@@ -12,15 +12,15 @@
     "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
   },
   "homepage": "https://github.com/optinomic/optinomic-avatar",
-  "version": "0.0.4",
-  "_release": "0.0.4",
+  "version": "0.0.5",
+  "_release": "0.0.5",
   "_resolution": {
     "type": "version",
-    "tag": "v0.0.4",
-    "commit": "32a17cd83c2e3b17d8471c558d984f685b4703f7"
+    "tag": "v0.0.5",
+    "commit": "37d230a77b484988f7087453e322513e7db947a0"
   },
   "_source": "https://github.com/optinomic/optinomic-avatar.git",
-  "_target": "^0.0.4",
+  "_target": "^0.0.5",
   "_originalSource": "optinomic/optinomic-avatar",
   "_direct": true
 }
