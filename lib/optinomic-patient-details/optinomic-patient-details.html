@@ -1,0 +1,130 @@
+<link rel="import" href="../juicy-jsoneditor/juicy-jsoneditor.html">
+<link rel="import" href="https://cdn.rawgit.com/Optinomic/optinomic-elements/1.0.0/optinomic-avatar/optinomic-avatar.html">
+<!-- josdejong/jsoneditor#104 workaround-->
+<!--
+`optinomic-patient-details`
+Avatar with initials - colorbased gender
+
+@demo demo/index.html 
+-->
+<dom-module id="optinomic-patient-details">
+    <template>
+        <style include="shared-styles iron-flex iron-flex-alignment">
+        :host {
+            display: block;
+        }
+        
+        paper-icon-button.grey {
+            color: var(--paper-grey-300);
+            --paper-icon-button-ink-color: var(--paper-grey-a200);
+        }
+        
+        paper-icon-button.grey:hover {
+            color: var(--paper-grey-500);
+        }
+        </style>
+        <template is="dom-if" if="[[patient]]">
+            <div class="grid-border-top layout horizontal start" style="margin-top:24px;">
+                <div class="flex">
+                    <h1 style="margin-top:12px;">[[translated.title]]</h1>
+                </div>
+                <div >
+                    <template is="dom-if" if="{{!show}}">
+                        <paper-icon-button class="grey" on-tap="__toggle_visibility" icon="visibility"></paper-icon-button>
+                    </template>
+                    <template is="dom-if" if="{{show}}">
+                        <paper-icon-button class="grey" on-tap="__toggle_visibility" icon="visibility-off"></paper-icon-button>
+                    </template>
+                </div>
+            </div>
+            <div class="layout horizontal">
+                <div style="margin-top: 20px;margin-right: 16px;">
+                    <optinomic-avatar firstname="[[patient.first_name]]" lastname="[[patient.last_name]]" gender="[[patient.gender]]" birthdate="[[patient.birthdate]]"></optinomic-avatar>
+                </div>
+                <div class="flex">
+                    <p>
+                        <span class="caption">[[translated.name]]:<br></span> {{patient.extras.full_name}}
+                    </p>
+                    <p>
+                        <span class="caption">[[translated.infoline]]:<br></span> {{patient.extras.infoline}}
+                    </p>
+                    <p>
+                        <span class="caption">[[translated.phone]]:<br></span> {{patient.extras.phone}}
+                    </p>
+                </div>
+            </div>
+
+            <template is="dom-if" if="{{show}}">
+                <h3 style="margin-top:12px;">JSON: [[translated.title]]</h3>
+                <juicy-jsoneditor json="{{patient::change}}" name="[[translated.title]]" mode="tree"></juicy-jsoneditor>
+            </template>
+        </template>
+    </template>
+    <script>
+    Polymer({
+
+        is: 'optinomic-patient-details',
+
+        properties: {
+            patient: {
+                type: Object
+            },
+            language: {
+                value: 'de'
+            },
+            show: {
+                type: Boolean,
+                value: false,
+            },
+        },
+
+        __translate: function(given_language) {
+            var t = {
+                "language": given_language
+            };
+
+            if (given_language === 'de') {
+                t.title = "Patientendetails";
+            } else {
+                t.title = "Patientdetails";
+            };
+
+            if (given_language === 'de') {
+                t.name = "Name (Geburtsdatum | Alter)";
+            } else {
+                t.name = "Name (Date of birth | Age)";
+            };
+
+            if (given_language === 'de') {
+                t.infoline = "Anschrift";
+            } else {
+                t.infoline = "Address";
+            };
+
+            if (given_language === 'de') {
+                t.phone = "Telefon";
+            } else {
+                t.phone = "Phone";
+            };
+
+            this.translated = t;
+
+            //console.log('__translate:', this.translated);
+        },
+
+        __toggle_visibility: function() {
+            this.show = !this.show;
+        },
+
+        ready: function() {
+            this.__translate(this.language);
+
+            //if (this.patient) {
+            //    this.patient = JSON.parse(JSON.stringify(this.patient));
+            //    console.log(this.patient);
+            //};
+        },
+
+    });
+    </script>
+</dom-module>
