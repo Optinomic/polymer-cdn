@@ -28,7 +28,7 @@ For Documentation check the [component-page](https://optinomic.github.io/optinom
 ## Install
 
 ```
-$ bower install optinomic/optinomic-avatar
+$ bower install --save optinomic/optinomic-patient-details
 ```
 
 ## Dependencies

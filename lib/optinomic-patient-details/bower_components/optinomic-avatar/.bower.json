@@ -1,0 +1,26 @@
+{
+  "name": "optinomic-avatar",
+  "description": "Avatar with initials - colorbased gender",
+  "main": "optinomic-avatar.html",
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.4.0"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^1.0.0",
+    "web-component-tester": "^4.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
+  },
+  "homepage": "https://github.com/optinomic/optinomic-avatar",
+  "version": "0.0.5",
+  "_release": "0.0.5",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.0.5",
+    "commit": "37d230a77b484988f7087453e322513e7db947a0"
+  },
+  "_source": "https://github.com/optinomic/optinomic-avatar.git",
+  "_target": "^0.0.5",
+  "_originalSource": "optinomic/optinomic-avatar",
+  "_direct": true
+}
