@@ -15,15 +15,15 @@
     "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
   },
   "homepage": "https://github.com/optinomic/optinomic-patient-details",
-  "version": "0.0.2",
-  "_release": "0.0.2",
+  "version": "0.0.3",
+  "_release": "0.0.3",
   "_resolution": {
     "type": "version",
-    "tag": "v0.0.2",
-    "commit": "648b73154902c63bf4f88d14d3398b2fe64e8ccc"
+    "tag": "v0.0.3",
+    "commit": "84a1086b12f6f9f0c6d4876ff53871c757bdadb3"
   },
   "_source": "https://github.com/optinomic/optinomic-patient-details.git",
-  "_target": "^0.0.2",
+  "_target": "^0.0.3",
   "_originalSource": "optinomic/optinomic-patient-details",
   "_direct": true
 }
