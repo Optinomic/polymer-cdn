@@ -1,0 +1,27 @@
+{
+  "name": "optinomic-redux-store",
+  "description": "Redux-Store for Optinomic-Apps",
+  "main": "optinomic-redux-store.html",
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.4.0",
+    "polymer-redux": "^0.4.0"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^1.0.0",
+    "web-component-tester": "^4.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
+  },
+  "homepage": "https://github.com/optinomic/optinomic-redux-store",
+  "version": "0.0.1",
+  "_release": "0.0.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "0.0.1",
+    "commit": "428e4e8768ce01905c9273fa7789e918c2ad0445"
+  },
+  "_source": "https://github.com/optinomic/optinomic-redux-store.git",
+  "_target": "^0.0.1",
+  "_originalSource": "optinomic/optinomic-redux-store",
+  "_direct": true
+}
