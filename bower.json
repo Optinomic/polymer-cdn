@@ -33,6 +33,6 @@
     "polymerfire": "firebase/polymerfire#latest",
     "iron-flex-layout": "PolymerElements/iron-flex-layout#^1.3.2",
     "show-json": "ryanburns23/show-json#^1.0.0",
-    "optinomic-redux-store": "optinomic/optinomic-redux-store#^0.0.1"
+    "optinomic-redux-store": "optinomic/optinomic-redux-store#^0.0.2"
   }
 }

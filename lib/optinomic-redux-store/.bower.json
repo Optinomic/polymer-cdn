@@ -13,15 +13,15 @@
     "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
   },
   "homepage": "https://github.com/optinomic/optinomic-redux-store",
-  "version": "0.0.1",
-  "_release": "0.0.1",
+  "version": "0.0.2",
+  "_release": "0.0.2",
   "_resolution": {
     "type": "version",
-    "tag": "0.0.1",
-    "commit": "428e4e8768ce01905c9273fa7789e918c2ad0445"
+    "tag": "0.0.2",
+    "commit": "ce70aa6be7a0e9eafb48072ceaec2316621b609a"
   },
   "_source": "https://github.com/optinomic/optinomic-redux-store.git",
-  "_target": "^0.0.1",
+  "_target": "^0.0.2",
   "_originalSource": "optinomic/optinomic-redux-store",
   "_direct": true
 }

@@ -1,5 +1,6 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../polymer-redux/polymer-redux.html">
+
 <!--
  Copyright 2017 | Optinomic GmbH.
  http://www.optinomic.com/
@@ -400,12 +401,8 @@ const AsyncActionsBehavior = {
                     type: 'GET_DATA_STARTED'
                 });
 
-
-                // GET /stays/:stay_id/survey_responses/:module_identifier/full
-                // GET /patients/:patient_id/survey_responses/:module_identifier/full
-
-                var module_identifier = 'ch.suedhang.apps.bscl_anq';
-                module_identifier = 'ch.suedhang.apps.bdi';
+                var module_identifier = requested_app_id === undefined ? helpers.getAppID() : requested_app_id;
+                console.log('actionGetSurveyResponses: ', module_identifier);
 
                 var current_stay_id = parseInt(helpers.getStayID());
 
@@ -548,15 +545,17 @@ const AsyncActionsBehavior = {
                                         };
                                     };
 
-                                    // Return all calculations if not found.
-                                    if (return_obj.calculation_found === false) {
-                                        return_obj.calculations = resp.calculations;
-                                    };
+
                                 });
                             });
 
                             if (return_obj.calculation_found && return_obj.event_found && return_obj.patient_found && return_obj.stay_found && return_obj.patient_uses_module_found) {
                                 return_obj.all_found = true;
+                            };
+
+                            // Return all calculations if not found.
+                            if (return_obj.calculation_found === false) {
+                                return_obj.calculations = resp.calculations;
                             };
 
                             return_array.push(return_obj);
@@ -606,6 +605,13 @@ const AsyncActionsBehavior = {
 // ----------------------------
 // Helpers
 // ----------------------------
+
+
+var requested_app_id = null;
+
+setRequestGetSurveyResponses = function(app_id) {
+    requested_app_id = app_id;
+};
 
 formatDateCH = function(date_string) {
     if (date_string !== undefined) {
