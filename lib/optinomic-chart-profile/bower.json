@@ -1,0 +1,19 @@
+{
+  "name": "optinomic-chart-profile",
+  "description": "Profile Charts",
+  "main": "optinomic-chart-profile.html",
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.4.0",
+    "iron-flex-layout": "^1.3.2",
+    "paper-tooltip": "^1.1.3",
+    "app-layout": "^0.10.7",
+    "app-grid": "^0.1.0",
+    "paper-checkbox": "^1.4.2"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^1.0.0",
+    "web-component-tester": "^4.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
+  }
+}

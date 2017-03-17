@@ -1,0 +1,1791 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+    <title>optinomic-chart-profile demo</title>
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+    <link rel="import" href="../optinomic-chart-profile.html">
+    <style is="custom-style" include="demo-pages-shared-styles">
+
+    </style>
+</head>
+
+<body>
+    <h3>Basic optinomic-chart-profile demo</h3>
+    <demo-snippet>
+        <template is="dom-bind">
+            <script type="text/javascript">
+            </script>
+            <optinomic-chart-profile options='{
+                "min": -4,
+                "max": "auto",
+                "item_height": 50,
+                "item_text_width": 120,
+                "color_grid": "#9E9E9E",
+                "show_baseline": false,
+                "range_alpha": 0.1,
+                "vertical_grid_every_x": 1,
+                "response_title_path": "calculation.info.mz.mz_typ",
+                "response_date_path": "calculation.info.filled",
+                "all_profiles": true
+            }' start='{
+                  "left_title": "Geringe Ausprägung",
+                  "left_text": "Eine längere Beschreibung bzgl. der geringen Ausprägung.",
+                  "left_color": "#4CAF50",
+                  "right_title": "Starke Ausprägung",
+                  "right_text": "Eine längere Beschreibung bzgl. der starken Ausprägung.",
+                  "right_color": "#F44336"
+                }' scales='[{
+                    "id": 0,
+                    "left_title": "GSI (Global Severity Index)",
+                    "left_text": "GSI (Global Severity Index)",
+                    "right_title": "GSI (Global Severity Index)",
+                    "right_text": "Durchschnittliche Belastung in allen Bereichen",
+                    "m_norm": [0.28, 0.35],
+                    "sd_norm": [0.23, 0.23],
+                    "score_path": "calculation.all_results.gsi_global_severity_index_z_score",
+                    "items": 53
+                }, {
+                    "id": 1,
+                    "left_title": "Psychotizismus",
+                    "left_text": "Psychotizismus",
+                    "right_title": "Psychotizismus",
+                    "right_text": "Gefühl der Isolation und zwischenmenschlichen Entfremdung. Verzerrter, isolierter Lebensstil     bis zu Halluzination und Gedankenzerfall.",
+                    "m_norm": [0.19, 0.19],
+                    "sd_norm": [0.28, 0.27],
+                    "score_path": "calculation.all_results.psychotizismus_z_score",
+                    "items": 5
+                }, {
+                    "id": 2,
+                    "left_title": "Paranoides Denken",
+                    "left_text": "Paranoides Denken",
+                    "right_title": "Paranoides Denken",
+                    "right_text": "Misstrauen, Minderwertigkeitsgefühle, paranoides Denken: Gedankenprojektion, Feindseligkeit,     Argwohn, Grandiosität, Einengung, Angst vor Autonomieverlust und wahnhafte Täuschung.",
+                    "m_norm": [0.33, 0.34],
+                    "sd_norm": [0.40, 0.38],
+                    "score_path": "calculation.all_results.paranoides_denken_z_score",
+                    "items": 5
+                }, {
+                    "id": 3,
+                    "left_title": "Phobische Angst",
+                    "left_text": "Phobische Angst",
+                    "right_title": "Phobische Angst",
+                    "right_text": "Andauernde und unangemessene Furcht als Reaktion auf eine bestimmte Person, einen Platz, ein     Objekt oder eine charakteristische Situation, die zu Vermeidungs- oder Fluchtverhalten führt.",
+                    "m_norm": [0.14, 0.16],
+                    "sd_norm": [0.23, 0.25],
+                    "score_path": "calculation.all_results.phobische_angst_z_score",
+                    "items": 5
+                }, {
+                    "id": 4,
+                    "left_title": "Aggressivität / Feindseligkeit",
+                    "left_text": "Aggressivität / Feindseligkeit",
+                    "right_title": "Aggressivität / Feindseligkeit",
+                    "right_text": "Reizbarkeit und Unausgeglichenheit bis hin zu starker Aggressivität. Ärger, Aggression,    Irritierbarkeit, Zorn und Verstimmung.",
+                    "m_norm": [0.29, 0.37],
+                    "sd_norm": [0.35, 0.33],
+                    "score_path": "calculation.all_results.aggressivit__t___feindseligkeit_z_score",
+                    "items": 5
+                }, {
+                    "id": 5,
+                    "left_title": "Ängstlichkeit",
+                    "left_text": "Ängstlichkeit",
+                    "right_title": "GSI (Global Severity Index)",
+                    "right_text": "Angst mit Nervosität, Spannungen und Zittern, Panikattacken und Schreckgefühlen, Gefühle von     Besorgnis und Furcht.",
+                    "m_norm": [0.29, 0.39],
+                    "sd_norm": [0.31, 0.36],
+                    "score_path": "calculation.all_results.__ngstlichkeit_z_score",
+                    "items": 6
+                }, {
+                    "id": 6,
+                    "left_title": "Depressivität",
+                    "left_text": "Depressivität",
+                    "right_title": "Depressivität",
+                    "right_text": "Gedrückte Stimmung, Gesunkenes Interesse am Leben, Verringerte Motivation und Energie,     Hoffnungslosigkeit, bis hin zu Suizidgedanken.",
+                    "m_norm": [0.24, 0.33],
+                    "sd_norm": [0.32, 0.40],
+                    "score_path": "calculation.all_results.depressivit__t_z_score",
+                    "items": 6
+                }, {
+                    "id": 7,
+                    "left_title": "Unsicherheit im Sozialkontakt",
+                    "left_text": "Unsicherheit im Sozialkontakt",
+                    "right_title": "GSI (Global Severity Index)",
+                    "right_text": "Unzulänglichkeits- und Minderwertigkeitsgefühle, Selbstabwertungen im sozialen Kontakt,    Selbstzweifel, Selbstunsicherheit und negative Erwartungen bzgl. dem eigenen zwischenmenschlichen   Verhalten.",
+                    "m_norm": [0.35, 0.49],
+                    "sd_norm": [0.40, 0.45],
+                    "score_path": "calculation.all_results.unsicherheit_im_sozialkontakt_z_score",
+                    "items": 4
+                }, {
+                    "id": 8,
+                    "left_title": "Zwanghaftigkeit",
+                    "left_text": "Zwanghaftigkeit",
+                    "right_title": "GSI (Global Severity Index)",
+                    "right_text": "Gedanken, Impulse und Handlungen, die konstant vorhanden und nicht änderbar und ich-fremd    oder ungewollt erlebt werden, Kognitive Leistungsstörungen.",
+                    "m_norm": [0.50, 0.54],
+                    "sd_norm": [0.46, 0.43],
+                    "score_path": "calculation.all_results.zwanghaftigkeit_z_score",
+                    "items": 6
+                }, {
+                    "id": 9,
+                    "left_title": "Somatisierung",
+                    "left_text": "Somatisierung",
+                    "right_title": "Somatisierung",
+                    "right_text": "Kopfschmerzen, Herzbeschwerden, Atemprobleme, Magenbeschwerden, Muskelschmerzen,     Schwächegefühl, Schweregefühl, Unwohlsein usw.",
+                    "m_norm": [0.23, 0.32],
+                    "sd_norm": [0.31, 0.33],
+                    "score_path": "calculation.all_results.somatisierung_z_score",
+                    "items": 7
+                }]' ranges='[{
+  "range_start": -999,
+  "range_stop": -2,
+  "color": "#F44336"
+},{
+  "range_start": -1,
+  "range_stop": 1.5,
+  "color": "#4CAF50"
+},{
+  "range_start": 4.6,
+  "range_stop": 999,
+  "color": "#F44336"
+}]' scores='{
+  "date": "2017-03-11T12:37:27.011Z",
+  "data": [
+    {
+      "all_found": true,
+      "app_id": "ch.suedhang.apps.bscl_anq",
+      "date": "2016-11-11T14:28:18.000000000000Z",
+      "response_id": 10976,
+      "response": {
+        "BSCL[sq504V23]": "4",
+        "BSCL[sq504V45]": "0",
+        "BSCL[sq504V18]": "2",
+        "BSCL[sq504V01]": "1",
+        "BSCL[sq504V20]": "0",
+        "q501V04": "1",
+        "datestamp": "2016-11-11 14:28:18",
+        "BSCL[sq504V02]": "2",
+        "BSCL[sq504V39]": "3",
+        "Eintrittsort": "1",
+        "BSCL[sq504V46]": "4",
+        "BSCL[sq504V07]": "0",
+        "Austrittsort": "",
+        "BSCL[sq504V43]": "2",
+        "BSCL[sq504V25]": "4",
+        "BSCL[sq504V33]": "2",
+        "optinomixHASH": "f68f66bd-0a06-45b0-8354-6ca54c0a0156",
+        "BSCL[sq504V08]": "1",
+        "BSCL[sq504V11]": "3",
+        "BSCL[sq504V50]": "0",
+        "submitdate": "2016-11-11 14:28:18",
+        "BSCL[sq504V36]": "2",
+        "BSCL[sq504V49]": "1",
+        "BSCL[sq504V14]": "0",
+        "BSCL[sq504V17]": "2",
+        "BSCL[sq504V53]": "1",
+        "BSCL[sq504V35]": "1",
+        "BSCL[sq504V03]": "3",
+        "q504V00": "2016-11-11 00:00:00",
+        "BSCL[sq504V21]": "2",
+        "BSCL[sq504V38]": "0",
+        "BSCL[sq504V47]": "3",
+        "BSCL[sq504V26]": "3",
+        "BSCL[sq504V40]": "1",
+        "BSCL[sq504V04]": "2",
+        "startdate": "2016-11-11 14:27:17",
+        "BSCL[sq504V32]": "2",
+        "BSCL[sq504V10]": "3",
+        "BSCL[sq504V09]": "2",
+        "BSCL[sq504V31]": "2",
+        "BSCL[sq504V13]": "4",
+        "BSCL[sq504V28]": "1",
+        "startlanguage": "de",
+        "BSCL[sq504V34]": "1",
+        "BSCL[sq504V52]": "3",
+        "BSCL[sq504V16]": "2",
+        "BSCL[sq504V22]": "3",
+        "PID": "7.0000000000",
+        "BSCL[sq504V19]": "1",
+        "BSCL[sq504V44]": "1",
+        "id": "100",
+        "q501V06": "",
+        "BSCL[sq504V41]": "3",
+        "BSCL[sq504V05]": "1",
+        "BSCL[sq504V27]": "2",
+        "BSCL[sq504V42]": "3",
+        "BSCL[sq504V06]": "0",
+        "FID": "7.0000000000",
+        "BSCL[sq504V24]": "4",
+        "BSCL[sq504V29]": "0",
+        "BSCL[sq504V12]": "2",
+        "BSCL[sq504V30]": "1",
+        "q501V05": "0",
+        "BSCL[sq504V51]": "4",
+        "BSCL[sq504V15]": "1",
+        "BSCL[sq504V48]": "2",
+        "lastpage": "2",
+        "BSCL[sq504V37]": "3"
+      },
+      "event": {
+        "status": "done",
+        "due": "2016-11-11T13:27:16.000000000000Z",
+        "url": "http://limesurvey.optinomic.org/survey/index/sid/693172/newtest/Y/lang/de?&693172X6X78=f68f66bd-0a06-45b0-8354-6ca54c0a0156&693172X6X73=7&693172X6X77=7",
+        "patient_uses_module_id": 7785,
+        "random_hash": "f68f66bd-0a06-45b0-8354-6ca54c0a0156",
+        "survey_name": "BSCL - ANQ",
+        "patient_id": 1,
+        "responsibility": {
+          "type": "patient_via_assessment"
+        },
+        "module": "ch.suedhang.apps.bscl_anq",
+        "overdue": {
+          "type": "ignore"
+        },
+        "created_at": "2016-11-11T13:27:16.000000000000Z",
+        "description": "Survey scheduled manually.",
+        "id": 39106
+      },
+      "event_found": true,
+      "event_id": 39106,
+      "patient": {
+        "address2": null,
+        "cis_lead_doctor": null,
+        "email": "ottigerb@gmail.com",
+        "deceased": false,
+        "first_name": "Beat",
+        "four_letter_code": "ATAE",
+        "stay_id": 144,
+        "country": "CH",
+        "phone_mobile": "+41796358584",
+        "phone_home": "+41796358584",
+        "gender": "male",
+        "city": "Oberrieden",
+        "ahv": null,
+        "lead_therapist": 2,
+        "address1": "Haldenstrasse 7",
+        "last_name": "Ottiger",
+        "language": "de",
+        "birth_name": "Musterpatient",
+        "title": null,
+        "notes": "Testpatient",
+        "cis_pid": 7,
+        "zip_code": "8942",
+        "birthdate": "1973-05-21T00:00:00.000000000000Z",
+        "id": 1,
+        "pid": 1,
+        "extras": {
+          "age": 43,
+          "birthday": "21.5.1973",
+          "birthday_age": "21.5.1973 | 43",
+          "name": "Ottiger Beat",
+          "ansprache": "Herr",
+          "anrede": "Herr Ottiger",
+          "full_name": "Herr Ottiger Beat (21.5.1973 | 43)",
+          "full_address": "Haldenstrasse 7, 8942 Oberrieden",
+          "phone": "+41796358584, +41796358584",
+          "infoline": "Haldenstrasse 7, 8942 Oberrieden",
+          "color_main": "#3F51B5",
+          "color_accent": "#E91E63"
+        }
+      },
+      "patient_found": true,
+      "patient_id": 1,
+      "stay": {
+        "photo": "",
+        "cis_lead_doctor": null,
+        "status": "",
+        "phase": "in_stay",
+        "frozen": false,
+        "first_contact": null,
+        "lead_therapist_id": 2,
+        "start": "2015-01-16T09:54:00.000000000000Z",
+        "stop_status": "",
+        "insurance_number": "",
+        "patient_id": 1,
+        "insurance_provider": "",
+        "cis_fid": 7,
+        "stop": "2017-07-31T22:00:00.000000000000Z",
+        "deputy_lead_therapist_id": 60,
+        "notes": "",
+        "service_provider": "",
+        "class": "",
+        "lead_therapist_id_overwrite": 2,
+        "id": 144,
+        "fid": 144,
+        "extras": {
+          "duration": 929,
+          "beginn": "16.1.2015",
+          "from_to": "16.1.2015 - 31.7.2017",
+          "ende": "31.7.2017"
+        }
+      },
+      "stay_found": true,
+      "stay_id": 144,
+      "patient_uses_module": {
+        "settings": {},
+        "stay_id": 144,
+        "patient_id": 1,
+        "responsibility": null,
+        "deactivated": false,
+        "module": "ch.suedhang.apps.bscl_anq",
+        "overdue": null,
+        "last_event_generation": "2017-03-11T12:37:26.556007000000Z",
+        "activated_on": "2016-10-28T12:43:12.000000000000Z",
+        "id": 7785
+      },
+      "patient_uses_module_found": true,
+      "patient_uses_module_id": 7785,
+      "calculation": {
+        "all_results": {
+          "somatisierung_scale_score": 1.71,
+          "gsi_global_severity_index_scale_score": 1.89,
+          "zusatzitems_z_score": null,
+          "aggressivit__t___feindseligkeit_z_score": 6.15,
+          "phobische_angst_sum_score": 9,
+          "psychotizismus_z_score": 3.74,
+          "paranoides_denken_z_score": 7,
+          "zusatzitems_scale_score": 3.25,
+          "paranoides_denken_scale_score": 3,
+          "zwanghaftigkeit_sum_score": 11,
+          "aggressivit__t___feindseligkeit_scale_score": 2.4,
+          "psychotizismus_scale_score": 1.2,
+          "__ngstlichkeit_scale_score": 0.83,
+          "depressivit__t_sum_score": 9,
+          "unsicherheit_im_sozialkontakt_scale_score": 2,
+          "zusatzitems_sum_score": 13,
+          "unsicherheit_im_sozialkontakt_z_score": 3.36,
+          "__ngstlichkeit_z_score": 1.22,
+          "gsi_global_severity_index_sum_score": 100,
+          "somatisierung_sum_score": 12,
+          "depressivit__t_z_score": 2.93,
+          "depressivit__t_scale_score": 1.5,
+          "__ngstlichkeit_sum_score": 5,
+          "unsicherheit_im_sozialkontakt_sum_score": 8,
+          "phobische_angst_z_score": 6.56,
+          "zwanghaftigkeit_scale_score": 1.83,
+          "paranoides_denken_sum_score": 15,
+          "aggressivit__t___feindseligkeit_sum_score": 12,
+          "psychotizismus_sum_score": 6,
+          "somatisierung_z_score": 4.21,
+          "gsi_global_severity_index_z_score": 6.7,
+          "phobische_angst_scale_score": 1.8,
+          "zwanghaftigkeit_z_score": 3
+        },
+        "result_array": [
+          {
+            "items": 53,
+            "result": {
+              "scale_score": 1.89,
+              "z_score": 6.7,
+              "sum_score": 100
+            },
+            "m_norm": [
+              0.28,
+              0.35
+            ],
+            "id": 0,
+            "sub_left": "GSI (Global Severity Index)",
+            "short_description": "gsi_global_severity_index",
+            "sub_right": "Durchschnittliche Belastung in allen Bereichen",
+            "sd_norm": [
+              0.23,
+              0.23
+            ],
+            "description": "GSI (Global Severity Index)"
+          },
+          {
+            "items": 5,
+            "result": {
+              "scale_score": 1.2,
+              "z_score": 3.74,
+              "sum_score": 6
+            },
+            "m_norm": [
+              0.19,
+              0.19
+            ],
+            "id": 1,
+            "sub_left": "Psychotizismus",
+            "short_description": "psychotizismus",
+            "sub_right": "Gefühl der Isolation und zwischenmenschlichen Entfremdung. Verzerrter, isolierter Lebensstil bis zu Halluzination und Gedankenzerfall.",
+            "sd_norm": [
+              0.28,
+              0.27
+            ],
+            "description": "Psychotizismus"
+          },
+          {
+            "items": 5,
+            "result": {
+              "scale_score": 3,
+              "z_score": 7,
+              "sum_score": 15
+            },
+            "m_norm": [
+              0.33,
+              0.34
+            ],
+            "id": 2,
+            "sub_left": "Paranoides Denken",
+            "short_description": "paranoides_denken",
+            "sub_right": "Misstrauen, Minderwertigkeitsgefühle, paranoides Denken: Gedankenprojektion, Feindseligkeit, Argwohn, Grandiosität, Einengung, Angst vor Autonomieverlust und wahnhafte Täuschung.",
+            "sd_norm": [
+              0.4,
+              0.38
+            ],
+            "description": "Paranoides Denken"
+          },
+          {
+            "items": 5,
+            "result": {
+              "scale_score": 1.8,
+              "z_score": 6.56,
+              "sum_score": 9
+            },
+            "m_norm": [
+              0.14,
+              0.16
+            ],
+            "id": 3,
+            "sub_left": "Phobische Angst",
+            "short_description": "phobische_angst",
+            "sub_right": "Andauernde und unangemessene Furcht als Reaktion auf eine bestimmte Person, einen Platz, ein Objekt oder eine charakteristische Situation, die zu Vermeidungs- oder Fluchtverhalten führt.",
+            "sd_norm": [
+              0.23,
+              0.25
+            ],
+            "description": "Phobische Angst"
+          },
+          {
+            "items": 5,
+            "result": {
+              "scale_score": 2.4,
+              "z_score": 6.15,
+              "sum_score": 12
+            },
+            "m_norm": [
+              0.29,
+              0.37
+            ],
+            "id": 4,
+            "sub_left": "Aggressivität / Feindseligkeit",
+            "short_description": "aggressivit__t___feindseligkeit",
+            "sub_right": "Reizbarkeit und Unausgeglichenheit bis hin zu starker Aggressivität. Ärger, Aggression, Irritierbarkeit, Zorn und Verstimmung.",
+            "sd_norm": [
+              0.35,
+              0.33
+            ],
+            "description": "Aggressivität / Feindseligkeit"
+          },
+          {
+            "items": 6,
+            "result": {
+              "scale_score": 0.83,
+              "z_score": 1.22,
+              "sum_score": 5
+            },
+            "m_norm": [
+              0.29,
+              0.39
+            ],
+            "id": 5,
+            "sub_left": "Ängstlichkeit",
+            "short_description": "__ngstlichkeit",
+            "sub_right": "Angst mit Nervosität, Spannungen und Zittern, Panikattacken und Schreckgefühlen, Gefühle von Besorgnis und Furcht.",
+            "sd_norm": [
+              0.31,
+              0.36
+            ],
+            "description": "Ängstlichkeit"
+          },
+          {
+            "items": 6,
+            "result": {
+              "scale_score": 1.5,
+              "z_score": 2.93,
+              "sum_score": 9
+            },
+            "m_norm": [
+              0.24,
+              0.33
+            ],
+            "id": 6,
+            "sub_left": "Depressivität",
+            "short_description": "depressivit__t",
+            "sub_right": "Gedrückte Stimmung, Gesunkenes Interesse am Leben, Verringerte Motivation und Energie, Hoffnungslosigkeit, bis hin zu Suizidgedanken.",
+            "sd_norm": [
+              0.32,
+              0.4
+            ],
+            "description": "Depressivität"
+          },
+          {
+            "items": 4,
+            "result": {
+              "scale_score": 2,
+              "z_score": 3.36,
+              "sum_score": 8
+            },
+            "m_norm": [
+              0.35,
+              0.49
+            ],
+            "id": 7,
+            "sub_left": "Unsicherheit im Sozialkontakt",
+            "short_description": "unsicherheit_im_sozialkontakt",
+            "sub_right": "Unzulänglichkeits- und Minderwertigkeitsgefühle, Selbstabwertungen im sozialen Kontakt, Selbstzweifel, Selbstunsicherheit und negative Erwartungen bzgl. dem eigenen zwischenmenschlichen Verhalten.",
+            "sd_norm": [
+              0.4,
+              0.45
+            ],
+            "description": "Unsicherheit im Sozialkontakt"
+          },
+          {
+            "items": 6,
+            "result": {
+              "scale_score": 1.83,
+              "z_score": 3,
+              "sum_score": 11
+            },
+            "m_norm": [
+              0.5,
+              0.54
+            ],
+            "id": 8,
+            "sub_left": "Zwanghaftigkeit",
+            "short_description": "zwanghaftigkeit",
+            "sub_right": "Gedanken, Impulse und Handlungen, die konstant vorhanden und nicht änderbar und ich-fremd oder ungewollt erlebt werden, Kognitive Leistungsstörungen.",
+            "sd_norm": [
+              0.46,
+              0.43
+            ],
+            "description": "Zwanghaftigkeit"
+          },
+          {
+            "items": 7,
+            "result": {
+              "scale_score": 1.71,
+              "z_score": 4.21,
+              "sum_score": 12
+            },
+            "m_norm": [
+              0.23,
+              0.32
+            ],
+            "id": 9,
+            "sub_left": "Somatisierung",
+            "short_description": "somatisierung",
+            "sub_right": "Kopfschmerzen, Herzbeschwerden, Atemprobleme, Magenbeschwerden, Muskelschmerzen, Schwächegefühl, Schweregefühl, Unwohlsein usw.",
+            "sd_norm": [
+              0.31,
+              0.33
+            ],
+            "description": "Somatisierung"
+          },
+          {
+            "items": 4,
+            "result": {
+              "scale_score": 3.25,
+              "z_score": null,
+              "sum_score": 13
+            },
+            "m_norm": [
+              null,
+              null
+            ],
+            "id": 10,
+            "sub_left": "Zusatzitems",
+            "short_description": "zusatzitems",
+            "sub_right": "Zusatzitems",
+            "sd_norm": [
+              null,
+              null
+            ],
+            "description": "Zusatzitems"
+          }
+        ],
+        "info": {
+          "hash": "f68f66bd-0a06-45b0-8354-6ca54c0a0156",
+          "response": {
+            "BSCL[sq504V23]": "4",
+            "BSCL[sq504V45]": "0",
+            "BSCL[sq504V18]": "2",
+            "BSCL[sq504V01]": "1",
+            "BSCL[sq504V20]": "0",
+            "q501V04": "1",
+            "datestamp": "2016-11-11 14:28:18",
+            "BSCL[sq504V02]": "2",
+            "BSCL[sq504V39]": "3",
+            "Eintrittsort": "1",
+            "BSCL[sq504V46]": "4",
+            "BSCL[sq504V07]": "0",
+            "Austrittsort": "",
+            "BSCL[sq504V43]": "2",
+            "BSCL[sq504V25]": "4",
+            "BSCL[sq504V33]": "2",
+            "optinomixHASH": "f68f66bd-0a06-45b0-8354-6ca54c0a0156",
+            "BSCL[sq504V08]": "1",
+            "BSCL[sq504V11]": "3",
+            "BSCL[sq504V50]": "0",
+            "submitdate": "2016-11-11 14:28:18",
+            "BSCL[sq504V36]": "2",
+            "BSCL[sq504V49]": "1",
+            "BSCL[sq504V14]": "0",
+            "BSCL[sq504V17]": "2",
+            "BSCL[sq504V53]": "1",
+            "BSCL[sq504V35]": "1",
+            "BSCL[sq504V03]": "3",
+            "q504V00": "2016-11-11 00:00:00",
+            "BSCL[sq504V21]": "2",
+            "BSCL[sq504V38]": "0",
+            "BSCL[sq504V47]": "3",
+            "BSCL[sq504V26]": "3",
+            "BSCL[sq504V40]": "1",
+            "BSCL[sq504V04]": "2",
+            "startdate": "2016-11-11 14:27:17",
+            "BSCL[sq504V32]": "2",
+            "BSCL[sq504V10]": "3",
+            "BSCL[sq504V09]": "2",
+            "BSCL[sq504V31]": "2",
+            "BSCL[sq504V13]": "4",
+            "BSCL[sq504V28]": "1",
+            "startlanguage": "de",
+            "BSCL[sq504V34]": "1",
+            "BSCL[sq504V52]": "3",
+            "BSCL[sq504V16]": "2",
+            "BSCL[sq504V22]": "3",
+            "PID": "7.0000000000",
+            "BSCL[sq504V19]": "1",
+            "BSCL[sq504V44]": "1",
+            "id": "100",
+            "q501V06": "",
+            "BSCL[sq504V41]": "3",
+            "BSCL[sq504V05]": "1",
+            "BSCL[sq504V27]": "2",
+            "BSCL[sq504V42]": "3",
+            "BSCL[sq504V06]": "0",
+            "FID": "7.0000000000",
+            "BSCL[sq504V24]": "4",
+            "BSCL[sq504V29]": "0",
+            "BSCL[sq504V12]": "2",
+            "BSCL[sq504V30]": "1",
+            "q501V05": "0",
+            "BSCL[sq504V51]": "4",
+            "BSCL[sq504V15]": "1",
+            "BSCL[sq504V48]": "2",
+            "lastpage": "2",
+            "BSCL[sq504V37]": "3"
+          },
+          "mz": {
+            "mz_typ": "Eintritt EAS",
+            "mz_id": 0,
+            "mz_text": "Eintritt - EAS"
+          },
+          "event_id": 39106,
+          "filled": "2016-11-11T14:28:18.000000000000Z",
+          "response_id": 10976
+        },
+        "definitions": {
+          "result_array": [
+            {
+              "items": 53,
+              "result": {
+                "scale_score": null,
+                "z_score": null,
+                "sum_score": null
+              },
+              "m_norm": [
+                0.28,
+                0.35
+              ],
+              "id": 0,
+              "sub_left": "GSI (Global Severity Index)",
+              "short_description": "gsi_global_severity_index",
+              "sub_right": "Durchschnittliche Belastung in allen Bereichen",
+              "sd_norm": [
+                0.23,
+                0.23
+              ],
+              "description": "GSI (Global Severity Index)"
+            },
+            {
+              "items": 5,
+              "result": {
+                "scale_score": null,
+                "z_score": null,
+                "sum_score": null
+              },
+              "m_norm": [
+                0.19,
+                0.19
+              ],
+              "id": 1,
+              "sub_left": "Psychotizismus",
+              "short_description": "psychotizismus",
+              "sub_right": "Gefühl der Isolation und zwischenmenschlichen Entfremdung. Verzerrter, isolierter Lebensstil bis zu Halluzination und Gedankenzerfall.",
+              "sd_norm": [
+                0.28,
+                0.27
+              ],
+              "description": "Psychotizismus"
+            },
+            {
+              "items": 5,
+              "result": {
+                "scale_score": null,
+                "z_score": null,
+                "sum_score": null
+              },
+              "m_norm": [
+                0.33,
+                0.34
+              ],
+              "id": 2,
+              "sub_left": "Paranoides Denken",
+              "short_description": "paranoides_denken",
+              "sub_right": "Misstrauen, Minderwertigkeitsgefühle, paranoides Denken: Gedankenprojektion, Feindseligkeit, Argwohn, Grandiosität, Einengung, Angst vor Autonomieverlust und wahnhafte Täuschung.",
+              "sd_norm": [
+                0.4,
+                0.38
+              ],
+              "description": "Paranoides Denken"
+            },
+            {
+              "items": 5,
+              "result": {
+                "scale_score": null,
+                "z_score": null,
+                "sum_score": null
+              },
+              "m_norm": [
+                0.14,
+                0.16
+              ],
+              "id": 3,
+              "sub_left": "Phobische Angst",
+              "short_description": "phobische_angst",
+              "sub_right": "Andauernde und unangemessene Furcht als Reaktion auf eine bestimmte Person, einen Platz, ein Objekt oder eine charakteristische Situation, die zu Vermeidungs- oder Fluchtverhalten führt.",
+              "sd_norm": [
+                0.23,
+                0.25
+              ],
+              "description": "Phobische Angst"
+            },
+            {
+              "items": 5,
+              "result": {
+                "scale_score": null,
+                "z_score": null,
+                "sum_score": null
+              },
+              "m_norm": [
+                0.29,
+                0.37
+              ],
+              "id": 4,
+              "sub_left": "Aggressivität / Feindseligkeit",
+              "short_description": "aggressivit__t___feindseligkeit",
+              "sub_right": "Reizbarkeit und Unausgeglichenheit bis hin zu starker Aggressivität. Ärger, Aggression, Irritierbarkeit, Zorn und Verstimmung.",
+              "sd_norm": [
+                0.35,
+                0.33
+              ],
+              "description": "Aggressivität / Feindseligkeit"
+            },
+            {
+              "items": 6,
+              "result": {
+                "scale_score": null,
+                "z_score": null,
+                "sum_score": null
+              },
+              "m_norm": [
+                0.29,
+                0.39
+              ],
+              "id": 5,
+              "sub_left": "Ängstlichkeit",
+              "short_description": "__ngstlichkeit",
+              "sub_right": "Angst mit Nervosität, Spannungen und Zittern, Panikattacken und Schreckgefühlen, Gefühle von Besorgnis und Furcht.",
+              "sd_norm": [
+                0.31,
+                0.36
+              ],
+              "description": "Ängstlichkeit"
+            },
+            {
+              "items": 6,
+              "result": {
+                "scale_score": null,
+                "z_score": null,
+                "sum_score": null
+              },
+              "m_norm": [
+                0.24,
+                0.33
+              ],
+              "id": 6,
+              "sub_left": "Depressivität",
+              "short_description": "depressivit__t",
+              "sub_right": "Gedrückte Stimmung, Gesunkenes Interesse am Leben, Verringerte Motivation und Energie, Hoffnungslosigkeit, bis hin zu Suizidgedanken.",
+              "sd_norm": [
+                0.32,
+                0.4
+              ],
+              "description": "Depressivität"
+            },
+            {
+              "items": 4,
+              "result": {
+                "scale_score": null,
+                "z_score": null,
+                "sum_score": null
+              },
+              "m_norm": [
+                0.35,
+                0.49
+              ],
+              "id": 7,
+              "sub_left": "Unsicherheit im Sozialkontakt",
+              "short_description": "unsicherheit_im_sozialkontakt",
+              "sub_right": "Unzulänglichkeits- und Minderwertigkeitsgefühle, Selbstabwertungen im sozialen Kontakt, Selbstzweifel, Selbstunsicherheit und negative Erwartungen bzgl. dem eigenen zwischenmenschlichen Verhalten.",
+              "sd_norm": [
+                0.4,
+                0.45
+              ],
+              "description": "Unsicherheit im Sozialkontakt"
+            },
+            {
+              "items": 6,
+              "result": {
+                "scale_score": null,
+                "z_score": null,
+                "sum_score": null
+              },
+              "m_norm": [
+                0.5,
+                0.54
+              ],
+              "id": 8,
+              "sub_left": "Zwanghaftigkeit",
+              "short_description": "zwanghaftigkeit",
+              "sub_right": "Gedanken, Impulse und Handlungen, die konstant vorhanden und nicht änderbar und ich-fremd oder ungewollt erlebt werden, Kognitive Leistungsstörungen.",
+              "sd_norm": [
+                0.46,
+                0.43
+              ],
+              "description": "Zwanghaftigkeit"
+            },
+            {
+              "items": 7,
+              "result": {
+                "scale_score": null,
+                "z_score": null,
+                "sum_score": null
+              },
+              "m_norm": [
+                0.23,
+                0.32
+              ],
+              "id": 9,
+              "sub_left": "Somatisierung",
+              "short_description": "somatisierung",
+              "sub_right": "Kopfschmerzen, Herzbeschwerden, Atemprobleme, Magenbeschwerden, Muskelschmerzen, Schwächegefühl, Schweregefühl, Unwohlsein usw.",
+              "sd_norm": [
+                0.31,
+                0.33
+              ],
+              "description": "Somatisierung"
+            },
+            {
+              "items": 4,
+              "result": {
+                "scale_score": null,
+                "z_score": null,
+                "sum_score": null
+              },
+              "m_norm": [
+                null,
+                null
+              ],
+              "id": 10,
+              "sub_left": "Zusatzitems",
+              "short_description": "zusatzitems",
+              "sub_right": "Zusatzitems",
+              "sd_norm": [
+                null,
+                null
+              ],
+              "description": "Zusatzitems"
+            }
+          ],
+          "variables": [
+            "sum_score",
+            "scale_score",
+            "z_score"
+          ],
+          "all_results_variables": [
+            "gsi_global_severity_index_sum_score",
+            "gsi_global_severity_index_scale_score",
+            "gsi_global_severity_index_z_score",
+            "psychotizismus_sum_score",
+            "psychotizismus_scale_score",
+            "psychotizismus_z_score",
+            "paranoides_denken_sum_score",
+            "paranoides_denken_scale_score",
+            "paranoides_denken_z_score",
+            "phobische_angst_sum_score",
+            "phobische_angst_scale_score",
+            "phobische_angst_z_score",
+            "aggressivit__t___feindseligkeit_sum_score",
+            "aggressivit__t___feindseligkeit_scale_score",
+            "aggressivit__t___feindseligkeit_z_score",
+            "__ngstlichkeit_sum_score",
+            "__ngstlichkeit_scale_score",
+            "__ngstlichkeit_z_score",
+            "depressivit__t_sum_score",
+            "depressivit__t_scale_score",
+            "depressivit__t_z_score",
+            "unsicherheit_im_sozialkontakt_sum_score",
+            "unsicherheit_im_sozialkontakt_scale_score",
+            "unsicherheit_im_sozialkontakt_z_score",
+            "zwanghaftigkeit_sum_score",
+            "zwanghaftigkeit_scale_score",
+            "zwanghaftigkeit_z_score",
+            "somatisierung_sum_score",
+            "somatisierung_scale_score",
+            "somatisierung_z_score",
+            "zusatzitems_sum_score",
+            "zusatzitems_scale_score",
+            "zusatzitems_z_score"
+          ]
+        }
+      },
+      "calculation_found": true,
+      "calculation_found_method": "variant_info"
+    },
+    {
+      "all_found": true,
+      "app_id": "ch.suedhang.apps.bscl_anq",
+      "date": "2016-12-19T16:48:24.000000000000Z",
+      "response_id": 10982,
+      "response": {
+        "BSCL[sq504V23]": "0",
+        "BSCL[sq504V45]": "0",
+        "BSCL[sq504V18]": "0",
+        "BSCL[sq504V01]": "0",
+        "BSCL[sq504V20]": "0",
+        "q501V04": "2",
+        "datestamp": "2016-12-19 16:48:24",
+        "BSCL[sq504V02]": "0",
+        "BSCL[sq504V39]": "0",
+        "Eintrittsort": "",
+        "BSCL[sq504V46]": "0",
+        "BSCL[sq504V07]": "0",
+        "Austrittsort": "2",
+        "BSCL[sq504V43]": "0",
+        "BSCL[sq504V25]": "0",
+        "BSCL[sq504V33]": "0",
+        "optinomixHASH": "5a7dc5e4-5b3d-4165-9864-711d6a5b49f8",
+        "BSCL[sq504V08]": "0",
+        "BSCL[sq504V11]": "0",
+        "BSCL[sq504V50]": "0",
+        "submitdate": "2016-12-19 16:48:24",
+        "BSCL[sq504V36]": "0",
+        "BSCL[sq504V49]": "0",
+        "BSCL[sq504V14]": "0",
+        "BSCL[sq504V17]": "0",
+        "BSCL[sq504V53]": "0",
+        "BSCL[sq504V35]": "0",
+        "BSCL[sq504V03]": "0",
+        "q504V00": "2016-12-19 00:00:00",
+        "BSCL[sq504V21]": "0",
+        "BSCL[sq504V38]": "0",
+        "BSCL[sq504V47]": "0",
+        "BSCL[sq504V26]": "0",
+        "BSCL[sq504V40]": "0",
+        "BSCL[sq504V04]": "0",
+        "startdate": "2016-12-19 16:47:17",
+        "BSCL[sq504V32]": "0",
+        "BSCL[sq504V10]": "0",
+        "BSCL[sq504V09]": "0",
+        "BSCL[sq504V31]": "0",
+        "BSCL[sq504V13]": "0",
+        "BSCL[sq504V28]": "0",
+        "startlanguage": "de",
+        "BSCL[sq504V34]": "0",
+        "BSCL[sq504V52]": "0",
+        "BSCL[sq504V16]": "0",
+        "BSCL[sq504V22]": "0",
+        "PID": "7.0000000000",
+        "BSCL[sq504V19]": "0",
+        "BSCL[sq504V44]": "0",
+        "id": "102",
+        "q501V06": "",
+        "BSCL[sq504V41]": "0",
+        "BSCL[sq504V05]": "0",
+        "BSCL[sq504V27]": "0",
+        "BSCL[sq504V42]": "0",
+        "BSCL[sq504V06]": "0",
+        "FID": "7.0000000000",
+        "BSCL[sq504V24]": "0",
+        "BSCL[sq504V29]": "0",
+        "BSCL[sq504V12]": "0",
+        "BSCL[sq504V30]": "0",
+        "q501V05": "0",
+        "BSCL[sq504V51]": "0",
+        "BSCL[sq504V15]": "0",
+        "BSCL[sq504V48]": "0",
+        "lastpage": "2",
+        "BSCL[sq504V37]": "0"
+      },
+      "event": {
+        "status": "done",
+        "due": "2016-12-19T15:47:16.000000000000Z",
+        "url": "http://limesurvey.optinomic.org/survey/index/sid/693172/newtest/Y/lang/de?&693172X6X78=5a7dc5e4-5b3d-4165-9864-711d6a5b49f8&693172X6X73=7&693172X6X77=7",
+        "patient_uses_module_id": 7785,
+        "random_hash": "5a7dc5e4-5b3d-4165-9864-711d6a5b49f8",
+        "survey_name": "BSCL - ANQ",
+        "patient_id": 1,
+        "responsibility": {
+          "type": "patient_via_assessment"
+        },
+        "module": "ch.suedhang.apps.bscl_anq",
+        "overdue": {
+          "type": "ignore"
+        },
+        "created_at": "2016-12-19T15:47:16.000000000000Z",
+        "description": "Survey scheduled manually.",
+        "id": 39834
+      },
+      "event_found": true,
+      "event_id": 39834,
+      "patient": {
+        "address2": null,
+        "cis_lead_doctor": null,
+        "email": "ottigerb@gmail.com",
+        "deceased": false,
+        "first_name": "Beat",
+        "four_letter_code": "ATAE",
+        "stay_id": 144,
+        "country": "CH",
+        "phone_mobile": "+41796358584",
+        "phone_home": "+41796358584",
+        "gender": "male",
+        "city": "Oberrieden",
+        "ahv": null,
+        "lead_therapist": 2,
+        "address1": "Haldenstrasse 7",
+        "last_name": "Ottiger",
+        "language": "de",
+        "birth_name": "Musterpatient",
+        "title": null,
+        "notes": "Testpatient",
+        "cis_pid": 7,
+        "zip_code": "8942",
+        "birthdate": "1973-05-21T00:00:00.000000000000Z",
+        "id": 1,
+        "pid": 1,
+        "extras": {
+          "age": 43,
+          "birthday": "21.5.1973",
+          "birthday_age": "21.5.1973 | 43",
+          "name": "Ottiger Beat",
+          "ansprache": "Herr",
+          "anrede": "Herr Ottiger",
+          "full_name": "Herr Ottiger Beat (21.5.1973 | 43)",
+          "full_address": "Haldenstrasse 7, 8942 Oberrieden",
+          "phone": "+41796358584, +41796358584",
+          "infoline": "Haldenstrasse 7, 8942 Oberrieden",
+          "color_main": "#3F51B5",
+          "color_accent": "#E91E63"
+        }
+      },
+      "patient_found": true,
+      "patient_id": 1,
+      "stay": {
+        "photo": "",
+        "cis_lead_doctor": null,
+        "status": "",
+        "phase": "in_stay",
+        "frozen": false,
+        "first_contact": null,
+        "lead_therapist_id": 2,
+        "start": "2015-01-16T09:54:00.000000000000Z",
+        "stop_status": "",
+        "insurance_number": "",
+        "patient_id": 1,
+        "insurance_provider": "",
+        "cis_fid": 7,
+        "stop": "2017-07-31T22:00:00.000000000000Z",
+        "deputy_lead_therapist_id": 60,
+        "notes": "",
+        "service_provider": "",
+        "class": "",
+        "lead_therapist_id_overwrite": 2,
+        "id": 144,
+        "fid": 144,
+        "extras": {
+          "duration": 929,
+          "beginn": "16.1.2015",
+          "from_to": "16.1.2015 - 31.7.2017",
+          "ende": "31.7.2017"
+        }
+      },
+      "stay_found": true,
+      "stay_id": 144,
+      "patient_uses_module": {
+        "settings": {},
+        "stay_id": 144,
+        "patient_id": 1,
+        "responsibility": null,
+        "deactivated": false,
+        "module": "ch.suedhang.apps.bscl_anq",
+        "overdue": null,
+        "last_event_generation": "2017-03-11T12:37:26.556007000000Z",
+        "activated_on": "2016-10-28T12:43:12.000000000000Z",
+        "id": 7785
+      },
+      "patient_uses_module_found": true,
+      "patient_uses_module_id": 7785,
+      "calculation": {
+        "all_results": {
+          "somatisierung_scale_score": 0,
+          "gsi_global_severity_index_scale_score": 0,
+          "zusatzitems_z_score": null,
+          "aggressivit__t___feindseligkeit_z_score": -1.12,
+          "phobische_angst_sum_score": 0,
+          "psychotizismus_z_score": -0.7,
+          "paranoides_denken_z_score": -0.89,
+          "zusatzitems_scale_score": 0,
+          "paranoides_denken_scale_score": 0,
+          "zwanghaftigkeit_sum_score": 0,
+          "aggressivit__t___feindseligkeit_scale_score": 0,
+          "psychotizismus_scale_score": 0,
+          "__ngstlichkeit_scale_score": 0,
+          "depressivit__t_sum_score": 0,
+          "unsicherheit_im_sozialkontakt_scale_score": 0,
+          "zusatzitems_sum_score": 0,
+          "unsicherheit_im_sozialkontakt_z_score": -1.09,
+          "__ngstlichkeit_z_score": -1.08,
+          "gsi_global_severity_index_sum_score": 0,
+          "somatisierung_sum_score": 0,
+          "depressivit__t_z_score": -0.82,
+          "depressivit__t_scale_score": 0,
+          "__ngstlichkeit_sum_score": 0,
+          "unsicherheit_im_sozialkontakt_sum_score": 0,
+          "phobische_angst_z_score": -0.64,
+          "zwanghaftigkeit_scale_score": 0,
+          "paranoides_denken_sum_score": 0,
+          "aggressivit__t___feindseligkeit_sum_score": 0,
+          "psychotizismus_sum_score": 0,
+          "somatisierung_z_score": -0.97,
+          "gsi_global_severity_index_z_score": -1.52,
+          "phobische_angst_scale_score": 0,
+          "zwanghaftigkeit_z_score": -1.26
+        },
+        "result_array": [
+          {
+            "items": 53,
+            "result": {
+              "scale_score": 0,
+              "z_score": -1.52,
+              "sum_score": 0
+            },
+            "m_norm": [
+              0.28,
+              0.35
+            ],
+            "id": 0,
+            "sub_left": "GSI (Global Severity Index)",
+            "short_description": "gsi_global_severity_index",
+            "sub_right": "Durchschnittliche Belastung in allen Bereichen",
+            "sd_norm": [
+              0.23,
+              0.23
+            ],
+            "description": "GSI (Global Severity Index)"
+          },
+          {
+            "items": 5,
+            "result": {
+              "scale_score": 0,
+              "z_score": -0.7,
+              "sum_score": 0
+            },
+            "m_norm": [
+              0.19,
+              0.19
+            ],
+            "id": 1,
+            "sub_left": "Psychotizismus",
+            "short_description": "psychotizismus",
+            "sub_right": "Gefühl der Isolation und zwischenmenschlichen Entfremdung. Verzerrter, isolierter Lebensstil bis zu Halluzination und Gedankenzerfall.",
+            "sd_norm": [
+              0.28,
+              0.27
+            ],
+            "description": "Psychotizismus"
+          },
+          {
+            "items": 5,
+            "result": {
+              "scale_score": 0,
+              "z_score": -0.89,
+              "sum_score": 0
+            },
+            "m_norm": [
+              0.33,
+              0.34
+            ],
+            "id": 2,
+            "sub_left": "Paranoides Denken",
+            "short_description": "paranoides_denken",
+            "sub_right": "Misstrauen, Minderwertigkeitsgefühle, paranoides Denken: Gedankenprojektion, Feindseligkeit, Argwohn, Grandiosität, Einengung, Angst vor Autonomieverlust und wahnhafte Täuschung.",
+            "sd_norm": [
+              0.4,
+              0.38
+            ],
+            "description": "Paranoides Denken"
+          },
+          {
+            "items": 5,
+            "result": {
+              "scale_score": 0,
+              "z_score": -0.64,
+              "sum_score": 0
+            },
+            "m_norm": [
+              0.14,
+              0.16
+            ],
+            "id": 3,
+            "sub_left": "Phobische Angst",
+            "short_description": "phobische_angst",
+            "sub_right": "Andauernde und unangemessene Furcht als Reaktion auf eine bestimmte Person, einen Platz, ein Objekt oder eine charakteristische Situation, die zu Vermeidungs- oder Fluchtverhalten führt.",
+            "sd_norm": [
+              0.23,
+              0.25
+            ],
+            "description": "Phobische Angst"
+          },
+          {
+            "items": 5,
+            "result": {
+              "scale_score": 0,
+              "z_score": -1.12,
+              "sum_score": 0
+            },
+            "m_norm": [
+              0.29,
+              0.37
+            ],
+            "id": 4,
+            "sub_left": "Aggressivität / Feindseligkeit",
+            "short_description": "aggressivit__t___feindseligkeit",
+            "sub_right": "Reizbarkeit und Unausgeglichenheit bis hin zu starker Aggressivität. Ärger, Aggression, Irritierbarkeit, Zorn und Verstimmung.",
+            "sd_norm": [
+              0.35,
+              0.33
+            ],
+            "description": "Aggressivität / Feindseligkeit"
+          },
+          {
+            "items": 6,
+            "result": {
+              "scale_score": 0,
+              "z_score": -1.08,
+              "sum_score": 0
+            },
+            "m_norm": [
+              0.29,
+              0.39
+            ],
+            "id": 5,
+            "sub_left": "Ängstlichkeit",
+            "short_description": "__ngstlichkeit",
+            "sub_right": "Angst mit Nervosität, Spannungen und Zittern, Panikattacken und Schreckgefühlen, Gefühle von Besorgnis und Furcht.",
+            "sd_norm": [
+              0.31,
+              0.36
+            ],
+            "description": "Ängstlichkeit"
+          },
+          {
+            "items": 6,
+            "result": {
+              "scale_score": 0,
+              "z_score": -0.82,
+              "sum_score": 0
+            },
+            "m_norm": [
+              0.24,
+              0.33
+            ],
+            "id": 6,
+            "sub_left": "Depressivität",
+            "short_description": "depressivit__t",
+            "sub_right": "Gedrückte Stimmung, Gesunkenes Interesse am Leben, Verringerte Motivation und Energie, Hoffnungslosigkeit, bis hin zu Suizidgedanken.",
+            "sd_norm": [
+              0.32,
+              0.4
+            ],
+            "description": "Depressivität"
+          },
+          {
+            "items": 4,
+            "result": {
+              "scale_score": 0,
+              "z_score": -1.09,
+              "sum_score": 0
+            },
+            "m_norm": [
+              0.35,
+              0.49
+            ],
+            "id": 7,
+            "sub_left": "Unsicherheit im Sozialkontakt",
+            "short_description": "unsicherheit_im_sozialkontakt",
+            "sub_right": "Unzulänglichkeits- und Minderwertigkeitsgefühle, Selbstabwertungen im sozialen Kontakt, Selbstzweifel, Selbstunsicherheit und negative Erwartungen bzgl. dem eigenen zwischenmenschlichen Verhalten.",
+            "sd_norm": [
+              0.4,
+              0.45
+            ],
+            "description": "Unsicherheit im Sozialkontakt"
+          },
+          {
+            "items": 6,
+            "result": {
+              "scale_score": 0,
+              "z_score": -1.26,
+              "sum_score": 0
+            },
+            "m_norm": [
+              0.5,
+              0.54
+            ],
+            "id": 8,
+            "sub_left": "Zwanghaftigkeit",
+            "short_description": "zwanghaftigkeit",
+            "sub_right": "Gedanken, Impulse und Handlungen, die konstant vorhanden und nicht änderbar und ich-fremd oder ungewollt erlebt werden, Kognitive Leistungsstörungen.",
+            "sd_norm": [
+              0.46,
+              0.43
+            ],
+            "description": "Zwanghaftigkeit"
+          },
+          {
+            "items": 7,
+            "result": {
+              "scale_score": 0,
+              "z_score": -0.97,
+              "sum_score": 0
+            },
+            "m_norm": [
+              0.23,
+              0.32
+            ],
+            "id": 9,
+            "sub_left": "Somatisierung",
+            "short_description": "somatisierung",
+            "sub_right": "Kopfschmerzen, Herzbeschwerden, Atemprobleme, Magenbeschwerden, Muskelschmerzen, Schwächegefühl, Schweregefühl, Unwohlsein usw.",
+            "sd_norm": [
+              0.31,
+              0.33
+            ],
+            "description": "Somatisierung"
+          },
+          {
+            "items": 4,
+            "result": {
+              "scale_score": 0,
+              "z_score": null,
+              "sum_score": 0
+            },
+            "m_norm": [
+              null,
+              null
+            ],
+            "id": 10,
+            "sub_left": "Zusatzitems",
+            "short_description": "zusatzitems",
+            "sub_right": "Zusatzitems",
+            "sd_norm": [
+              null,
+              null
+            ],
+            "description": "Zusatzitems"
+          }
+        ],
+        "info": {
+          "hash": "5a7dc5e4-5b3d-4165-9864-711d6a5b49f8",
+          "response": {
+            "BSCL[sq504V23]": "0",
+            "BSCL[sq504V45]": "0",
+            "BSCL[sq504V18]": "0",
+            "BSCL[sq504V01]": "0",
+            "BSCL[sq504V20]": "0",
+            "q501V04": "2",
+            "datestamp": "2016-12-19 16:48:24",
+            "BSCL[sq504V02]": "0",
+            "BSCL[sq504V39]": "0",
+            "Eintrittsort": "",
+            "BSCL[sq504V46]": "0",
+            "BSCL[sq504V07]": "0",
+            "Austrittsort": "2",
+            "BSCL[sq504V43]": "0",
+            "BSCL[sq504V25]": "0",
+            "BSCL[sq504V33]": "0",
+            "optinomixHASH": "5a7dc5e4-5b3d-4165-9864-711d6a5b49f8",
+            "BSCL[sq504V08]": "0",
+            "BSCL[sq504V11]": "0",
+            "BSCL[sq504V50]": "0",
+            "submitdate": "2016-12-19 16:48:24",
+            "BSCL[sq504V36]": "0",
+            "BSCL[sq504V49]": "0",
+            "BSCL[sq504V14]": "0",
+            "BSCL[sq504V17]": "0",
+            "BSCL[sq504V53]": "0",
+            "BSCL[sq504V35]": "0",
+            "BSCL[sq504V03]": "0",
+            "q504V00": "2016-12-19 00:00:00",
+            "BSCL[sq504V21]": "0",
+            "BSCL[sq504V38]": "0",
+            "BSCL[sq504V47]": "0",
+            "BSCL[sq504V26]": "0",
+            "BSCL[sq504V40]": "0",
+            "BSCL[sq504V04]": "0",
+            "startdate": "2016-12-19 16:47:17",
+            "BSCL[sq504V32]": "0",
+            "BSCL[sq504V10]": "0",
+            "BSCL[sq504V09]": "0",
+            "BSCL[sq504V31]": "0",
+            "BSCL[sq504V13]": "0",
+            "BSCL[sq504V28]": "0",
+            "startlanguage": "de",
+            "BSCL[sq504V34]": "0",
+            "BSCL[sq504V52]": "0",
+            "BSCL[sq504V16]": "0",
+            "BSCL[sq504V22]": "0",
+            "PID": "7.0000000000",
+            "BSCL[sq504V19]": "0",
+            "BSCL[sq504V44]": "0",
+            "id": "102",
+            "q501V06": "",
+            "BSCL[sq504V41]": "0",
+            "BSCL[sq504V05]": "0",
+            "BSCL[sq504V27]": "0",
+            "BSCL[sq504V42]": "0",
+            "BSCL[sq504V06]": "0",
+            "FID": "7.0000000000",
+            "BSCL[sq504V24]": "0",
+            "BSCL[sq504V29]": "0",
+            "BSCL[sq504V12]": "0",
+            "BSCL[sq504V30]": "0",
+            "q501V05": "0",
+            "BSCL[sq504V51]": "0",
+            "BSCL[sq504V15]": "0",
+            "BSCL[sq504V48]": "0",
+            "lastpage": "2",
+            "BSCL[sq504V37]": "0"
+          },
+          "mz": {
+            "mz_typ": "Austritt EP",
+            "mz_id": 1,
+            "mz_text": "Austritt - EP"
+          },
+          "event_id": 39834,
+          "filled": "2016-12-19T16:48:24.000000000000Z",
+          "response_id": 10982
+        },
+        "definitions": {
+          "result_array": [
+            {
+              "items": 53,
+              "result": {
+                "scale_score": null,
+                "z_score": null,
+                "sum_score": null
+              },
+              "m_norm": [
+                0.28,
+                0.35
+              ],
+              "id": 0,
+              "sub_left": "GSI (Global Severity Index)",
+              "short_description": "gsi_global_severity_index",
+              "sub_right": "Durchschnittliche Belastung in allen Bereichen",
+              "sd_norm": [
+                0.23,
+                0.23
+              ],
+              "description": "GSI (Global Severity Index)"
+            },
+            {
+              "items": 5,
+              "result": {
+                "scale_score": null,
+                "z_score": null,
+                "sum_score": null
+              },
+              "m_norm": [
+                0.19,
+                0.19
+              ],
+              "id": 1,
+              "sub_left": "Psychotizismus",
+              "short_description": "psychotizismus",
+              "sub_right": "Gefühl der Isolation und zwischenmenschlichen Entfremdung. Verzerrter, isolierter Lebensstil bis zu Halluzination und Gedankenzerfall.",
+              "sd_norm": [
+                0.28,
+                0.27
+              ],
+              "description": "Psychotizismus"
+            },
+            {
+              "items": 5,
+              "result": {
+                "scale_score": null,
+                "z_score": null,
+                "sum_score": null
+              },
+              "m_norm": [
+                0.33,
+                0.34
+              ],
+              "id": 2,
+              "sub_left": "Paranoides Denken",
+              "short_description": "paranoides_denken",
+              "sub_right": "Misstrauen, Minderwertigkeitsgefühle, paranoides Denken: Gedankenprojektion, Feindseligkeit, Argwohn, Grandiosität, Einengung, Angst vor Autonomieverlust und wahnhafte Täuschung.",
+              "sd_norm": [
+                0.4,
+                0.38
+              ],
+              "description": "Paranoides Denken"
+            },
+            {
+              "items": 5,
+              "result": {
+                "scale_score": null,
+                "z_score": null,
+                "sum_score": null
+              },
+              "m_norm": [
+                0.14,
+                0.16
+              ],
+              "id": 3,
+              "sub_left": "Phobische Angst",
+              "short_description": "phobische_angst",
+              "sub_right": "Andauernde und unangemessene Furcht als Reaktion auf eine bestimmte Person, einen Platz, ein Objekt oder eine charakteristische Situation, die zu Vermeidungs- oder Fluchtverhalten führt.",
+              "sd_norm": [
+                0.23,
+                0.25
+              ],
+              "description": "Phobische Angst"
+            },
+            {
+              "items": 5,
+              "result": {
+                "scale_score": null,
+                "z_score": null,
+                "sum_score": null
+              },
+              "m_norm": [
+                0.29,
+                0.37
+              ],
+              "id": 4,
+              "sub_left": "Aggressivität / Feindseligkeit",
+              "short_description": "aggressivit__t___feindseligkeit",
+              "sub_right": "Reizbarkeit und Unausgeglichenheit bis hin zu starker Aggressivität. Ärger, Aggression, Irritierbarkeit, Zorn und Verstimmung.",
+              "sd_norm": [
+                0.35,
+                0.33
+              ],
+              "description": "Aggressivität / Feindseligkeit"
+            },
+            {
+              "items": 6,
+              "result": {
+                "scale_score": null,
+                "z_score": null,
+                "sum_score": null
+              },
+              "m_norm": [
+                0.29,
+                0.39
+              ],
+              "id": 5,
+              "sub_left": "Ängstlichkeit",
+              "short_description": "__ngstlichkeit",
+              "sub_right": "Angst mit Nervosität, Spannungen und Zittern, Panikattacken und Schreckgefühlen, Gefühle von Besorgnis und Furcht.",
+              "sd_norm": [
+                0.31,
+                0.36
+              ],
+              "description": "Ängstlichkeit"
+            },
+            {
+              "items": 6,
+              "result": {
+                "scale_score": null,
+                "z_score": null,
+                "sum_score": null
+              },
+              "m_norm": [
+                0.24,
+                0.33
+              ],
+              "id": 6,
+              "sub_left": "Depressivität",
+              "short_description": "depressivit__t",
+              "sub_right": "Gedrückte Stimmung, Gesunkenes Interesse am Leben, Verringerte Motivation und Energie, Hoffnungslosigkeit, bis hin zu Suizidgedanken.",
+              "sd_norm": [
+                0.32,
+                0.4
+              ],
+              "description": "Depressivität"
+            },
+            {
+              "items": 4,
+              "result": {
+                "scale_score": null,
+                "z_score": null,
+                "sum_score": null
+              },
+              "m_norm": [
+                0.35,
+                0.49
+              ],
+              "id": 7,
+              "sub_left": "Unsicherheit im Sozialkontakt",
+              "short_description": "unsicherheit_im_sozialkontakt",
+              "sub_right": "Unzulänglichkeits- und Minderwertigkeitsgefühle, Selbstabwertungen im sozialen Kontakt, Selbstzweifel, Selbstunsicherheit und negative Erwartungen bzgl. dem eigenen zwischenmenschlichen Verhalten.",
+              "sd_norm": [
+                0.4,
+                0.45
+              ],
+              "description": "Unsicherheit im Sozialkontakt"
+            },
+            {
+              "items": 6,
+              "result": {
+                "scale_score": null,
+                "z_score": null,
+                "sum_score": null
+              },
+              "m_norm": [
+                0.5,
+                0.54
+              ],
+              "id": 8,
+              "sub_left": "Zwanghaftigkeit",
+              "short_description": "zwanghaftigkeit",
+              "sub_right": "Gedanken, Impulse und Handlungen, die konstant vorhanden und nicht änderbar und ich-fremd oder ungewollt erlebt werden, Kognitive Leistungsstörungen.",
+              "sd_norm": [
+                0.46,
+                0.43
+              ],
+              "description": "Zwanghaftigkeit"
+            },
+            {
+              "items": 7,
+              "result": {
+                "scale_score": null,
+                "z_score": null,
+                "sum_score": null
+              },
+              "m_norm": [
+                0.23,
+                0.32
+              ],
+              "id": 9,
+              "sub_left": "Somatisierung",
+              "short_description": "somatisierung",
+              "sub_right": "Kopfschmerzen, Herzbeschwerden, Atemprobleme, Magenbeschwerden, Muskelschmerzen, Schwächegefühl, Schweregefühl, Unwohlsein usw.",
+              "sd_norm": [
+                0.31,
+                0.33
+              ],
+              "description": "Somatisierung"
+            },
+            {
+              "items": 4,
+              "result": {
+                "scale_score": null,
+                "z_score": null,
+                "sum_score": null
+              },
+              "m_norm": [
+                null,
+                null
+              ],
+              "id": 10,
+              "sub_left": "Zusatzitems",
+              "short_description": "zusatzitems",
+              "sub_right": "Zusatzitems",
+              "sd_norm": [
+                null,
+                null
+              ],
+              "description": "Zusatzitems"
+            }
+          ],
+          "variables": [
+            "sum_score",
+            "scale_score",
+            "z_score"
+          ],
+          "all_results_variables": [
+            "gsi_global_severity_index_sum_score",
+            "gsi_global_severity_index_scale_score",
+            "gsi_global_severity_index_z_score",
+            "psychotizismus_sum_score",
+            "psychotizismus_scale_score",
+            "psychotizismus_z_score",
+            "paranoides_denken_sum_score",
+            "paranoides_denken_scale_score",
+            "paranoides_denken_z_score",
+            "phobische_angst_sum_score",
+            "phobische_angst_scale_score",
+            "phobische_angst_z_score",
+            "aggressivit__t___feindseligkeit_sum_score",
+            "aggressivit__t___feindseligkeit_scale_score",
+            "aggressivit__t___feindseligkeit_z_score",
+            "__ngstlichkeit_sum_score",
+            "__ngstlichkeit_scale_score",
+            "__ngstlichkeit_z_score",
+            "depressivit__t_sum_score",
+            "depressivit__t_scale_score",
+            "depressivit__t_z_score",
+            "unsicherheit_im_sozialkontakt_sum_score",
+            "unsicherheit_im_sozialkontakt_scale_score",
+            "unsicherheit_im_sozialkontakt_z_score",
+            "zwanghaftigkeit_sum_score",
+            "zwanghaftigkeit_scale_score",
+            "zwanghaftigkeit_z_score",
+            "somatisierung_sum_score",
+            "somatisierung_scale_score",
+            "somatisierung_z_score",
+            "zusatzitems_sum_score",
+            "zusatzitems_scale_score",
+            "zusatzitems_z_score"
+          ]
+        }
+      },
+      "calculation_found": true,
+      "calculation_found_method": "variant_info"
+    }
+  ],
+  "request": "stay"
+}'>
+            </optinomic-chart-profile>
+        </template>
+    </demo-snippet>
+</body>
+
+</html>
