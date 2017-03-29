@@ -13,15 +13,15 @@
     "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
   },
   "homepage": "https://github.com/Optinomic/optinomic-clinic-sample-selector",
-  "version": "0.0.1",
-  "_release": "0.0.1",
+  "version": "0.0.4",
+  "_release": "0.0.4",
   "_resolution": {
     "type": "version",
-    "tag": "v0.0.1",
-    "commit": "5de85d6e27495a09d1984e0ce9ce13419b69cf78"
+    "tag": "v0.0.4",
+    "commit": "deab84a0f1c5440f4bb6cb1e8809879f87fd315c"
   },
   "_source": "https://github.com/Optinomic/optinomic-clinic-sample-selector.git",
-  "_target": "^0.0.1",
+  "_target": "^0.0.4",
   "_originalSource": "Optinomic/optinomic-clinic-sample-selector",
   "_direct": true
 }

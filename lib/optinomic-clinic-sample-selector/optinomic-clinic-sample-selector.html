@@ -1,10 +1,20 @@
 <link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../vaadin-combo-box/vaadin-combo-box.html">
 <link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../vaadin-combo-box/vaadin-combo-box.html">
 <!--
 `optinomic-clinic-sample-selector`
 Selects current clinic-sample based on the clinic-sample md-array.
+
+## Events
+### clinic-sample-changed
+Whenever the user change the selection or the `data_dive` path changes tis event will be fired.
+So you can listen to the event like:
+```html
+<optinomic-clinic-sample-selector on-clinic-sample-changed="__doSomething"></optinomic-clinic-sample-selector>
+``` 
+
+
 
 @demo demo/index.html 
 -->
@@ -22,12 +32,14 @@ Selects current clinic-sample based on the clinic-sample md-array.
         <template is="dom-if" if="[[horizontal]]">
             <div class="layout horizontal">
                 <template is="dom-repeat" items="[[clinic_sample.dimensions]]" as="d">
-                    <vaadin-combo-box id$="[[index]]" label="[[d.name]]" items="[[d.array]]" item-label-path="text" item-value-path="id" value="[[d.selected]]" on-value-changed="__valueChanged" required auto-validate error-message="'This is required'">
-                        <paper-icon-button icon="remove-circle" class="clear-button"></paper-icon-button>
-                        <template>
-                            [[item.text]]
-                        </template>
-                    </vaadin-combo-box>
+                    <div class="flex">
+                        <vaadin-combo-box id$="[[index]]" label="[[d.name]]" items="[[d.array]]" item-label-path="text" item-value-path="id" value="[[d.selected]]" on-value-changed="__valueChanged" required auto-validate error-message="'This is required'">
+                            <paper-icon-button icon="remove-circle" class="clear-button"></paper-icon-button>
+                            <template>
+                                [[item.text]]
+                            </template>
+                        </vaadin-combo-box>
+                    </div>
                 </template>
             </div>
         </template>
@@ -53,25 +65,11 @@ Selects current clinic-sample based on the clinic-sample md-array.
             // INIT Properties
             this.clinic_sample = this.clinic_sample === undefined ? {} : this.clinic_sample;
             this.data_dive = this.data_dive === undefined ? [] : this.data_dive;
-            this.data_dive_path = this.data_dive_path === undefined ? "statistics.paranoides_denken_scale_score" : this.data_dive_path;
-
+            this.data_dive_path = this.data_dive_path === undefined ? "" : this.data_dive_path;
             this.return_data = this.return_data === undefined ? {} : this.return_data;
-
-
-
-            this.demo3_value = 1;
-            this.demo3_items = [{
-                label: 'zero',
-                value: 0
-            }, {
-                label: 'one',
-                value: 1
-            }];
-
 
             this.__setDefault();
             this.__getDataDiveObj();
-
         },
 
         __setDefault: function() {
@@ -88,7 +86,7 @@ Selects current clinic-sample based on the clinic-sample md-array.
             };
 
             this.set('clinic_sample.dimensions', dimensions);
-            console.log('__setDefault', dimensions);
+            //console.log('__setDefault', dimensions);
         },
 
         __valueChanged: function(event) {
@@ -105,7 +103,7 @@ Selects current clinic-sample based on the clinic-sample md-array.
                 event_value = dimensions[event_id].array.length - 1;
             };
 
-            console.log('1) __valueChanged', event_id, event_value, dimensions, data_dive);
+            //console.log('__valueChanged', event_id, event_value, dimensions, data_dive);
 
 
             dimensions[event_id].selected = event_value;
@@ -156,16 +154,43 @@ Selects current clinic-sample based on the clinic-sample md-array.
                 };
             };
 
+
+            var clinic_sample_name = this.__getCSName();
+            //console.log('__getDataDiveObj', data_dive, return_obj, clinic_sample_name);
+
+            // Save
             this.set('return_data', return_obj);
-            console.log('__getDataDiveObj', data_dive, return_obj);
+
+            // Event
+            this.fire('clinic-sample-changed', clinic_sample_name);
+        },
+
+        __getCSName: function() {
+
+            var return_str = "";
+            var dimensions = this.get('clinic_sample.dimensions');
+            var data_dive = this.get('data_dive');
+
+            if (data_dive.length > 0) {
+                data_dive.forEach(function(dimension, dimensionID) {
+                    var current_dim = dimensions[dimensionID];
+                    return_str = return_str + current_dim.name + ": " + current_dim.array[dimension].text;
+                    if (dimensionID !== dimensions.length - 1) {
+                        return_str = return_str + " | ";
+                    };
+                    //console.log('?', dimension, dimensionID, current_dim);
+                });
+            };
+
+            return return_str;
         },
 
 
-        ready: function() {
+        ready: function() {},
+
+        attached: function() {
             this.__init();
         },
-
-        attached: function() {},
 
         properties: {
             data_dive: {
