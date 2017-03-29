@@ -9,14 +9,15 @@
 
 ```JAVASCRIPT
 var options = {
-    "min": -4,
+    "min": "auto",
     "max": "auto",
     "item_height": 50,
-    "item_text_width": 120,
+    "item_text_left": 100,
+    "item_text_right": 120,
     "color_grid": "#9E9E9E",
     "color_clinic_sample": "#673AB7",
     "show_baseline": true,
-    "show_scale_text": false,
+    "show_scale_text": true,
     "show_score_vertical_line": false,
     "show_score_profile_line": true,
     "show_score_circles": true,
