@@ -8,7 +8,11 @@
     "paper-tooltip": "^1.1.3",
     "app-layout": "^0.10.7",
     "app-grid": "^0.1.0",
-    "paper-checkbox": "^1.4.2"
+    "paper-checkbox": "^1.4.2",
+    "optinomic-clinic-sample-selector": "Optinomic/optinomic-clinic-sample-selector#^0.0.4",
+    "paper-tabs": "^1.8.0",
+    "iron-pages": "^1.0.8",
+    "g-r-i-d": "^1.2.4"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
@@ -17,15 +21,15 @@
     "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
   },
   "homepage": "https://github.com/Optinomic/optinomic-chart-profile",
-  "version": "0.0.1",
-  "_release": "0.0.1",
+  "version": "0.0.2",
+  "_release": "0.0.2",
   "_resolution": {
     "type": "version",
-    "tag": "v0.0.1",
-    "commit": "d5e32e6202e9da2da7be13d3ac80f6ca462c5b1a"
+    "tag": "v0.0.2",
+    "commit": "2579ec54a5457209fd1a583e55a5a52e053f8639"
   },
   "_source": "https://github.com/Optinomic/optinomic-chart-profile.git",
-  "_target": "^0.0.1",
+  "_target": "^0.0.2",
   "_originalSource": "Optinomic/optinomic-chart-profile",
   "_direct": true
 }
