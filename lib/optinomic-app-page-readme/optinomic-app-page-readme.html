@@ -1,0 +1,131 @@
+<link rel="import" href="../polymer/polymer.html">
+<!--
+`optinomic-app-page-readme`
+Readme | Helppage of Optinomic-Apps
+
+@demo demo/index.html 
+-->
+<dom-module id="optinomic-app-page-readme">
+    <template>
+        <style>
+        :host {
+            display: block;
+        }
+        
+        marked-element {
+            display: block;
+            background-color: #FAFAFA;
+            padding: 10px 30px;
+            padding-bottom: 36px;
+            margin-bottom: 48px;
+            border-radius: 6px;
+            border: 1px solid #E0E0E0;
+        }
+        
+        .markdown-html code {
+            color: #795548;
+            background-color: #FAFAFA;
+            font-size: 14.7px;
+        }
+        
+        h2,
+        .markdown-html h1 {
+            margin-top: 48px;
+            font-size: 25.2px;
+            font-weight: 300;
+            line-height: 33.6px;
+            color: #616161;
+        }
+        
+        h3,
+        .markdown-html h2 {
+            margin-top: 36px;
+            font-size: 21px;
+            font-weight: 300;
+            letter-spacing: 0.005em;
+            color: #424242;
+        }
+        
+        h4,
+        .markdown-html h3 {
+            font-size: 16.8px;
+            font-weight: 300;
+            letter-spacing: 0.010em;
+            line-height: 25.2px;
+            color: #212121;
+        }
+        
+        p,
+        .markdown-html p {
+            font-size: 14.7px;
+            font-weight: 400;
+            letter-spacing: 0.010em;
+            line-height: 21px;
+            color: #212121;
+        }
+        
+        a,
+        .markdown-html a {
+            text-decoration: none;
+            color: #3F51B5;
+        }
+        </style>
+        <template is="dom-if" if="[[_clinic]]">
+            <h1>[[_clinic.clinic_name]]</h1>
+            <p>[[_clinic.clinic_slogan]]</p>
+            <p>[[_clinic.clinic_address]]</p>
+            <h2>[[_clinic.admin_name]]</h2>
+            <p>[[_clinic.admin_phone]]</p>
+            <p>[[_clinic.admin_email]]</p>
+        </template>
+        <h1>[[t.readme]]</h1>
+        <marked-element markdown="[[markdown]]">
+            <div class="markdown-html"></div>
+        </marked-element>
+    </template>
+    <script>
+    Polymer({
+
+        is: 'optinomic-app-page-readme',
+
+        __translate: function(given_language) {
+            var t = {
+                "language": given_language
+            };
+
+            if (given_language === 'de') {
+                t.readme = "Hilfe";
+            } else {
+                t.readme = "Help";
+            };
+
+
+            this.t = t;
+
+            console.log('__translate (t):', this.t);
+        },
+
+        ready: function() {
+            this.__translate(this.language);
+        },
+
+        behaviors: [ReduxBehavior],
+
+        properties: {
+            markdown: {
+                type: String,
+                value: null,
+            },
+            language: {
+                type: String,
+                value: 'de',
+            },
+            _clinic: {
+                type: String,
+                statePath: 'clinic.data'
+            }
+        },
+
+    });
+    </script>
+</dom-module>
