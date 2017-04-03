@@ -1,4 +1,5 @@
 <link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../marked-element/marked-element.html">
 <!--
 `optinomic-app-page-readme`
 Readme | Helppage of Optinomic-Apps
@@ -7,9 +8,10 @@ Readme | Helppage of Optinomic-Apps
 -->
 <dom-module id="optinomic-app-page-readme">
     <template>
-        <style>
+        <style include="shared-styles">
         :host {
             display: block;
+            padding: 6px;
         }
         
         marked-element {
