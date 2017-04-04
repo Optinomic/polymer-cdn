@@ -72,18 +72,24 @@ Readme | Helppage of Optinomic-Apps
             color: #3F51B5;
         }
         </style>
-        <template is="dom-if" if="[[_clinic]]">
-            <h1>[[_clinic.clinic_name]]</h1>
-            <p>[[_clinic.clinic_slogan]]</p>
-            <p>[[_clinic.clinic_address]]</p>
-            <h2>[[_clinic.admin_name]]</h2>
-            <p>[[_clinic.admin_phone]]</p>
-            <p>[[_clinic.admin_email]]</p>
+        <template is="dom-if" if="[[_current_app.found]]">
+            <h1>[[_current_app.data.name]]</h1>
+            <p>[[_current_app.data.short_description]] | V[[_current_app.data.version]]</p>
+            <h2>[[t.description]] </h2>
+            <p>[[_current_app.data.description]]</p>
         </template>
-        <h1>[[t.readme]]</h1>
+        <h2>[[t.readme]]</h2>
         <marked-element markdown="[[markdown]]">
             <div class="markdown-html"></div>
         </marked-element>
+        <template is="dom-if" if="[[_clinic]]">
+            <h2>[[_clinic.clinic_name]]</h2>
+            <p>[[_clinic.clinic_slogan]]</p>
+            <p>[[_clinic.clinic_address]]</p>
+            <h3>[[_clinic.admin_name]]</h3>
+            <p>[[_clinic.admin_phone]]</p>
+            <p>[[_clinic.admin_email]]</p>
+        </template>
     </template>
     <script>
     Polymer({
@@ -101,6 +107,11 @@ Readme | Helppage of Optinomic-Apps
                 t.readme = "Help";
             };
 
+            if (given_language === 'de') {
+                t.description = "Beschreibung";
+            } else {
+                t.description = "Description";
+            };
 
             this.t = t;
 
@@ -125,6 +136,10 @@ Readme | Helppage of Optinomic-Apps
             _clinic: {
                 type: String,
                 statePath: 'clinic.data'
+            },
+            _current_app: {
+                type: String,
+                statePath: 'apps.current'
             }
         },
 
