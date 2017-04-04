@@ -33,12 +33,12 @@
     "web-component-tester": "^4.0.0",
     "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
   },
-  "version": "0.4.1",
-  "_release": "0.4.1",
+  "version": "0.4.2",
+  "_release": "0.4.2",
   "_resolution": {
     "type": "version",
-    "tag": "v0.4.1",
-    "commit": "e233fdcd2274eb82d37724ca1918af2dd377f886"
+    "tag": "v0.4.2",
+    "commit": "b7183c2c2a48d1f5ef27e94dd6e641410d9e8cd3"
   },
   "_source": "https://github.com/tur-nr/polymer-redux.git",
   "_target": "^0.4.0",

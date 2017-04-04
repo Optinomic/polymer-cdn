@@ -2,7 +2,7 @@
   "name": "juicy-jsoneditor",
   "description": "Polymer Element that wraps http://github.com/josdejong/jsoneditor and adds two-way binding for edited JSON",
   "license": "MIT",
-  "main": "dist/juicy-jsoneditor.html",
+  "main": "juicy-jsoneditor.html",
   "keywords": [
     "polymer",
     "web-components",
@@ -23,12 +23,12 @@
     "Tomek Wytrebowicz <tomalecpub@gmail.com>"
   ],
   "homepage": "https://github.com/Juicy/juicy-jsoneditor",
-  "version": "1.1.0",
-  "_release": "1.1.0",
+  "version": "1.1.1",
+  "_release": "1.1.1",
   "_resolution": {
     "type": "version",
-    "tag": "1.1.0",
-    "commit": "c7f83e89cd46a3bc8cc8216a3472cc63c538ebbf"
+    "tag": "1.1.1",
+    "commit": "35a83009c71254788ace83aca783b1361c2fc4b2"
   },
   "_source": "https://github.com/Juicy/juicy-jsoneditor.git",
   "_target": "^1.1.0",
