@@ -48,23 +48,42 @@ Basically a extended &lt;h1&gt; inside a Optinomic-App.
             color: #9E9E9E;
             margin-left: var(--h2-size);
         }
+        
+        .title-toggle {
+            width: 48px;
+        }
+        
+        paper-icon-button {
+            color: #E0E0E0;
+            --paper-icon-button-ink-color: var(--paper-grey-a200);
+        }
+        
+        paper-icon-button:hover {
+            color: #9E9E9E;
+        }
         </style>
-        <div class="title">
-            <div class="layout horizontal center">
-                <div>
-                    <h1 class="title-h1">[[h1]]</h1>
-                </div>
-                <template is="dom-if" if="[[h3]]">
-                    <div class="flex">
-                        <p class="title-h3">[[h3]]</p>
-                    </div>
+        <div class="layout horizontal center">
+            <div class="title-toggle">
+                <template is="dom-if" if="[[show_toggle_button]]">
+                    <paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
                 </template>
             </div>
-            <template is="dom-if" if="[[h2]]">
-                <p class="title-h2">[[h2]]</p>
-            </template>
+            <div class="flex title">
+                <div class="layout horizontal center">
+                    <div>
+                        <h1 class="title-h1">[[h1]]</h1>
+                    </div>
+                    <template is="dom-if" if="[[h3]]">
+                        <div class="flex">
+                            <p class="title-h3">[[h3]]</p>
+                        </div>
+                    </template>
+                </div>
+                <template is="dom-if" if="[[h2]]">
+                    <p class="title-h2">[[h2]]</p>
+                </template>
+            </div>
         </div>
-        </body>
     </template>
     <script>
     Polymer({
@@ -111,6 +130,10 @@ Basically a extended &lt;h1&gt; inside a Optinomic-App.
                 value: null
             },
             small: {
+                type: Boolean,
+                value: false
+            },
+            show_toggle_button: {
                 type: Boolean,
                 value: false
             },
