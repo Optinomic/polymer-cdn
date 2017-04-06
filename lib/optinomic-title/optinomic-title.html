@@ -63,11 +63,11 @@ Basically a extended &lt;h1&gt; inside a Optinomic-App.
         }
         </style>
         <div class="layout horizontal center">
-            <div class="title-toggle">
-                <template is="dom-if" if="[[show_toggle_button]]">
+            <template is="dom-if" if="[[show_toggle_button]]">
+                <div class="title-toggle">
                     <paper-icon-button icon="menu" on-tap="toggleDrawer"></paper-icon-button>
-                </template>
-            </div>
+                </div>
+            </template>
             <div class="flex title">
                 <div class="layout horizontal center">
                     <div>
@@ -143,7 +143,6 @@ Basically a extended &lt;h1&gt; inside a Optinomic-App.
             },
 
         },
-
 
         ready: function() {
             this.__resizeGrafic();

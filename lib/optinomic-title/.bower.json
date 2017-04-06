@@ -12,15 +12,15 @@
     "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
   },
   "homepage": "https://github.com/Optinomic/optinomic-title",
-  "version": "0.0.8",
-  "_release": "0.0.8",
+  "version": "0.0.9",
+  "_release": "0.0.9",
   "_resolution": {
     "type": "version",
-    "tag": "0.0.8",
-    "commit": "db96fc0dc92d250706de03a2af46e43a55b079f8"
+    "tag": "0.0.9",
+    "commit": "483f7572ca7afefe59a85547c855ded28a072b56"
   },
   "_source": "https://github.com/Optinomic/optinomic-title.git",
-  "_target": "^0.0.8",
+  "_target": "^0.0.9",
   "_originalSource": "Optinomic/optinomic-title",
   "_direct": true
 }
