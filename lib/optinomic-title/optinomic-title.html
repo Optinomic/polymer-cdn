@@ -116,8 +116,8 @@ Basically a extended &lt;h1&gt; inside a Optinomic-App.
         },
 
         toggleDrawer: function() {
-            console.log('(!) toggleDrawer');
-            this.$.drawer.toggle();
+            //console.log('(!) toggleDrawer');
+            this.fire('drawer-toggle');
         },
 
         properties: {
