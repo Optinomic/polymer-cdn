@@ -65,7 +65,7 @@ Basically a extended &lt;h1&gt; inside a Optinomic-App.
         <div class="layout horizontal center">
             <div class="title-toggle">
                 <template is="dom-if" if="[[show_toggle_button]]">
-                    <paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
+                    <paper-icon-button icon="menu" on-tap="togglDrawer"></paper-icon-button>
                 </template>
             </div>
             <div class="flex title">
@@ -115,6 +115,10 @@ Basically a extended &lt;h1&gt; inside a Optinomic-App.
             this.updateStyles();
         },
 
+        toggleDrawer: function() {
+            console.log('(!) toggleDrawer');
+            this.$.drawer.toggle();
+        },
 
         properties: {
             h1: {
@@ -139,6 +143,7 @@ Basically a extended &lt;h1&gt; inside a Optinomic-App.
             },
 
         },
+
 
         ready: function() {
             this.__resizeGrafic();
