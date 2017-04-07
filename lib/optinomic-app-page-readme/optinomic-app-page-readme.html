@@ -74,15 +74,16 @@ Readme | Helppage of Optinomic-Apps
         }
         </style>
         <template is="dom-if" if="[[_current_app.found]]">
-            <optinomic-title show_toggle_button small h1="[[_current_app.data.name]]" h2="[[_current_app.data.short_description]]" h3="[[_current_app.data.version]]"></optinomic-title>
+            <optinomic-title show_toggle_button small h1="[[t.readme]]" h2="[[_current_app.data.name]] | [[_current_app.data.short_description]]" h3="[[_current_app.data.version]]"></optinomic-title>
             <h2>[[t.description]] </h2>
-            <p>[[_current_app.data.descripti on]]
+            <p>[[_current_app.data.description]]
             </p>
         </template>
-        <h2>[[t.readme]]</h2>
+        <h3>readme.md</h3>
         <marked-element markdown="[[markdown]]">
             <div class="markdown-html"></div>
         </marked-element>
+        <h3>[[t.clinic]]</h3>
         <template is="dom-if" if="[[_clinic]]">
             <h2>[[_clinic.clinic_name]]</h2>
             <p>[[_clinic.clinic_slogan]]</p>
@@ -99,14 +100,20 @@ Readme | Helppage of Optinomic-Apps
 
         __init: function() {
 
+            var clinic = this.get('_clinic');
+            var current_app = this.get('_current_app');
+
+
             // Load Data if not available
-            if (this._clinic === null) {
+            if (clinic === null) {
                 this.dispatch('actionGetClinic');
             };
 
-            if (this._current_app === null) {
+            if (current_app.found === false) {
                 this.dispatch('actionGetApps');
             };
+
+            console.log('INIT (optinomic-app-page-readme)', clinic, current_app);
         },
 
         __translate: function(given_language) {
@@ -121,6 +128,12 @@ Readme | Helppage of Optinomic-Apps
             };
 
             if (given_language === 'de') {
+                t.clinic = "Kontakt";
+            } else {
+                t.clinic = "Contact";
+            };
+
+            if (given_language === 'de') {
                 t.description = "Beschreibung";
             } else {
                 t.description = "Description";
@@ -132,6 +145,7 @@ Readme | Helppage of Optinomic-Apps
         },
 
         ready: function() {
+            this.__init();
             this.__translate(this.language);
         },
 

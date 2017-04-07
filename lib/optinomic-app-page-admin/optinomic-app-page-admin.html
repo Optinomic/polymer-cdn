@@ -28,14 +28,23 @@ Admin-Page of Optinomic-Apps
 
         __init: function() {
 
+            var clinic = this.get('_clinic');
+            var current_app = this.get('_current_app');
+
+
             // Load Data if not available
-            if (this._clinic === null) {
+            if (clinic === null) {
                 this.dispatch('actionGetClinic');
             };
 
-            if (this._current_app === null) {
+            if (current_app.found === false) {
                 this.dispatch('actionGetApps');
             };
+
+            console.log('INIT (optinomic-app-page-readme)', clinic, current_app);
+
+            // Update logState
+            this.logState();
         },
 
         __translate: function(given_language) {
@@ -54,7 +63,7 @@ Admin-Page of Optinomic-Apps
 
             this.t = t;
 
-            console.log('__translate (t):', this.t);
+            console.log('__translate (t):', given_language, this.t);
         },
 
         logState: function() {
@@ -81,6 +90,7 @@ Admin-Page of Optinomic-Apps
         },
 
         ready: function() {
+            this.__init();
             this.__translate(this.language);
         },
 
