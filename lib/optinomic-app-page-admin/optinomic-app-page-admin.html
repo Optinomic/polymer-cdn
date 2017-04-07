@@ -1,5 +1,6 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../marked-element/marked-element.html">
+<link rel="import" href="../show-json/show-json.html">
 <link rel="import" href="../optinomic-title/optinomic-title.html">
 <link rel="import" href="../optinomic-patient-details/optinomic-patient-details.html">
 <!--
@@ -18,6 +19,8 @@ Admin-Page of Optinomic-Apps
         </style>
         <optinomic-title show_toggle_button small h1="[[t.title]]" h2="[[t.title_sub]]" h3="[[t.title_more]]"></optinomic-title>
         <optinomic-patient-details patient="[[_current_patient]]"></optinomic-patient-details>
+        <h3>State | Optinomic - Redux Store</h3>
+        <show-json json='[[state]]'></show-json>
         <div>
             <paper-icon-button on-tap="logState" icon="bug-report"></paper-icon-button>
             <paper-icon-button on-tap="refresh_data" icon="refresh"></paper-icon-button>
@@ -30,9 +33,6 @@ Admin-Page of Optinomic-Apps
 
         __init: function() {
 
-            this.dispatch('actionShowAppToolbar', true);
-
-
             var d = {};
             d.current_patient = this.get('_current_patient');
 
@@ -42,6 +42,10 @@ Admin-Page of Optinomic-Apps
             };
 
             console.log('INIT (optinomic-app-page-admin)', d);
+
+
+            // Update logState
+            this.logState();
 
         },
 
