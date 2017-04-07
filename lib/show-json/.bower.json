@@ -24,7 +24,6 @@
     "commit": "e537d2ea950382f4eee87aa09c87eeb41aea905a"
   },
   "_source": "https://github.com/ryanburns23/show-json.git",
-  "_target": "^1.0.0",
-  "_originalSource": "ryanburns23/show-json",
-  "_direct": true
+  "_target": "*",
+  "_originalSource": "ryanburns23/show-json"
 }

@@ -22,7 +22,6 @@
     "commit": "715fd0f951575b0c4b414b97bfd1f1090f511b61"
   },
   "_source": "https://github.com/Optinomic/optinomic-app-page-readme.git",
-  "_target": "^0.0.6",
-  "_originalSource": "Optinomic/optinomic-app-page-readme",
-  "_direct": true
+  "_target": "*",
+  "_originalSource": "Optinomic/optinomic-app-page-readme"
 }

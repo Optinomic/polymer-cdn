@@ -6,6 +6,7 @@
 <link rel="import" href="../paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../paper-checkbox/paper-checkbox.html">
 <link rel="import" href="../paper-tabs/paper-tabs.html">
+<link rel="import" href="../paper-tooltip/paper-tooltip.html">
 <link rel="import" href="../g-r-i-d/g-r-i-d.html">
 <link rel="import" href="../optinomic-clinic-sample-selector/optinomic-clinic-sample-selector.html">
 <!--
@@ -267,6 +268,24 @@ var options = {
             --paper-tab-ink: var(--paper-indigo-500);
         }
         
+        paper-tooltip.left {
+            --paper-tooltip-opacity: 1;
+            --paper-tooltip: {
+                width: var(--grafic-margin-left);
+                font-size: 14px;
+                margin-bottom: -12px !important;
+            }
+        }
+        
+        paper-tooltip.right {
+            --paper-tooltip-opacity: 1;
+            --paper-tooltip: {
+                width: var(--grafic-margin-right);
+                font-size: 14px;
+                margin-bottom: -12px !important;
+            }
+        }
+        
         iron-swipeable-pages > * {
             -webkit-user-select: none;
             /* Chrome all / Safari all */
@@ -351,38 +370,48 @@ var options = {
             </div>
             <!-- Skalenbeschriftung: Links/Rechts -->
             <template is="dom-if" if="[[d.wide]]">
-                <div class="absolute_left">
-                    <template is="dom-repeat" id="left_beschriftung" items="[[scales]]" as="s">
-                        <div class="description_item fade_in horizontal layout">
-                            <div class="flex self-center">
-                                <div class="layout horizontal flex">
-                                    <div class="flex">
-                                        <p class="description_item_title  right">[[s.left_title]]</p>
-                                        <template is="dom-if" if="[[d.show_scale_text]]">
-                                            <p class="description_item_text  right">[[s.left_text]]</p>
-                                        </template>
+                <template is="dom-if" if="[[d.item_text_left_show]]">
+                    <div class="absolute_left">
+                        <template is="dom-repeat" id="left_beschriftung" items="[[scales]]" as="s">
+                            <div class="description_item fade_in horizontal layout">
+                                <div class="flex self-center">
+                                    <div class="layout horizontal flex">
+                                        <div class="flex">
+                                            <p id$="[[s.id_left_text]]" class="description_item_title right">[[s.left_title]]</p>
+                                            <template is="dom-if" if="[[d.show_scale_text]]">
+                                                <p class="description_item_text right">[[s.left_text]]</p>
+                                            </template>
+                                            <template is="dom-if" if="[[!d.show_scale_text]]">
+                                                <paper-tooltip class="left" position="top">[[s.left_text]]</paper-tooltip>
+                                            </template>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </template>
-                </div>
-                <div class="absolute_right">
-                    <template is="dom-repeat" id="right_beschriftung" items="[[scales]]" as="s">
-                        <div class="description_item fade_in horizontal layout">
-                            <div class="flex self-center">
-                                <div class="layout horizontal flex self-center">
-                                    <div class="flex">
-                                        <p class="description_item_title">[[s.right_title]]</p>
-                                        <template is="dom-if" if="[[d.show_scale_text]]">
-                                            <p class="description_item_text">[[s.right_text]]</p>
-                                        </template>
+                        </template>
+                    </div>
+                </template>
+                <template is="dom-if" if="[[d.item_text_right_show]]">
+                    <div class="absolute_right">
+                        <template is="dom-repeat" id="right_beschriftung" items="[[scales]]" as="s">
+                            <div class="description_item fade_in horizontal layout">
+                                <div class="flex self-center">
+                                    <div class="layout horizontal flex self-center">
+                                        <div class="flex">
+                                            <p id$="[[s.id_right_text]]" class="description_item_title">[[s.right_title]]</p>
+                                            <template is="dom-if" if="[[d.show_scale_text]]">
+                                                <p class="description_item_text">[[s.right_text]]</p>
+                                            </template>
+                                            <template is="dom-if" if="[[!d.show_scale_text]]">
+                                                <paper-tooltip class="right" position="top">[[s.right_text]]</paper-tooltip>
+                                            </template>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </template>
-                </div>
+                        </template>
+                    </div>
+                </template>
             </template>
             <!-- Skalenbeschriftung: Links | Mobile -->
             <template is="dom-if" if="[[!d.wide]]">
@@ -608,7 +637,15 @@ var options = {
 
             d.item_height = d.item_height === undefined ? 50 : d.item_height;
             d.item_text_left = d.item_text_left === undefined ? 120 : d.item_text_left;
+            d.item_text_left_show = true;
+            if (d.item_text_left === 0) {
+                d.item_text_left_show = false;
+            };
             d.item_text_right = d.item_text_right === undefined ? 120 : d.item_text_right;
+            d.item_text_right_show = true;
+            if (d.item_text_right === 0) {
+                d.item_text_right_show = false;
+            };
             d.response_title_path = d.response_title_path === undefined ? null : d.response_title_path;
             d.response_date_path = d.response_date_path === undefined ? null : d.response_date_path;
             d.min = d.min === undefined ? "auto" : d.min;
@@ -680,6 +717,8 @@ var options = {
 
             scales.forEach(function(scale, scaleID) {
                 scale.id = scaleID;
+                scale.id_left_text = scaleID + "_left_text";
+                scale.id_right_text = scaleID + "_right_text";;
                 scale.topline = scaleID * d.item_height + d.grafic_top_space;
                 scale.baseline = scale.topline + (d.item_height / 2);
                 scale.bottomline = scale.topline + d.item_height;
@@ -1306,6 +1345,9 @@ var options = {
                 d.item_min = d.item_min * -1;
             } else {
                 d.item_min = Math.ceil(Math.abs(d.item_min)) + 1;
+            };
+            if (d.item_min > 0) {
+                d.item_min = 0
             };
         } else {
             d.item_min = d.min;

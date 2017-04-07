@@ -21,7 +21,6 @@
     "commit": "ce70aa6be7a0e9eafb48072ceaec2316621b609a"
   },
   "_source": "https://github.com/optinomic/optinomic-redux-store.git",
-  "_target": "^0.0.2",
-  "_originalSource": "optinomic/optinomic-redux-store",
-  "_direct": true
+  "_target": "*",
+  "_originalSource": "optinomic/optinomic-redux-store"
 }
