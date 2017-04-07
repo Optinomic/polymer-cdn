@@ -30,6 +30,9 @@ Admin-Page of Optinomic-Apps
 
         __init: function() {
 
+            this.dispatch('actionShowAppToolbar', true);
+
+
             var d = {};
             d.current_patient = this.get('_current_patient');
 

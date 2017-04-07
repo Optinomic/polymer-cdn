@@ -100,9 +100,10 @@ Readme | Helppage of Optinomic-Apps
 
         __init: function() {
 
+            this.dispatch('actionShowAppToolbar', true);
+
             var clinic = this.get('_clinic');
             var current_app = this.get('_current_app');
-
 
             // Load Data if not available
             if (clinic === null) {
@@ -161,11 +162,11 @@ Readme | Helppage of Optinomic-Apps
                 value: 'de',
             },
             _clinic: {
-                type: String,
+                type: Object,
                 statePath: 'clinic.data'
             },
             _current_app: {
-                type: String,
+                type: Object,
                 statePath: 'apps.current'
             }
         },
