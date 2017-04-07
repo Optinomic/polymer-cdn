@@ -17,7 +17,7 @@ Admin-Page of Optinomic-Apps
         }
         </style>
         <optinomic-title show_toggle_button small h1="[[t.title]]" h2="[[t.title_sub]]" h3="[[t.title_more]]"></optinomic-title>
-        <optinomic-patient-details></optinomic-patient-details>
+        <optinomic-patient-details patient="[[_current_patient]]"></optinomic-patient-details>
         <div>
             <paper-icon-button on-tap="logState" icon="bug-report"></paper-icon-button>
             <paper-icon-button on-tap="refresh_data" icon="refresh"></paper-icon-button>

@@ -14,12 +14,12 @@
     "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
   },
   "homepage": "https://github.com/Optinomic/optinomic-app-page-admin",
-  "version": "0.0.5",
-  "_release": "0.0.5",
+  "version": "0.0.6",
+  "_release": "0.0.6",
   "_resolution": {
     "type": "version",
-    "tag": "0.0.5",
-    "commit": "fe56f9c8360fbfbb6186ff8cfe7f8b3ef1f704b8"
+    "tag": "0.0.6",
+    "commit": "9c918b40af3581354a4a4a041e72edbfa79def9e"
   },
   "_source": "https://github.com/Optinomic/optinomic-app-page-admin.git",
   "_target": "*",
