@@ -1,6 +1,6 @@
-# \<optinomic-app-page-admin\>
+# \<optinomic-app-page-readme\>
 
-Admin-Page of Optinomic-Apps
+Readme | Helppage of Optinomic-Apps
 
 ## Install the Polymer-CLI
 

@@ -8,7 +8,7 @@
     <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
     <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
     <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
-    <link rel="import" href="../optinomic-app-page-admin.html">
+    <link rel="import" href="../optinomic-app-page-readme.html">
     <style is="custom-style" include="demo-pages-shared-styles">
 
     </style>
@@ -16,10 +16,43 @@
 
 <body>
     <div class="vertical-section-container ">
-        <h3>Basic optinomic-app-page-admin demo</h3>
+        <h3>Basic optinomic-app-page-readme demo</h3>
         <demo-snippet>
             <template>
-                <optinomic-app-page-admin></optinomic-app-page-admin>
+                <optinomic-app-page-readme markdown="# Readme  Helppage of Optinomic-Apps
+
+## Install the Polymer-CLI
+
+First, make sure you have the [Polymer CLI](https://www.npmjs.com/package/polymer-cli) installed. Then run `polymer serve` to serve your application locally.
+
+
+
+## Building Your Application
+
+```html
+  <h1>Hallo</h1>
+  <p>Ich wünsche Dir einen wunderschönen Tag mit viel Sonne im Herzen.</p>
+```
+
+This will create a `build/` folder with `bundled/` and `unbundled/` sub-folders
+containing a bundled (Vulcanized) and unbundled builds, both run through HTML,
+CSS, and JS optimizers.
+
+You can serve the built versions by giving `polymer serve` a folder to serve
+from:
+
+```
+$ polymer serve build/bundled
+```
+
+## Running Tests
+
+```
+$ polymer test
+```
+
+Your application is already set up to be tested via [web-component-tester](https://github.com/Polymer/web-component-tester). Run `polymer test` to run your application's test suite locally.
+"></optinomic-app-page-readme>
             </template>
         </demo-snippet>
     </div>

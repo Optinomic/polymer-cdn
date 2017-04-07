@@ -13,15 +13,16 @@
     "web-component-tester": "^4.0.0",
     "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
   },
-  "homepage": "https://github.com/Optinomic/optinomic-app-page-admin",
-  "version": "0.0.1",
-  "_release": "0.0.1",
+  "homepage": "https://github.com/Optinomic/optinomic-app-page-readme",
+  "version": "0.0.5",
+  "_release": "0.0.5",
   "_resolution": {
     "type": "version",
-    "tag": "0.0.1",
-    "commit": "a610e8231327c0d5b49f22b0db8c6c416832ebba"
+    "tag": "0.0.5",
+    "commit": "0bff47608320287e37941ef2cbe9ca7af4966dc3"
   },
-  "_source": "https://github.com/Optinomic/optinomic-app-page-admin.git",
-  "_target": "^0.0.1",
-  "_originalSource": "Optinomic/optinomic-app-page-admin"
+  "_source": "https://github.com/Optinomic/optinomic-app-page-readme.git",
+  "_target": "^0.0.5",
+  "_originalSource": "Optinomic/optinomic-app-page-readme",
+  "_direct": true
 }
