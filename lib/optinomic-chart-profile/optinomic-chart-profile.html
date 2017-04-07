@@ -32,6 +32,7 @@ var options = {
     "show_score_vertical_line": false,
     "show_score_profile_line": true,
     "show_score_circles": true,
+    "show_settings_block": true,
     "range_alpha": 0.1,
     "vertical_grid_every_x": 1,
     "response_title_path": "calculation.info.mz.mz_typ",
@@ -45,6 +46,7 @@ var options = {
 | __min__ | "auto" will find the min/max automatically for you. You can also hardcode the min or max by setting it as a number. _Default: "auto"_ |
 | __max__ | "auto" will find the min/max automatically for you. You can also hardcode the min or max by setting it as a number. _Default: "auto"_ |
 | __item_height__ | The height (px) of every scale from scales. _Default: 50_ |
+| __show_settings_block__ | Should the elemet render the Settings-Tab? _Default: True_ |
 
 
 @demo demo/index.html 
@@ -304,20 +306,22 @@ var options = {
         }
         </style>
         <!-- START -->
-        <div class="center">
-            <div class="layout horizontal flex">
-                <div class="flex">
-                    <p style$="color:[[start.left_color]]">
-                        [[start.left_title]]<span class="caption"><br>[[start.left_text]]</span>
-                    </p>
-                </div>
-                <div class="flex">
-                    <p style$="color:[[start.right_color]]; text-align:right">
-                        [[start.right_title]]<span class="caption"><br>[[start.right_text]]</span>
-                    </p>
+        <template is="dom-if" if="[[this.start]]">
+            <div class="center">
+                <div class="layout horizontal flex">
+                    <div class="flex">
+                        <p style$="color:[[start.left_color]]">
+                            [[start.left_title]]<span class="caption"><br>[[start.left_text]]</span>
+                        </p>
+                    </div>
+                    <div class="flex">
+                        <p style$="color:[[start.right_color]]; text-align:right">
+                            [[start.right_title]]<span class="caption"><br>[[start.right_text]]</span>
+                        </p>
+                    </div>
                 </div>
             </div>
-        </div>
+        </template>
         <!-- GRAFIK -->
         <div id="svg_grafic" class="relative">
             <!-- Zahlenbeschriftung -->
@@ -493,66 +497,96 @@ var options = {
             </template>
         </div>
         <!-- TAB -->
-        <div class="">
-            <paper-tabs selected="{{d.tab_selected}}" on-iron-select="__tabChanged" autoselect autoselect-delay="100" scrollable fit-container>
-                <paper-tab>{{t.measurements}}</paper-tab>
-                <paper-tab>{{t.clinic_sample}}</paper-tab>
-                <paper-tab>{{t.ranges}}</paper-tab>
-            </paper-tabs>
-            <iron-pages selected="{{d.tab_selected}}">
-                <div class="config_page">
-                    <!-- Toggle Messungen -->
-                    <g-r-i-d min-column-width="250" gutter="4" row-height="" shown="{{animate_grid_0}}">
-                        <template is="dom-repeat" items="{{_score_profiles}}" as="score">
-                            <div class="item" style$="border: 1px solid {{score.color}}; background-color: {{score.color_rgb}};">
-                                <paper-checkbox checked="{{score.show}}" class="styled">
-                                    <span style$="color: {{score.color}};">
+        <template is="dom-if" if="{{d.show_settings_block}}">
+            <div>
+                <paper-tabs selected="{{d.tab_selected}}" on-iron-select="__tabChanged" autoselect autoselect-delay="100" scrollable fit-container>
+                    <paper-tab>{{t.measurements}}</paper-tab>
+                    <paper-tab>{{t.clinic_sample}}</paper-tab>
+                    <paper-tab>{{t.ranges}}</paper-tab>
+                </paper-tabs>
+                <iron-pages selected="{{d.tab_selected}}">
+                    <div class="config_page">
+                        <!-- Toggle Messungen -->
+                        <g-r-i-d min-column-width="250" gutter="4" row-height="" shown="{{animate_grid_0}}">
+                            <template is="dom-repeat" items="{{_score_profiles}}" as="score">
+                                <div class="item" style$="border: 1px solid {{score.color}}; background-color: {{score.color_rgb}};">
+                                    <paper-checkbox checked="{{score.show}}" class="styled">
+                                        <span style$="color: {{score.color}};">
                                     {{score.title}}
                                 </span>
-                                    <span class="subtitle">
+                                        <span class="subtitle">
                                     {{score.date}}
                                 </span>
-                                </paper-checkbox>
-                            </div>
-                        </template>
-                    </g-r-i-d>
-                </div>
-                <div class="config_page fade_in">
-                    <!-- Clinic-Sample-Wrapper -->
-                    <g-r-i-d id="grid_clinic_sample" min-column-width="250" gutter="4" row-height="" shown="{{animate_grid_1}}">
-                        <template is="dom-repeat" items="{{_clinic_sample_profiles}}" as="cs">
-                            <div class="item" style$="border: 1px solid {{cs.color}}; background-color: {{cs.color_bg}};">
-                                <paper-checkbox checked="{{cs.show}}" class="styled">
-                                    <span style$="color: {{cs.color}};">
+                                    </paper-checkbox>
+                                </div>
+                            </template>
+                        </g-r-i-d>
+                    </div>
+                    <div class="config_page fade_in">
+                        <!-- Clinic-Sample-Wrapper -->
+                        <g-r-i-d id="grid_clinic_sample" min-column-width="250" gutter="4" row-height="" shown="{{animate_grid_1}}">
+                            <template is="dom-if" if="{{!clinic_samples.empty}}">
+                                <template is="dom-repeat" items="{{_clinic_sample_profiles}}" as="cs">
+                                    <div class="item" style$="border: 1px solid {{cs.color}}; background-color: {{cs.color_bg}};">
+                                        <paper-checkbox checked="{{cs.show}}" class="styled">
+                                            <span style$="color: {{cs.color}};">
                                     {{cs.name}}
                                 </span>
-                                </paper-checkbox>
-                            </div>
-                        </template>
-                        <div class="item" style="border: 1px solid black;">
-                            <optinomic-clinic-sample-selector on-clinic-sample-changed="__csChanged" data_dive="[[clinic_sample_dive]]" clinic_sample="[[clinic_samples]]" data_dive_path="statistics" return_data="{{clinic_sample_data}}"></optinomic-clinic-sample-selector>
-                        </div>
-                    </g-r-i-d>
-                </div>
-                <div class="config_page fade_in">
-                    <!-- Ranges -->
-                    <g-r-i-d min-column-width="400" gutter="4" row-height="" shown="{{animate_grid_2}}">
-                        <template is="dom-repeat" items="{{ranges}}" as="range">
-                            <div class="item" style$="border: 1px solid {{range.color}}; background-color: {{range.color_bg}};">
-                                <paper-checkbox checked="{{range.show}}" class="styled">
-                                    <span style$="color: {{range.color}};">
+                                        </paper-checkbox>
+                                    </div>
+                                </template>
+                                <div class="item" style="border: 1px solid black;">
+                                    <optinomic-clinic-sample-selector on-clinic-sample-changed="__csChanged" data_dive="[[clinic_sample_dive]]" clinic_sample="[[clinic_samples]]" data_dive_path="statistics" return_data="{{clinic_sample_data}}"></optinomic-clinic-sample-selector>
+                                </div>
+                            </template>
+                            <template is="dom-if" if="{{clinic_samples.empty}}">
+                                <div class="item" style="border: 1px solid #263238; background-color: #ECEFF1;">
+                                    <paper-checkbox checked="true" class="styled">
+                                        <span style="color: #263238;">
+                                        Kleine Klinichstichprobe vorhanden.
+                                    </span>
+                                        <span class="subtitle">
+                                        No clinic samples availabe.
+                                    </span>
+                                    </paper-checkbox>
+                                </div>
+                            </template>
+                        </g-r-i-d>
+                    </div>
+                    <div class="config_page fade_in">
+                        <!-- Ranges -->
+                        <g-r-i-d min-column-width="400" gutter="4" row-height="" shown="{{animate_grid_2}}">
+                            <template is="dom-if" if="{{d.ranges_available}}">
+                                <template is="dom-repeat" items="{{ranges}}" as="range">
+                                    <div class="item" style$="border: 1px solid {{range.color}}; background-color: {{range.color_bg}};">
+                                        <paper-checkbox checked="{{range.show}}" class="styled">
+                                            <span style$="color: {{range.color}};">
                                         {{range.text}}
                                     </span>
-                                    <span class="subtitle">
+                                            <span class="subtitle">
                                         {{range.from_to}}
                                     </span>
-                                </paper-checkbox>
-                            </div>
-                        </template>
-                    </g-r-i-d>
-                </div>
-            </iron-pages>
-        </div>
+                                        </paper-checkbox>
+                                    </div>
+                                </template>
+                            </template>
+                            <template is="dom-if" if="{{!d.ranges_available}}">
+                                <div class="item" style="border: 1px solid #263238; background-color: #ECEFF1;">
+                                    <paper-checkbox checked="true" class="styled">
+                                        <span style="color: #263238;">
+                                        Kleine Interpretation vorhanden.
+                                    </span>
+                                        <span class="subtitle">
+                                        No ranges availabe.
+                                    </span>
+                                    </paper-checkbox>
+                                </div>
+                            </template>
+                        </g-r-i-d>
+                    </div>
+                </iron-pages>
+            </div>
+        </template>
     </template>
     <script>
     Polymer({
@@ -595,6 +629,9 @@ var options = {
         },
 
         __init: function() {
+            // start @ Properties
+            this.start = this.start === undefined ? null : this.start;
+
             // Scales @ Properties
             this.scales = this.scales === undefined ? [] : this.scales;
 
@@ -605,7 +642,9 @@ var options = {
             this.scores = this.scores === undefined ? {} : this.scores;
 
             // clinic_samples @ Properties
-            this.clinic_samples = this.clinic_samples === undefined ? {} : this.clinic_samples;
+            this.clinic_samples = this.clinic_samples === undefined ? {
+                "empty": true
+            } : this.clinic_samples;
 
             var init_dive_path = [];
             if ('dimensions' in this.clinic_samples) {
@@ -615,9 +654,6 @@ var options = {
             };
 
             this.clinic_sample_dive = this.clinic_sample_dive === undefined ? init_dive_path : this.clinic_sample_dive;
-
-
-            console.log('this.clinic_sample_dive', this.clinic_sample_dive);
 
 
             // Options @ Properties
@@ -634,6 +670,7 @@ var options = {
 
 
             d.show_scale_text = d.show_scale_text === undefined ? false : d.show_scale_text;
+            d.show_settings_block = d.show_settings_block === undefined ? true : d.show_settings_block;
 
             d.item_height = d.item_height === undefined ? 50 : d.item_height;
             d.item_text_left = d.item_text_left === undefined ? 120 : d.item_text_left;
@@ -653,6 +690,10 @@ var options = {
             d.range_alpha = d.range_alpha === undefined ? 0.1 : d.range_alpha;
             d.vertical_grid_every_x = d.vertical_grid_every_x === undefined ? 1 : d.vertical_grid_every_x;
 
+            d.ranges_available = false;
+            if (this.ranges.length > 0) {
+                d.ranges_available = true;
+            };
 
             // Resize
             d.wide = false;
@@ -766,6 +807,7 @@ var options = {
                 do_min = true;
             } else {
                 item_min = parseInt(d.min);
+                this.set('d.item_min', item_min);
             };
 
             var do_max = false;
@@ -773,6 +815,7 @@ var options = {
                 do_max = true;
             } else {
                 item_max = parseInt(d.max);
+                this.set('d.item_max', item_max);
             };
 
             if (do_max || do_min) {
