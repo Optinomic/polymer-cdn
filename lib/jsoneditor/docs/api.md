@@ -54,7 +54,11 @@ Constructs a new JSONEditor.
 
 - `{function} onEditable`
 
-  Set a callback function  to determine whether individual nodes are editable or read-only. Only applicable when option `mode` is `tree`. The callback is invoked as `editable(node)`, where `node` is an object `{field: string, value: string, path: string[]}`. The function must either return a boolean value to set both the nodes field and value editable or read-only, or return an object `{field: boolean, value: boolean}`.
+  Set a callback function  to determine whether individual nodes are editable or read-only. Only applicable when option `mode` is `tree`, `text`, or `code`.
+
+  In case of mode `tree`, the callback is invoked as `editable(node)`, where `node` is an object `{field: string, value: string, path: string[]}`. The function must either return a boolean value to set both the nodes field and value editable or read-only, or return an object `{field: boolean, value: boolean}` to set set the read-only attribute for field and value individually.
+
+  In modes `text` and `code`, the callback is invoked as `editable(node)` where `node` is an empty object (no field, value, or path). In that case the function can return false to make the text or code editor completely read-only.
 
 - `{function} onError`
 
@@ -109,6 +113,67 @@ Constructs a new JSONEditor.
 - `{String} theme`
 
   Set the Ace editor theme, uses included 'ace/theme/jsoneditor' by default. Please note that only the default theme is included with jsoneditor, so if you specify another one you need to make sure it is loaded.
+
+- `{Object} templates`
+
+  Array of templates that will appear in the context menu, Each template is a json object precreated that can be added as a object value to any node in your document. 
+
+  The following example allow you can create a "Person" node and a "Address" node, each one will appear in your context menu, once you selected the whole json object will be created.
+
+    ```js
+  var options = {
+    templates: [
+          {
+              text: 'Person',
+              title: 'Insert a Person Node',
+              className: 'jsoneditor-type-object',
+              field: 'PersonTemplate',
+              value: {
+                  'firstName': 'John',
+                  'lastName': 'Do',
+                  'age': 28
+              }
+          },
+          {
+              text: 'Address',
+              title: 'Insert a Address Node',
+              field: 'AddressTemplate',
+              value: {
+                  'street': "",
+                  'city': "",
+                  'state': "",
+                  'ZIP code': ""
+              }
+          }
+      ]
+  }
+  ```
+
+- `{Object} autocomplete`
+
+  *autocomplete* will enable this feature in your editor in tree mode, the object have the following **subelements**:
+
+  - `{number[]} confirmKeys`
+
+     Indicate the KeyCodes for trigger confirm completion, by default those keys are:  [39, 35, 9] which are the code for [right, end, tab]
+
+  - `{Function} getOptions (text: string, path: string[], input: string, editor: JSONEditor)`
+
+     This function will return your possible options for create the autocomplete selection, you can control dynamically which options you want to display according to the current active editing node.
+     
+     *Parameters:*
+
+     - `text`   : The text in the current node part. (basically the text that the user is editing)
+     - `path`   : The path of the node that is being edited as an array with strings.
+     - `input`  : Can be "field" or "value" depending if the user is editing a field name or a value of a node.
+     - `editor` : The editor instance object that is being edited.
+
+     *Returns:*
+
+     - Can return an array with autocomplete options (strings), for example `['apple','cranberry','raspberry','pie']`
+     - Can return `null` when there are no autocomplete options.
+     - Can return an object `{startFrom: number, options: string[]}`. Here `startFrom` determines the start character from where the existing text will be replaced. `startFrom` is `0` by default, replacing the whole text.
+     - Can return a `Promise` resolving one of the return types above to support asynchronously retrieving a list with options.
 
 
 ### Methods

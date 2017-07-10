@@ -3,6 +3,56 @@
 https://github.com/josdejong/jsoneditor
 
 
+## 2017-07-08, version 5.8.2
+
+- Select first option from `modes` instead of `tree` when `mode` is not
+  configured. Thanks @bag-man.
+- Some fixes and improvements in the API of autocompletion.
+  Thanks @israelito3000.
+
+
+## 2017-07-03, version 5.8.1
+
+- Fixed broken minified bundles in folder `dist` (again...).
+
+
+## 2017-07-02, version 5.8.0
+
+- Implemented support for autocompletion. Thanks @israelito3000.
+
+
+## 2017-06-27, version 5.7.2
+
+- Fixed broken minified bundles in folder `dist`
+  (reverted to `uglify-js@2.8.22` for now).
+
+
+## 2017-06-25, version 5.7.1
+
+- Upgraded dependency `ajv` to version `5.2.0`. Resolves warnings in
+  Webpack build processes.
+
+
+## 2017-05-26, version 5.7.0
+
+- Implemented support for template items. Thanks @israelito3000.
+- Upgraded dependencies to the latest versions. Thanks @andreykaipov.
+
+
+## 2017-04-15, version 5.6.0
+
+- Implemented readonly option for modes `text` and `code.`
+  Thanks @walkerrandolphsmith.
+- Upgraded dependencies (`brance` and `ajv`) to the latest versions.
+- Fixed not being able to move focus to enum select box when clicking
+  a JSON Schema warning.
+- Fixed #309: already loaded version of Ace being overwritten by the
+  embedded version of JSONEditor.
+- Fixed #368: Mode selection drop down not fully visible on small screen.
+- Fixed #253: Optimize the input experience of Chinese IME.
+  Thanks @chinesedfan.
+
+
 ## 2017-01-06, version 5.5.11
 
 - Fixed embedded version of jsoneditor ace theme not being loaded in

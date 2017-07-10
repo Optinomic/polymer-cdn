@@ -16,12 +16,12 @@
     "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
   },
   "homepage": "https://github.com/ryanburns23/show-json",
-  "version": "1.0.0",
-  "_release": "1.0.0",
+  "version": "1.0.1",
+  "_release": "1.0.1",
   "_resolution": {
     "type": "version",
-    "tag": "v1.0.0",
-    "commit": "e537d2ea950382f4eee87aa09c87eeb41aea905a"
+    "tag": "v1.0.1",
+    "commit": "994fc9a51ff931b3e7166ce31becd845e0d00c11"
   },
   "_source": "https://github.com/ryanburns23/show-json.git",
   "_target": "*",

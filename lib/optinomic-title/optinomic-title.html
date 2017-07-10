@@ -4,149 +4,175 @@
 `optinomic-title`
 Basically a extended &lt;h1&gt; inside a Optinomic-App.
 
-@demo demo/index.html 
+@demo demo/index.html
 -->
 <dom-module id="optinomic-title">
-    <template>
-        <style is="custom-style" include="iron-flex iron-flex-alignment">
-        :host {
-            display: block;
-            font-family: 'Roboto', sans-serif !important;
-            --h1-size: 47.25px;
-            --h2-size: 14.6px;
-            --h3-size: 12.6px;
-            --title-margin-bottom: 24px;
-            --h2-margin-top: -6.8px;
-        }
-        
-        .title {
-            margin-top: var(--h1-size);
-            margin-bottom: var(--title-margin-bottom);
-            font-size-adjust: 0.58;
-        }
-        
-        .title-h1 {
-            font-size: var(--h1-size);
-            font-weight: 300;
-            color: #424242;
-            margin: 0;
-        }
-        
-        .title-h2 {
-            font-size: var(--h2-size);
-            font-weight: 400;
-            letter-spacing: 0.02em;
-            color: #9E9E9E;
-            margin-left: 2px;
-            margin-top: var(--h2-margin-top);
-        }
-        
-        .title-h3 {
-            font-size: var(--h3-size);
-            font-weight: 300;
-            letter-spacing: 0.02em;
-            color: #9E9E9E;
-            margin-left: var(--h2-size);
-        }
-        
-        .title-toggle {
-            width: 48px;
-        }
-        
-        paper-icon-button {
-            color: #E0E0E0;
-            --paper-icon-button-ink-color: var(--paper-grey-a200);
-        }
-        
-        paper-icon-button:hover {
-            color: #9E9E9E;
-        }
-        </style>
-        <div class="layout horizontal center">
-            <template is="dom-if" if="[[show_toggle_button]]">
-                <div class="title-toggle">
-                    <paper-icon-button icon="menu" on-tap="toggleDrawer"></paper-icon-button>
-                </div>
-            </template>
-            <div class="flex title">
-                <div class="layout horizontal center">
-                    <div>
-                        <h1 class="title-h1">[[h1]]</h1>
-                    </div>
-                    <template is="dom-if" if="[[h3]]">
-                        <div class="flex">
-                            <p class="title-h3">[[h3]]</p>
-                        </div>
-                    </template>
-                </div>
-                <template is="dom-if" if="[[h2]]">
-                    <p class="title-h2">[[h2]]</p>
-                </template>
-            </div>
+  <template>
+    <style is="custom-style" include="iron-flex iron-flex-alignment">
+      :host {
+        display: block;
+        font-family: 'Roboto', sans-serif !important;
+        --h1-size: 47.25px;
+        --h2-size: 14.6px;
+        --h3-size: 12.6px;
+        --title-margin-top: 0;
+        --title-margin-bottom: 0;
+        --h2-margin-top: -6.8px;
+      }
+
+      .title {
+        margin-top: var(--title-margin-top);
+        margin-bottom: var(--title-margin-bottom);
+        font-size-adjust: 0.58;
+      }
+
+      .title-h1 {
+        font-size: var(--h1-size);
+        font-weight: 300;
+        color: #424242;
+        margin: 0;
+        font-family: 'Lora', serif;
+      }
+
+      .title-h2 {
+        font-size: var(--h2-size);
+        font-weight: 400;
+        letter-spacing: 0.02em;
+        color: #9E9E9E;
+        margin-left: 2px;
+        margin-top: var(--h2-margin-top);
+      }
+
+      .title-h3 {
+        font-size: var(--h3-size);
+        font-weight: 300;
+        letter-spacing: 0.02em;
+        color: #9E9E9E;
+        margin-left: var(--h2-size);
+      }
+
+      .title-toggle {
+        width: 48px;
+      }
+
+      paper-icon-button {
+        color: #E0E0E0;
+        --paper-icon-button-ink-color: var(--paper-grey-a200);
+      }
+      paper-icon-button:hover {
+        color: #9E9E9E;
+      }
+
+    </style>
+    <div class="layout horizontal center">
+      <template is="dom-if" if="[[show_toggle_button]]">
+        <div class="title-toggle">
+          <paper-icon-button icon="menu" on-tap="toggleDrawer"></paper-icon-button>
         </div>
-    </template>
-    <script>
+      </template>
+      <div class="flex title">
+        <div class="layout horizontal center">
+          <div>
+            <h1 class="title-h1">[[h1]]</h1>
+          </div>
+          <template is="dom-if" if="[[h3]]">
+            <div class="flex">
+              <p class="title-h3">[[h3]]</p>
+            </div>
+          </template>
+        </div>
+        <template is="dom-if" if="[[h2]]">
+          <p class="title-h2">[[h2]]</p>
+        </template>
+      </div>
+    </div>
+  </template>
+  <script>
     Polymer({
-        is: 'optinomic-title',
+      is: 'optinomic-title',
 
-        __resizeGrafic: function() {
+      __resizeGrafic: function () {
 
-            var small = this.get('small');
-            small = small === undefined ? false : small;
+        var small = this.get('small');
+        small = small === undefined
+          ? false
+          : small;
 
+        var nomargin = this.get('nomargin');
+        nomargin = nomargin === undefined
+          ? false
+          : nomargin;
 
-            if (small === false) {
-                var h1 = 47.25;
-                var h2 = h1 / 3.25;
-                var h3 = h1 / 3.75;
-            } else {
-                var h1 = 35.7;
-                var h2 = h1 / 3.25;
-                var h3 = h1 / 3.75;
-            };
+        if (small === false) {
+          var h1 = 47.25;
+          var h2 = h1 / 3.25;
+          var h3 = h1 / 3.75;
+        } else {
+          var h1 = 35.7;
+          var h2 = h1 / 3.25;
+          var h3 = h1 / 3.75;
+        };
 
-            // Apply
-            this.customStyle['--h1-size'] = h1 + 'px';
-            this.customStyle['--h2-size'] = h2 + 'px';
-            this.customStyle['--h3-size'] = h3 + 'px';
-            this.customStyle['--title-margin-bottom'] = (h1 / 2) + 'px';
-            this.customStyle['--h2-margin-top'] = '-' + (h1 / 7.5) + 'px';
+        if (nomargin !== true) {
+          this.customStyle['--title-margin-top'] = h1 + 'px';
+          this.customStyle['--title-margin-bottom'] = (h1 / 2) + 'px';
+        } else {
+          this.customStyle['--title-margin-top'] = '0px';
+          this.customStyle['--title-margin-bottom'] = '0px';
+          //console.error('0', nomargin);
+        };
 
-            this.updateStyles();
+        // Apply
+        this.customStyle['--h1-size'] = h1 + 'px';
+        this.customStyle['--h2-size'] = h2 + 'px';
+        this.customStyle['--h3-size'] = h3 + 'px';
+
+        this.customStyle['--h2-margin-top'] = '-' + (h1 / 7.5) + 'px';
+
+        this.updateStyles();
+      },
+
+      toggleDrawer: function () {
+        //console.log('(!) toggleDrawer');
+        this.fire('drawer-toggle');
+      },
+
+      properties: {
+        h1: {
+          type: String,
+          value: "Optinomic",
+          observer: '_dataChanged'
         },
-
-        toggleDrawer: function() {
-            //console.log('(!) toggleDrawer');
-            this.fire('drawer-toggle');
+        h2: {
+          type: String,
+          value: null,
+          observer: '_dataChanged'
         },
-
-        properties: {
-            h1: {
-                type: String,
-                value: "Optinomic"
-            },
-            h2: {
-                type: String,
-                value: null
-            },
-            h3: {
-                type: String,
-                value: null
-            },
-            small: {
-                type: Boolean,
-                value: false
-            },
-            show_toggle_button: {
-                type: Boolean,
-                value: false
-            },
-
+        h3: {
+          type: String,
+          value: null,
+          observer: '_dataChanged'
         },
-
-        ready: function() {
-            this.__resizeGrafic();
+        small: {
+          type: Boolean,
+          value: false,
+          observer: '_dataChanged'
         },
+        nomargin: {
+          type: Boolean,
+          value: false,
+          observer: '_dataChanged'
+        },
+        show_toggle_button: {
+          type: Boolean,
+          value: false,
+          observer: '_dataChanged'
+        }
+      },
+
+      _dataChanged: function () {
+        this.__resizeGrafic();
+      }
     });
-    </script>
+  </script>
 </dom-module>
