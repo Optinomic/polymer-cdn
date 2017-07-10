@@ -33,7 +33,7 @@
     "polymerfire": "firebase/polymerfire#latest",
     "iron-flex-layout": "PolymerElements/iron-flex-layout#latest",
     "show-json": "ryanburns23/show-json#latest",
-    "optinomic-title": "Optinomic/optinomic-title#^0.1.1",
+    "optinomic-title": "Optinomic/optinomic-title#^0.1.2",
     "optinomic-redux-store": "optinomic/optinomic-redux-store#latest",
     "optinomic-chart-profile": "Optinomic/optinomic-chart-profile#latest",
     "optinomic-clinic-sample-selector": "Optinomic/optinomic-clinic-sample-selector#latest",
@@ -46,6 +46,6 @@
     "firebase": "^4.1.1",
     "webcomponentsjs": "^0.7.24",
     "app-layout": "^0.10.7",
-    "optinomic-title": "^0.1.1"
+    "optinomic-title": "^0.1.2"
   }
 }
