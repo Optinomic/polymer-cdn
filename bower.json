@@ -36,7 +36,7 @@
     "optinomic-title": "Optinomic/optinomic-title#^0.1.2",
     "optinomic-redux-store": "optinomic/optinomic-redux-store#latest",
     "optinomic-chart-profile": "Optinomic/optinomic-chart-profile#latest",
-    "optinomic-clinic-sample-selector": "Optinomic/optinomic-clinic-sample-selector#latest",
+    "optinomic-clinic-sample-selector": "Optinomic/optinomic-clinic-sample-selector#^0.0.5",
     "optinomic-app-page-readme": "Optinomic/optinomic-app-page-readme#latest",
     "optinomic-app-page-admin": "Optinomic/optinomic-app-page-admin#latest"
   },
