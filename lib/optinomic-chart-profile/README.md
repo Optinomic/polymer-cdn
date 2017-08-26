@@ -14,6 +14,7 @@ var options = {
     "item_height": 50,
     "item_text_left": 100,
     "item_text_right": 120,
+    "color_skin": "default",
     "color_grid": "#9E9E9E",
     "color_clinic_sample": "#673AB7",
     "show_baseline": true,
@@ -34,4 +35,5 @@ var options = {
 | __min__ | "auto" will find the min/max automatically for you. You can also hardcode the min or max by setting it as a number. _Default: "auto"_ |
 | __max__ | "auto" will find the min/max automatically for you. You can also hardcode the min or max by setting it as a number. _Default: "auto"_ |
 | __item_height__ | The height (px) of every scale from scales. _Default: 50_ |
-
+"color_skin"_ |
+| __color_skin__ | measurements colors skin. Possible values so far are: default, zebra, pink_dark_to_light, indigo_dark_to_light, grey_dark_to_light _Default: 'default'_ |
