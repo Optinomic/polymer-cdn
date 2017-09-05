@@ -46,6 +46,7 @@
     "firebase": "^4.1.1",
     "webcomponentsjs": "^0.7.24",
     "app-layout": "^0.10.7",
-    "optinomic-title": "^0.1.2"
+    "optinomic-title": "^0.1.2",
+    "vaadin-grid": "^1.0.0"
   }
 }
