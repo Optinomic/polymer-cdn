@@ -493,92 +493,98 @@ var options = {
     </div>
 
     <!-- TAB -->
-    <template is="dom-if" if="{{d.show_settings_block}}">
-      <div>
-        <paper-tabs selected="{{d.tab_selected}}" on-iron-select="__tabChanged" autoselect autoselect-delay="100" scrollable fit-container>
-          <paper-tab>{{t.measurements}}</paper-tab>
-          <paper-tab>{{t.clinic_sample}}</paper-tab>
-          <paper-tab>{{t.ranges}}</paper-tab>
-        </paper-tabs>
-        <iron-pages selected="{{d.tab_selected}}">
-          <div class="config_page">
-            <!-- Toggle Messungen -->
-            <g-r-i-d min-column-width="250" gutter="4" row-height="" shown="{{animate_grid_0}}">
-              <template is="dom-repeat" items="{{_score_profiles}}" as="score">
-                <div class="item" style$="border: 1px solid {{score.color}}; background-color: {{score.color_rgb}};">
-                  <paper-checkbox checked="{{score.show}}" class="styled">
-                    <span>
-                      {{score.title}}
-                    </span>
-                    <span class="subtitle">
-                      {{score.date}}
-                    </span>
-                  </paper-checkbox>
-                </div>
-              </template>
-            </g-r-i-d>
-          </div>
-          <div class="config_page fade_in">
-            <!-- Clinic-Sample-Wrapper -->
-            <g-r-i-d id="grid_clinic_sample" colums="1" gutter="4" row-height="" shown="{{animate_grid_1}}">
-              <template is="dom-if" if="{{!clinic_samples.empty}}">
-                <template is="dom-repeat" items="{{_clinic_sample_profiles}}" as="cs">
-                  <div class="item" style$="border: 1px solid {{cs.color}}; background-color: {{cs.color_bg}}; width:100%;">
-                    <paper-checkbox checked="{{cs.show}}" class="styled">
+    <div class="">
+
+      <template is="dom-if" if="[[d.show_settings_block]]">
+        <div>
+          <paper-tabs selected="{{d.tab_selected}}" on-iron-select="__tabChanged" autoselect autoselect-delay="100" scrollable fit-container>
+            <paper-tab>{{t.measurements}}</paper-tab>
+            <paper-tab>{{t.clinic_sample}}</paper-tab>
+            <paper-tab>{{t.ranges}}</paper-tab>
+          </paper-tabs>
+          <iron-pages selected="{{d.tab_selected}}">
+            <div class="config_page">
+              <!-- Toggle Messungen -->
+              <g-r-i-d min-column-width="250" gutter="4" row-height="" shown="{{animate_grid_0}}">
+                <template is="dom-repeat" items="{{_score_profiles}}" as="score">
+                  <div class="item" style$="border: 1px solid {{score.color}}; background-color: {{score.color_rgb}};">
+                    <paper-checkbox checked="{{score.show}}" class="styled">
                       <span>
-                        {{cs.name}}
-                      </span>
-                    </paper-checkbox>
-                  </div>
-                </template>
-                <div class="item" style="border: 1px solid black; width:100%;">
-                  <optinomic-clinic-sample-selector on-clinic-sample-changed="__csChanged" data_dive="[[clinic_sample_dive]]" clinic_sample="[[clinic_samples]]" data_dive_path="statistics" return_data="{{clinic_sample_data}}"></optinomic-clinic-sample-selector>
-                </div>
-              </template>
-              <template is="dom-if" if="{{clinic_samples.empty}}">
-                <div class="item" style="border: 1px solid #263238; background-color: #ECEFF1; width:100%;">
-                  <span style="color: #263238;">
-                    Keine Klinichstichprobe vorhanden.
-                  </span><br>
-                  <span class="subtitle">
-                    No clinic samples availabe.
-                  </span>
-                </div>
-              </template>
-            </g-r-i-d>
-          </div>
-          <div class="config_page fade_in">
-            <!-- Ranges -->
-            <g-r-i-d min-column-width="360" gutter="4" row-height="" shown="{{animate_grid_2}}">
-              <template is="dom-if" if="{{d.ranges_available}}">
-                <template is="dom-repeat" items="{{ranges}}" as="range">
-                  <div class="item" style$="border: 1px solid {{range.color}}; background-color: {{range.color_bg}};">
-                    <paper-checkbox checked="{{range.show}}" class="styled">
-                      <span>
-                        {{range.text}}
+                        {{score.title}}
                       </span>
                       <span class="subtitle">
-                        {{range.from_to}}
+                        {{score.date}}
                       </span>
                     </paper-checkbox>
                   </div>
                 </template>
-              </template>
-              <template is="dom-if" if="{{!d.ranges_available}}">
-                <div class="item" style="border: 1px solid #263238; background-color: #ECEFF1;">
-                  <span style="color: #263238;">
-                    Keine Interpretation vorhanden.
-                  </span><br>
-                  <span class="subtitle">
-                    No ranges availabe.
-                  </span>
-                </div>
-              </template>
-            </g-r-i-d>
-          </div>
-        </iron-pages>
-      </div>
-    </template>
+              </g-r-i-d>
+            </div>
+            <div class="config_page fade_in">
+              <!-- Clinic-Sample-Wrapper -->
+              <g-r-i-d id="grid_clinic_sample" colums="1" gutter="4" row-height="" shown="{{animate_grid_1}}">
+                <template is="dom-if" if="{{!clinic_samples.empty}}">
+                  <template is="dom-repeat" items="{{_clinic_sample_profiles}}" as="cs">
+                    <div class="item" style$="border: 1px solid {{cs.color}}; background-color: {{cs.color_bg}}; width:100%;">
+                      <paper-checkbox checked="{{cs.show}}" class="styled">
+                        <span>
+                          {{cs.name}}
+                        </span>
+                      </paper-checkbox>
+                    </div>
+                  </template>
+                  <div class="item" style="border: 1px solid black; width:100%;">
+                    <optinomic-clinic-sample-selector on-clinic-sample-changed="__csChanged" data_dive="[[clinic_sample_dive]]" clinic_sample="[[clinic_samples]]" data_dive_path="statistics" return_data="{{clinic_sample_data}}"></optinomic-clinic-sample-selector>
+                  </div>
+                </template>
+                <template is="dom-if" if="{{clinic_samples.empty}}">
+                  <div class="item" style="border: 1px solid #263238; background-color: #ECEFF1; width:100%;">
+                    <span style="color: #263238;">
+                      Keine Klinichstichprobe vorhanden.
+                    </span><br>
+                    <span class="subtitle">
+                      No clinic samples availabe.
+                    </span>
+                  </div>
+                </template>
+              </g-r-i-d>
+            </div>
+            <div class="config_page fade_in">
+              <!-- Ranges -->
+              <g-r-i-d min-column-width="360" gutter="4" row-height="" shown="{{animate_grid_2}}">
+                <template is="dom-if" if="{{d.ranges_available}}">
+                  <template is="dom-repeat" items="{{ranges}}" as="range">
+                    <div class="item" style$="border: 1px solid {{range.color}}; background-color: {{range.color_bg}};">
+                      <paper-checkbox checked="{{range.show}}" class="styled">
+                        <span>
+                          {{range.text}}
+                        </span>
+                        <span class="subtitle">
+                          {{range.from_to}}
+                        </span>
+                      </paper-checkbox>
+                    </div>
+                  </template>
+                </template>
+                <template is="dom-if" if="{{!d.ranges_available}}">
+                  <div class="item" style="border: 1px solid #263238; background-color: #ECEFF1;">
+                    <span style="color: #263238;">
+                      Keine Interpretation vorhanden.
+                    </span><br>
+                    <span class="subtitle">
+                      No ranges availabe.
+                    </span>
+                  </div>
+                </template>
+              </g-r-i-d>
+            </div>
+          </iron-pages>
+        </div>
+      </template>
+      <template is="dom-if" if="[[d.show_settings_block]]">
+        <p>No Settings</p>
+      </template>
+    </div>
   </template>
   <script>
     Polymer({
@@ -1468,6 +1474,18 @@ var options = {
         colors.push("#C2185B");
         colors.push("#E91E63");
         colors.push("#F06292");
+        colors.push("#F8BBD0");
+      };
+
+      if (color_skin === 'indigo_grey_pink') {
+        colors.push("#1A237E");
+        colors.push("#212121");
+        colors.push("#880E4F");
+        colors.push("#3F51B5");
+        colors.push("#9E9E9E");
+        colors.push("#E91E63");
+        colors.push("#C5CAE9");
+        colors.push("#F5F5F5");
         colors.push("#F8BBD0");
       };
 
