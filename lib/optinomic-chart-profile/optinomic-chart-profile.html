@@ -383,7 +383,7 @@ var options = {
             </template>
         </template>
         <!-- Interpretation -->
-        <template is="dom-if" if="[[d.norm_sample_defined]]">
+        <template is="dom-if" if="[[ranges]]">
             <template is="dom-if" if="[[d.wide]]">
                 <div class="layout horizontal flex">
                     <div class="legend_left fade_in">
@@ -680,11 +680,11 @@ var options = {
             </template>
             <div hidden="[[!d.show_settings_block]]">
                 <div class="layout horizontal flex">
-                    <template is="dom-if" if="[[d.allow_toggle_settings_block]]" restamp="true">
+                    <div hidden="[[!d.allow_toggle_settings_block]]">
                         <div class="fade_in">
                             <paper-icon-button icon="close" on-tap="__toggleSettingsBlock" style="color:#E0E0E0;margin-top:8px;"></paper-icon-button>
                         </div>
-                    </template>
+                    </div>
                     <div class="flex">
                         <paper-tabs selected="{{d.tab_selected}}" on-iron-select="__tabChanged" autoselect autoselect-delay="100" scrollable fit-container>
                             <paper-tab>{{t.measurements}}</paper-tab>
@@ -694,9 +694,9 @@ var options = {
                     </div>
                 </div>
                 <iron-pages selected="{{d.tab_selected}}">
-                    <template is="dom-if" if="[[d.show_settings_block]]" restamp="true">
-                        <div class="config_page">
-                            <!-- Toggle Messungen -->
+                    <div class="config_page">
+                        <!-- Toggle Messungen -->
+                        <template is="dom-if" if="[[d.show_settings_block]]" restamp="true">
                             <g-r-i-d min-column-width="250" gutter="4" row-height="" shown="{{animate_grid_0}}">
                                 <template is="dom-repeat" items="{{_score_profiles}}" as="score">
                                     <template is="dom-if" if="[[score.dropout_is]]">
@@ -717,33 +717,35 @@ var options = {
                                     </template>
                                 </template>
                             </g-r-i-d>
-                        </div>
-                        <div class="config_page fade_in">
-                            <!-- Clinic-Sample-Wrapper -->
-                            <g-r-i-d id="grid_clinic_sample" colums="1" gutter="4" row-height="" shown="{{animate_grid_1}}">
-                                <template is="dom-if" if="{{!clinic_samples.empty}}">
-                                    <template is="dom-repeat" items="{{_clinic_sample_profiles}}" as="cs">
-                                        <div class="item" style$="border: 1px solid {{cs.color}}; background-color: {{cs.color_bg}}; width:100%;">
-                                            <paper-checkbox checked="{{cs.show}}" class="styled">
-                                                <span>{{cs.name}}</span>
-                                            </paper-checkbox>
-                                        </div>
-                                    </template>
-                                    <div class="item" style="border: 1px solid black; width:100%;">
-                                        <optinomic-clinic-sample-selector on-clinic-sample-changed="__csChanged" data_dive="[[clinic_sample_dive]]" clinic_sample="[[clinic_samples]]" data_dive_path="statistics" return_data="{{clinic_sample_data}}"></optinomic-clinic-sample-selector>
+                        </template>
+                    </div>
+                    <div class="config_page fade_in">
+                        <!-- Clinic-Sample-Wrapper -->
+                        <g-r-i-d id="grid_clinic_sample" colums="1" gutter="4" row-height="" shown="{{animate_grid_1}}">
+                            <template is="dom-if" if="{{!clinic_samples.empty}}">
+                                <template is="dom-repeat" items="{{_clinic_sample_profiles}}" as="cs">
+                                    <div class="item" style$="border: 1px solid {{cs.color}}; background-color: {{cs.color_bg}}; width:100%;">
+                                        <paper-checkbox checked="{{cs.show}}" class="styled">
+                                            <span>{{cs.name}}</span>
+                                        </paper-checkbox>
                                     </div>
                                 </template>
-                                <template is="dom-if" if="{{clinic_samples.empty}}">
-                                    <div class="item" style="border: 1px solid #263238; background-color: #ECEFF1; width:100%;">
-                                        <span style="color: #263238;">Keine Klinichstichprobe vorhanden.</span>
-                                        <br>
-                                        <span class="subtitle">No clinic samples availabe.</span>
-                                    </div>
-                                </template>
-                            </g-r-i-d>
-                        </div>
-                        <div class="config_page fade_in">
-                            <!-- Ranges -->
+                                <div class="item" style="border: 1px solid black; width:100%;">
+                                    <optinomic-clinic-sample-selector on-clinic-sample-changed="__csChanged" data_dive="[[clinic_sample_dive]]" clinic_sample="[[clinic_samples]]" data_dive_path="statistics" return_data="{{clinic_sample_data}}"></optinomic-clinic-sample-selector>
+                                </div>
+                            </template>
+                            <template is="dom-if" if="{{clinic_samples.empty}}">
+                                <div class="item" style="border: 1px solid #263238; background-color: #ECEFF1; width:100%;">
+                                    <span style="color: #263238;">Keine Klinichstichprobe vorhanden.</span>
+                                    <br>
+                                    <span class="subtitle">No clinic samples availabe.</span>
+                                </div>
+                            </template>
+                        </g-r-i-d>
+                    </div>
+                    <div class="config_page fade_in">
+                        <!-- Ranges -->
+                        <template is="dom-if" if="[[d.show_settings_block]]" restamp="true">
                             <g-r-i-d min-column-width="360" gutter="4" row-height="" shown="{{animate_grid_2}}">
                                 <template is="dom-if" if="{{d.ranges_available}}">
                                     <template is="dom-repeat" items="{{ranges}}" as="range">
@@ -763,8 +765,8 @@ var options = {
                                     </div>
                                 </template>
                             </g-r-i-d>
-                        </div>
-                    </template>
+                        </template>
+                    </div>
                 </iron-pages>
             </div>
         </div>
@@ -947,7 +949,7 @@ var options = {
 
 
             // Resize
-            d.wide = false;
+            d.wide = true;
             d.wide_breakpoint = d.wide_breakpoint === undefined ? 520 : d.wide_breakpoint;
 
             // Grafic Size
@@ -1507,9 +1509,7 @@ var options = {
                 false;
 
             var d = this.get('d');
-            d.wide = d.wide === undefined ?
-                false :
-                d.wide;
+            d.wide = d.wide === undefined ? true : d.wide;
 
             var full_width = this.$.svg_grafic.offsetWidth;
 
