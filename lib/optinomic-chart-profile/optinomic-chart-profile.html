@@ -662,7 +662,7 @@ var options = {
                                         </div>
                                         <div class="flex" style="padding:0; margin: 0">
                                             <p class="description_item_title">
-                                                [[score.title]] [[score.show]]
+                                                [[score.title]]
                                                 <template is="dom-if" if="[[score.dropout_is]]">
                                                     | [[score.dropout_reason]]
                                                 </template>
@@ -790,7 +790,8 @@ var options = {
                 observer: 'onInit'
             },
             start: {
-                type: Object
+                type: Object,
+                observer: 'onInit'
             },
             scales: {
                 type: Object,
@@ -801,14 +802,17 @@ var options = {
                 observer: 'onInit'
             },
             ranges: {
-                type: Object
+                type: Object,
+                observer: 'onInit'
             },
             clinic_samples: {
-                type: Object
+                type: Object,
+                observer: 'onInit'
             },
             clinic_sample_dive: {
                 type: Array,
-                notify: true
+                notify: true,
+                observer: 'onInit'
             },
             _clinic_sample_profiles: {
                 type: Array,
@@ -1295,7 +1299,7 @@ var options = {
             });
 
             this.set('_score_profiles', scores_points);
-            console.log('(✓) score_profiles', this._score_profiles);
+            // console.log('(✓) score_profiles', this._score_profiles);
         },
 
         __csChanged: function(e) {
