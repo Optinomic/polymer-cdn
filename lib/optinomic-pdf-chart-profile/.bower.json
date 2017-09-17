@@ -1,0 +1,26 @@
+{
+  "name": "optinomic-pdf-chart-profile",
+  "description": "Profile Charts as pdfmake",
+  "main": "optinomic-pdf-chart-profile.html",
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.4.0"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^1.0.0",
+    "web-component-tester": "^4.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
+  },
+  "homepage": "https://github.com/Optinomic/optinomic-pdfmake-chart-profile",
+  "version": "0.0.1",
+  "_release": "0.0.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.0.1",
+    "commit": "7c403484105859f64bef7ddac6b9f5469f8dfbfd"
+  },
+  "_source": "https://github.com/Optinomic/optinomic-pdfmake-chart-profile.git",
+  "_target": "^0.0.1",
+  "_originalSource": "Optinomic/optinomic-pdfmake-chart-profile",
+  "_direct": true
+}

@@ -1,10 +1,14 @@
-# \<optinomic-chart-profile\>
+# \<optinomic-pdf-chart-profile\>
 
-`optinomic-chart-profile` creates awesome Chart-Profiles. Designed for Optionmic-Apps.
+`optinomic-pdf-chart-profile` creates awesome PDFMake Chart-Profiles. Designed for Optionmic-Apps. 
+
 
 ## Porperties - Descripiton
-### Options
+### pdf-content
+`pdfContent` is the output of this element. Basically a PDFMake Object (http://pdfmake.org/).
 
+
+### Options
 
 ```JAVASCRIPT
 var options = {
@@ -21,8 +25,6 @@ var options = {
     "show_score_vertical_line": false,
     "show_score_profile_line": true,
     "show_score_circles": true,
-    "show_settings_block": true,
-    "allow_toggle_settings_block": false,
     "range_alpha": 0.1,
     "vertical_grid_every_x": 1,
     "norm_sample": "Z-Werte wurden aufgrund der Normstichprobe nach Franke (2000) berechnet (N=300).",
@@ -41,7 +43,6 @@ var options = {
 | __item_height__ | The height (px) of every scale from scales. _Default: 50_ |
 | __color_skin__ | measurements colors skin. Possible values so far are: `default`, `zebra`, `pink_dark_to_light`, `indigo_dark_to_light`, `grey_dark_to_light`  _Default: 'default'_ |
 | __show_settings_block__ | Should the elemet render the Settings-Tab? Bei `false` wird die Übersicht der Messungen angezeigt. _Default: True_ |
-| __allow_toggle_settings_block__ | Darf der User zwischen Übersicht und "Settings-Tab" hin und herwechseln? _Default: True_ |
 | __response_title_path__ | Path to value: Expects a `String` - How should the measurement be called?  |
 | __response_date_path__ | Path to value: Expects a `String` - What ist the date of the measurment?  |
 | __dropout__ | Path to value: Expects a `boolean` - Is this measurement a dropout?  |

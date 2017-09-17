@@ -1,0 +1,1634 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+    <title>optinomic-pdfmake demo</title>
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+    <link rel="import" href="../../paper-input/paper-input.html">
+    <link rel="import" href="../../paper-input/paper-textarea.html">
+    <link rel="import" href="../optinomic-pdfmake.html">
+    <style is="custom-style" include="demo-pages-shared-styles"></style>
+</head>
+<dom-module id="optinomic-demo-run">
+    <template>
+        <style include="iron-flex iron-flex-alignment">
+         :host {
+            display: block;
+        }
+
+        .demo_container {
+            padding: 48px;
+            background-color: #EEEEEE;
+            border-style: solid;
+            border-width: 1px;
+            border-color: #E0E0E0;
+        }
+
+        .element_container {
+            background-color: #FFFFFF;
+            border-style: solid;
+            border-width: 1px;
+            border-color: #E0E0E0;
+        }
+        </style>
+        <template is="dom-if" if="[[_d]]">
+            <div class="element_container">
+                <optinomic-pdfmake header-left="{{headerLeft}}" header-right="{{headerRight}}" footer-left="{{footerLeft}}" document-title="{{documentTitle}}" content="{{content}}"></optinomic-pdfmake>
+            </div>
+            <div>&nbsp;</div>
+            <div class="element_container">
+                <optinomic-pdfmake header-left="{{headerLeft}}" header-right="{{headerRight}}" footer-left="{{footerLeft}}" document-title="{{documentTitle}}" content="{{content}}" loading-string="2 von 7" hide-logo></optinomic-pdfmake>
+            </div>
+            <div>&nbsp;</div>
+            <div class="demo_container">
+                <h3>pdfmake - Demo:</h3>
+                <button on-tap="_setDemoContent">Demo - Content setzen</button>
+                <paper-input label="Document Title" value="{{documentTitle}}"></paper-input>
+                <paper-input label="Header Left" value="{{headerLeft}}"></paper-input>
+                <paper-input label="Header Right" value="{{headerRight}}"></paper-input>
+                <paper-textarea label="Content" value="{{content}}" auto-focus></paper-textarea>
+            </div>
+        </template>
+    </template>
+    <script>
+    Polymer({
+
+        is: 'optinomic-demo-run',
+
+
+        properties: {
+            headerLeft: {
+                type: String,
+                value: "Patient Name (Geburtsdatum)",
+                observer: '_debug_observer'
+            },
+            headerRight: {
+                type: String,
+                value: "Klinik Name",
+                observer: '_debug_observer'
+            },
+            documentTitle: {
+                type: String,
+                value: "Optionmic",
+                observer: '_debug_observer'
+            },
+            content: {
+                type: String,
+                observer: '_debug_observer'
+            }
+        },
+
+        _debug_observer: function() {
+            //console.log('DEMO: _debug_observer', this.headerLeft);
+        },
+
+        __init: function() {
+
+            this._d = this._d === undefined ? {} :
+                this._d;
+
+            var d = this.get('_d');
+
+            d.debug_content = [
+
+                {
+                    "stack": [
+                        // second column consists of paragraphs
+                        {
+                            "text": "Symptomcheckliste (BSCL)",
+                            "style": "h1",
+                            "margin": [0, 12, 0, 0],
+                            "alignment": "left"
+                        }, {
+                            "text": "Erfassung subjektiver Beeinträchtigung durch körperliche und psychische Symptome.",
+                            "style": "caption",
+                            "color": "#616161",
+                            "margin": [1, 0, 0, 0],
+                            "alignment": "left"
+                        }
+                    ],
+                    "margin": [0, 0, 0, 12]
+                },
+
+
+                {
+                    "id": "chart_bscl",
+                    "layout": "noBorders",
+                    "table": {
+                        "dontBreakRows": true,
+                        "headerRows": 0,
+                        "body": [
+                            [{
+                                "stack": [{
+                                        "stack": [{
+                                                "columns": [{
+                                                        "width": 68,
+                                                        "style": "chart_p",
+                                                        "alignment": "right",
+                                                        "text": [{
+                                                            "text": "Somatisierung",
+                                                            "bold": true
+                                                        }]
+                                                    },
+                                                    {
+                                                        "width": "*",
+                                                        "text": ""
+                                                    },
+                                                    {
+                                                        "width": 173,
+                                                        "style": "chart_p",
+                                                        "alignment": "left",
+                                                        "text": [{
+                                                            "text": "Kopfschmerzen, Herzbeschwerden, Atemprobleme, Magenbeschwerden, Muskelschmerzen, Schwächegefühl, Schweregefühl, Unwohlsein usw.",
+                                                            "bold": false
+                                                        }]
+                                                    }
+                                                ],
+                                                "relativePosition": {
+                                                    "x": 0,
+                                                    "y": 10
+                                                },
+                                                "columnGap": 10
+                                            },
+                                            {
+                                                "columns": [{
+                                                        "width": 68,
+                                                        "style": "chart_p",
+                                                        "alignment": "right",
+                                                        "text": [{
+                                                            "text": "Zwanghaftigkeit",
+                                                            "bold": true
+                                                        }]
+                                                    },
+                                                    {
+                                                        "width": "*",
+                                                        "text": ""
+                                                    },
+                                                    {
+                                                        "width": 173,
+                                                        "style": "chart_p",
+                                                        "alignment": "left",
+                                                        "text": [{
+                                                            "text": "Gedanken, Impulse und Handlungen, die konstant vorhanden und nicht änderbar und ich-fremd oder ungewollt erlebt werden, Kognitive Leistungsstörungen.",
+                                                            "bold": false
+                                                        }]
+                                                    }
+                                                ],
+                                                "relativePosition": {
+                                                    "x": 0,
+                                                    "y": 58
+                                                },
+                                                "columnGap": 10
+                                            },
+                                            {
+                                                "columns": [{
+                                                        "width": 68,
+                                                        "style": "chart_p",
+                                                        "alignment": "right",
+                                                        "text": [{
+                                                            "text": "Unsicherheit im Sozialkontakt",
+                                                            "bold": true
+                                                        }]
+                                                    },
+                                                    {
+                                                        "width": "*",
+                                                        "text": ""
+                                                    },
+                                                    {
+                                                        "width": 173,
+                                                        "style": "chart_p",
+                                                        "alignment": "left",
+                                                        "text": [{
+                                                            "text": "Minderwertigkeit, Selbstabwertungen, Selbstzweifel, Selbstunsicherheit und negative Erwartungen bzgl. dem eigenen zwischenmenschlichen Verhalten.",
+                                                            "bold": false
+                                                        }]
+                                                    }
+                                                ],
+                                                "relativePosition": {
+                                                    "x": 0,
+                                                    "y": 106
+                                                },
+                                                "columnGap": 10
+                                            },
+                                            {
+                                                "columns": [{
+                                                        "width": 68,
+                                                        "style": "chart_p",
+                                                        "alignment": "right",
+                                                        "text": [{
+                                                            "text": "Depressivität",
+                                                            "bold": true
+                                                        }]
+                                                    },
+                                                    {
+                                                        "width": "*",
+                                                        "text": ""
+                                                    },
+                                                    {
+                                                        "width": 173,
+                                                        "style": "chart_p",
+                                                        "alignment": "left",
+                                                        "text": [{
+                                                            "text": "Gedrückte Stimmung, Verringerte Motivation und Antrieb, Hoffnungslosigkeit, bis hin zu Suizidgedanken.",
+                                                            "bold": false
+                                                        }]
+                                                    }
+                                                ],
+                                                "relativePosition": {
+                                                    "x": 0,
+                                                    "y": 154
+                                                },
+                                                "columnGap": 10
+                                            },
+                                            {
+                                                "columns": [{
+                                                        "width": 68,
+                                                        "style": "chart_p",
+                                                        "alignment": "right",
+                                                        "text": [{
+                                                            "text": "Ängstlichkeit",
+                                                            "bold": true
+                                                        }]
+                                                    },
+                                                    {
+                                                        "width": "*",
+                                                        "text": ""
+                                                    },
+                                                    {
+                                                        "width": 173,
+                                                        "style": "chart_p",
+                                                        "alignment": "left",
+                                                        "text": [{
+                                                            "text": "Angst mit Nervosität, Spannungen und Zittern, Panikattacken und Schreckgefühlen, Gefühle von Besorgnis und Furcht.",
+                                                            "bold": false
+                                                        }]
+                                                    }
+                                                ],
+                                                "relativePosition": {
+                                                    "x": 0,
+                                                    "y": 202
+                                                },
+                                                "columnGap": 10
+                                            },
+                                            {
+                                                "columns": [{
+                                                        "width": 68,
+                                                        "style": "chart_p",
+                                                        "alignment": "right",
+                                                        "text": [{
+                                                            "text": "Aggressivität / Feindseligkeit",
+                                                            "bold": true
+                                                        }]
+                                                    },
+                                                    {
+                                                        "width": "*",
+                                                        "text": ""
+                                                    },
+                                                    {
+                                                        "width": 173,
+                                                        "style": "chart_p",
+                                                        "alignment": "left",
+                                                        "text": [{
+                                                            "text": "Reizbarkeit und Unausgeglichenheit bis hin zu starker Aggressivität. Ärger, Aggression, Irritierbarkeit, Zorn und Verstimmung.",
+                                                            "bold": false
+                                                        }]
+                                                    }
+                                                ],
+                                                "relativePosition": {
+                                                    "x": 0,
+                                                    "y": 250
+                                                },
+                                                "columnGap": 10
+                                            },
+                                            {
+                                                "columns": [{
+                                                        "width": 68,
+                                                        "style": "chart_p",
+                                                        "alignment": "right",
+                                                        "text": [{
+                                                            "text": "Phobische Angst",
+                                                            "bold": true
+                                                        }]
+                                                    },
+                                                    {
+                                                        "width": "*",
+                                                        "text": ""
+                                                    },
+                                                    {
+                                                        "width": 173,
+                                                        "style": "chart_p",
+                                                        "alignment": "left",
+                                                        "text": [{
+                                                            "text": "Andauernde und unangemessene Furcht als Reaktion auf eine Person, einen Platz, ein Objekt oder eine Situation, die zu Vermeidungs- oder Fluchtverhalten führt.",
+                                                            "bold": false
+                                                        }]
+                                                    }
+                                                ],
+                                                "relativePosition": {
+                                                    "x": 0,
+                                                    "y": 298
+                                                },
+                                                "columnGap": 10
+                                            },
+                                            {
+                                                "columns": [{
+                                                        "width": 68,
+                                                        "style": "chart_p",
+                                                        "alignment": "right",
+                                                        "text": [{
+                                                            "text": "Paranoides Denken",
+                                                            "bold": true
+                                                        }]
+                                                    },
+                                                    {
+                                                        "width": "*",
+                                                        "text": ""
+                                                    },
+                                                    {
+                                                        "width": 173,
+                                                        "style": "chart_p",
+                                                        "alignment": "left",
+                                                        "text": [{
+                                                            "text": "Misstrauen, Minderwertigkeitsgefühle, Gedankenprojektion, Feindseligkeit, Einengung, Angst vor Autonomieverlust und wahnhafte Täuschung.",
+                                                            "bold": false
+                                                        }]
+                                                    }
+                                                ],
+                                                "relativePosition": {
+                                                    "x": 0,
+                                                    "y": 346
+                                                },
+                                                "columnGap": 10
+                                            },
+                                            {
+                                                "columns": [{
+                                                        "width": 68,
+                                                        "style": "chart_p",
+                                                        "alignment": "right",
+                                                        "text": [{
+                                                            "text": "Psychotizismus",
+                                                            "bold": true
+                                                        }]
+                                                    },
+                                                    {
+                                                        "width": "*",
+                                                        "text": ""
+                                                    },
+                                                    {
+                                                        "width": 173,
+                                                        "style": "chart_p",
+                                                        "alignment": "left",
+                                                        "text": [{
+                                                            "text": "Gefühl der Isolation und zwischenmenschlichen Entfremdung. Verzerrter, isolierter Lebensstil bis zu Halluzination und Gedankenzerfall.",
+                                                            "bold": false
+                                                        }]
+                                                    }
+                                                ],
+                                                "relativePosition": {
+                                                    "x": 0,
+                                                    "y": 394
+                                                },
+                                                "columnGap": 10
+                                            },
+                                            {
+                                                "columns": [{
+                                                        "width": 68,
+                                                        "style": "chart_p",
+                                                        "alignment": "right",
+                                                        "text": [{
+                                                                "text": "GSI: ",
+                                                                "bold": true
+                                                            },
+                                                            {
+                                                                "text": "Global Severity Index",
+                                                                "fontSize": 7.5,
+                                                                "bold": false
+                                                            }
+                                                        ]
+                                                    },
+                                                    {
+                                                        "width": "*",
+                                                        "text": ""
+                                                    },
+                                                    {
+                                                        "width": 173,
+                                                        "style": "chart_p",
+                                                        "alignment": "left",
+                                                        "text": [{
+                                                                "text": "GSI: ",
+                                                                "bold": true
+                                                            },
+                                                            {
+                                                                "text": "Durchschnittliche Belastung in allen Bereichen",
+                                                                "bold": false
+                                                            }
+                                                        ]
+                                                    }
+                                                ],
+                                                "relativePosition": {
+                                                    "x": 0,
+                                                    "y": 442
+                                                },
+                                                "columnGap": 10
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "stack": [{
+                                                "color": "#616161",
+                                                "fontSize": 8,
+                                                "alignment": "left",
+                                                "text": -3,
+                                                "relativePosition": {
+                                                    "x": 76,
+                                                    "y": 0
+                                                }
+                                            },
+                                            {
+                                                "color": "#616161",
+                                                "fontSize": 8,
+                                                "alignment": "left",
+                                                "text": -2,
+                                                "relativePosition": {
+                                                    "x": 95.53846153846155,
+                                                    "y": 0
+                                                }
+                                            },
+                                            {
+                                                "color": "#616161",
+                                                "fontSize": 8,
+                                                "alignment": "left",
+                                                "text": -1,
+                                                "relativePosition": {
+                                                    "x": 115.07692307692308,
+                                                    "y": 0
+                                                }
+                                            },
+                                            {
+                                                "color": "#616161",
+                                                "fontSize": 8,
+                                                "alignment": "left",
+                                                "text": 0,
+                                                "relativePosition": {
+                                                    "x": 134.6153846153846,
+                                                    "y": 0
+                                                }
+                                            },
+                                            {
+                                                "color": "#616161",
+                                                "fontSize": 8,
+                                                "alignment": "left",
+                                                "text": 1,
+                                                "relativePosition": {
+                                                    "x": 154.15384615384616,
+                                                    "y": 0
+                                                }
+                                            },
+                                            {
+                                                "color": "#616161",
+                                                "fontSize": 8,
+                                                "alignment": "left",
+                                                "text": 2,
+                                                "relativePosition": {
+                                                    "x": 173.6923076923077,
+                                                    "y": 0
+                                                }
+                                            },
+                                            {
+                                                "color": "#616161",
+                                                "fontSize": 8,
+                                                "alignment": "left",
+                                                "text": 3,
+                                                "relativePosition": {
+                                                    "x": 193.23076923076923,
+                                                    "y": 0
+                                                }
+                                            },
+                                            {
+                                                "color": "#616161",
+                                                "fontSize": 8,
+                                                "alignment": "left",
+                                                "text": 4,
+                                                "relativePosition": {
+                                                    "x": 212.76923076923077,
+                                                    "y": 0
+                                                }
+                                            },
+                                            {
+                                                "color": "#616161",
+                                                "fontSize": 8,
+                                                "alignment": "left",
+                                                "text": 5,
+                                                "relativePosition": {
+                                                    "x": 232.30769230769232,
+                                                    "y": 0
+                                                }
+                                            },
+                                            {
+                                                "color": "#616161",
+                                                "fontSize": 8,
+                                                "alignment": "left",
+                                                "text": 6,
+                                                "relativePosition": {
+                                                    "x": 251.84615384615387,
+                                                    "y": 0
+                                                }
+                                            },
+                                            {
+                                                "color": "#616161",
+                                                "fontSize": 8,
+                                                "alignment": "left",
+                                                "text": 7,
+                                                "relativePosition": {
+                                                    "x": 271.3846153846154,
+                                                    "y": 0
+                                                }
+                                            },
+                                            {
+                                                "color": "#616161",
+                                                "fontSize": 8,
+                                                "alignment": "left",
+                                                "text": 8,
+                                                "relativePosition": {
+                                                    "x": 290.9230769230769,
+                                                    "y": 0
+                                                }
+                                            },
+                                            {
+                                                "color": "#616161",
+                                                "fontSize": 8,
+                                                "alignment": "left",
+                                                "text": 9,
+                                                "relativePosition": {
+                                                    "x": 310.46153846153845,
+                                                    "y": 0
+                                                }
+                                            },
+                                            {
+                                                "color": "#616161",
+                                                "fontSize": 8,
+                                                "alignment": "left",
+                                                "text": 10,
+                                                "relativePosition": {
+                                                    "x": 330,
+                                                    "y": 0
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "stack": [{
+                                            "relativePosition": {
+                                                "x": 78,
+                                                "y": 10
+                                            },
+                                            "canvas": [{
+                                                    "type": "rect",
+                                                    "x": 0,
+                                                    "y": 0,
+                                                    "w": 78.15384615384616,
+                                                    "h": 480,
+                                                    "color": "#eaf2eb"
+                                                },
+                                                {
+                                                    "type": "rect",
+                                                    "x": 78.15384615384616,
+                                                    "y": 0,
+                                                    "w": 19.538461538461547,
+                                                    "h": 480,
+                                                    "color": "#ffffff"
+                                                },
+                                                {
+                                                    "type": "rect",
+                                                    "x": 97.69230769230771,
+                                                    "y": 0,
+                                                    "w": 156.3076923076923,
+                                                    "h": 480,
+                                                    "color": "#f9eaea"
+                                                }
+                                            ]
+                                        }]
+                                    },
+                                    {
+                                        "stack": [{
+                                            "relativePosition": {
+                                                "x": 78,
+                                                "y": 10
+                                            },
+                                            "canvas": [{
+                                                    "type": "polyline",
+                                                    "fillOpacity": 0.5,
+                                                    "color": "#888888",
+                                                    "points": [{
+                                                            "x": 33.01699229751892,
+                                                            "y": 0
+                                                        },
+                                                        {
+                                                            "x": 33.01699229751892,
+                                                            "y": 41
+                                                        },
+                                                        {
+                                                            "x": 35.41338863332254,
+                                                            "y": 55
+                                                        },
+                                                        {
+                                                            "x": 35.41338863332254,
+                                                            "y": 89
+                                                        },
+                                                        {
+                                                            "x": 33.8516379263326,
+                                                            "y": 103
+                                                        },
+                                                        {
+                                                            "x": 33.8516379263326,
+                                                            "y": 137
+                                                        },
+                                                        {
+                                                            "x": 37.9653676467175,
+                                                            "y": 151
+                                                        },
+                                                        {
+                                                            "x": 37.9653676467175,
+                                                            "y": 185
+                                                        },
+                                                        {
+                                                            "x": 33.91731536325901,
+                                                            "y": 199
+                                                        },
+                                                        {
+                                                            "x": 33.91731536325901,
+                                                            "y": 233
+                                                        },
+                                                        {
+                                                            "x": 29.448922491853665,
+                                                            "y": 247
+                                                        },
+                                                        {
+                                                            "x": 29.448922491853665,
+                                                            "y": 281
+                                                        },
+                                                        {
+                                                            "x": 27.946059629364665,
+                                                            "y": 295
+                                                        },
+                                                        {
+                                                            "x": 27.946059629364665,
+                                                            "y": 329
+                                                        },
+                                                        {
+                                                            "x": 37.69769685455225,
+                                                            "y": 343
+                                                        },
+                                                        {
+                                                            "x": 37.69769685455225,
+                                                            "y": 377
+                                                        },
+                                                        {
+                                                            "x": 33.20807256372606,
+                                                            "y": 391
+                                                        },
+                                                        {
+                                                            "x": 33.20807256372606,
+                                                            "y": 425
+                                                        },
+                                                        {
+                                                            "x": 29.21175895339551,
+                                                            "y": 439
+                                                        },
+                                                        {
+                                                            "x": 29.21175895339551,
+                                                            "y": 480
+                                                        },
+                                                        {
+                                                            "x": 119.7603018868988,
+                                                            "y": 480
+                                                        },
+                                                        {
+                                                            "x": 119.7603018868988,
+                                                            "y": 439
+                                                        },
+                                                        {
+                                                            "x": 121.86967834015078,
+                                                            "y": 425
+                                                        },
+                                                        {
+                                                            "x": 121.86967834015078,
+                                                            "y": 391
+                                                        },
+                                                        {
+                                                            "x": 102.39528905742891,
+                                                            "y": 377
+                                                        },
+                                                        {
+                                                            "x": 102.39528905742891,
+                                                            "y": 343
+                                                        },
+                                                        {
+                                                            "x": 121.25558605072519,
+                                                            "y": 329
+                                                        },
+                                                        {
+                                                            "x": 121.25558605072519,
+                                                            "y": 295
+                                                        },
+                                                        {
+                                                            "x": 89.60300868879715,
+                                                            "y": 281
+                                                        },
+                                                        {
+                                                            "x": 89.60300868879715,
+                                                            "y": 247
+                                                        },
+                                                        {
+                                                            "x": 102.35822883322518,
+                                                            "y": 233
+                                                        },
+                                                        {
+                                                            "x": 102.35822883322518,
+                                                            "y": 199
+                                                        },
+                                                        {
+                                                            "x": 109.41321607102331,
+                                                            "y": 185
+                                                        },
+                                                        {
+                                                            "x": 109.41321607102331,
+                                                            "y": 151
+                                                        },
+                                                        {
+                                                            "x": 90.84333028212019,
+                                                            "y": 137
+                                                        },
+                                                        {
+                                                            "x": 90.84333028212019,
+                                                            "y": 103
+                                                        },
+                                                        {
+                                                            "x": 95.64123797183895,
+                                                            "y": 89
+                                                        },
+                                                        {
+                                                            "x": 95.64123797183895,
+                                                            "y": 55
+                                                        },
+                                                        {
+                                                            "x": 98.79415593836174,
+                                                            "y": 41
+                                                        },
+                                                        {
+                                                            "x": 98.79415593836174,
+                                                            "y": 0
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "polyline",
+                                                    "lineWidth": 2,
+                                                    "lineColor": "#f0f0f0",
+                                                    "points": [{
+                                                            "x": 65.90557411794033,
+                                                            "y": 0
+                                                        },
+                                                        {
+                                                            "x": 65.90557411794033,
+                                                            "y": 41
+                                                        },
+                                                        {
+                                                            "x": 65.52731330258075,
+                                                            "y": 55
+                                                        },
+                                                        {
+                                                            "x": 65.52731330258075,
+                                                            "y": 89
+                                                        },
+                                                        {
+                                                            "x": 62.347484104226396,
+                                                            "y": 103
+                                                        },
+                                                        {
+                                                            "x": 62.347484104226396,
+                                                            "y": 137
+                                                        },
+                                                        {
+                                                            "x": 73.6892918588704,
+                                                            "y": 151
+                                                        },
+                                                        {
+                                                            "x": 73.6892918588704,
+                                                            "y": 185
+                                                        },
+                                                        {
+                                                            "x": 68.1377720982421,
+                                                            "y": 199
+                                                        },
+                                                        {
+                                                            "x": 68.1377720982421,
+                                                            "y": 233
+                                                        },
+                                                        {
+                                                            "x": 59.525965590325406,
+                                                            "y": 247
+                                                        },
+                                                        {
+                                                            "x": 59.525965590325406,
+                                                            "y": 281
+                                                        },
+                                                        {
+                                                            "x": 74.60082284004493,
+                                                            "y": 295
+                                                        },
+                                                        {
+                                                            "x": 74.60082284004493,
+                                                            "y": 329
+                                                        },
+                                                        {
+                                                            "x": 70.04649295599057,
+                                                            "y": 343
+                                                        },
+                                                        {
+                                                            "x": 70.04649295599057,
+                                                            "y": 377
+                                                        },
+                                                        {
+                                                            "x": 77.53887545193842,
+                                                            "y": 391
+                                                        },
+                                                        {
+                                                            "x": 77.53887545193842,
+                                                            "y": 425
+                                                        },
+                                                        {
+                                                            "x": 74.48603042014715,
+                                                            "y": 439
+                                                        },
+                                                        {
+                                                            "x": 74.48603042014715,
+                                                            "y": 480
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }]
+                                    },
+                                    {
+                                        "stack": [{
+                                            "relativePosition": {
+                                                "x": 78,
+                                                "y": 0
+                                            },
+                                            "canvas": [{
+                                                    "type": "rect",
+                                                    "x": 0,
+                                                    "y": 10,
+                                                    "w": 254,
+                                                    "h": 480,
+                                                    "lineColor": "#E0E0E0"
+                                                },
+                                                {
+                                                    "type": "line",
+                                                    "x1": 0,
+                                                    "y1": 58,
+                                                    "x2": 254,
+                                                    "y2": 58,
+                                                    "lineWidth": 1,
+                                                    "lineColor": "#E0E0E0"
+                                                },
+                                                {
+                                                    "type": "line",
+                                                    "x1": 0,
+                                                    "y1": 106,
+                                                    "x2": 254,
+                                                    "y2": 106,
+                                                    "lineWidth": 1,
+                                                    "lineColor": "#E0E0E0"
+                                                },
+                                                {
+                                                    "type": "line",
+                                                    "x1": 0,
+                                                    "y1": 154,
+                                                    "x2": 254,
+                                                    "y2": 154,
+                                                    "lineWidth": 1,
+                                                    "lineColor": "#E0E0E0"
+                                                },
+                                                {
+                                                    "type": "line",
+                                                    "x1": 0,
+                                                    "y1": 202,
+                                                    "x2": 254,
+                                                    "y2": 202,
+                                                    "lineWidth": 1,
+                                                    "lineColor": "#E0E0E0"
+                                                },
+                                                {
+                                                    "type": "line",
+                                                    "x1": 0,
+                                                    "y1": 250,
+                                                    "x2": 254,
+                                                    "y2": 250,
+                                                    "lineWidth": 1,
+                                                    "lineColor": "#E0E0E0"
+                                                },
+                                                {
+                                                    "type": "line",
+                                                    "x1": 0,
+                                                    "y1": 298,
+                                                    "x2": 254,
+                                                    "y2": 298,
+                                                    "lineWidth": 1,
+                                                    "lineColor": "#E0E0E0"
+                                                },
+                                                {
+                                                    "type": "line",
+                                                    "x1": 0,
+                                                    "y1": 346,
+                                                    "x2": 254,
+                                                    "y2": 346,
+                                                    "lineWidth": 1,
+                                                    "lineColor": "#E0E0E0"
+                                                },
+                                                {
+                                                    "type": "line",
+                                                    "x1": 0,
+                                                    "y1": 394,
+                                                    "x2": 254,
+                                                    "y2": 394,
+                                                    "lineWidth": 1,
+                                                    "lineColor": "#E0E0E0"
+                                                },
+                                                {
+                                                    "type": "line",
+                                                    "x1": 0,
+                                                    "y1": 442,
+                                                    "x2": 254,
+                                                    "y2": 442,
+                                                    "lineWidth": 1,
+                                                    "lineColor": "#E0E0E0"
+                                                },
+                                                {
+                                                    "type": "line",
+                                                    "x1": 0,
+                                                    "y1": 10,
+                                                    "x2": 0,
+                                                    "y2": 490,
+                                                    "lineWidth": 1,
+                                                    "lineColor": "#E0E0E0"
+                                                },
+                                                {
+                                                    "type": "line",
+                                                    "x1": 19.53846153846154,
+                                                    "y1": 10,
+                                                    "x2": 19.53846153846154,
+                                                    "y2": 490,
+                                                    "lineWidth": 1,
+                                                    "lineColor": "#E0E0E0"
+                                                },
+                                                {
+                                                    "type": "line",
+                                                    "x1": 39.07692307692308,
+                                                    "y1": 10,
+                                                    "x2": 39.07692307692308,
+                                                    "y2": 490,
+                                                    "lineWidth": 1,
+                                                    "lineColor": "#E0E0E0"
+                                                },
+                                                {
+                                                    "type": "line",
+                                                    "x1": 58.61538461538462,
+                                                    "y1": 10,
+                                                    "x2": 58.61538461538462,
+                                                    "y2": 490,
+                                                    "lineWidth": 2,
+                                                    "lineColor": "#E0E0E0"
+                                                },
+                                                {
+                                                    "type": "line",
+                                                    "x1": 78.15384615384616,
+                                                    "y1": 10,
+                                                    "x2": 78.15384615384616,
+                                                    "y2": 490,
+                                                    "lineWidth": 1,
+                                                    "lineColor": "#E0E0E0"
+                                                },
+                                                {
+                                                    "type": "line",
+                                                    "x1": 97.69230769230771,
+                                                    "y1": 10,
+                                                    "x2": 97.69230769230771,
+                                                    "y2": 490,
+                                                    "lineWidth": 1,
+                                                    "lineColor": "#E0E0E0"
+                                                },
+                                                {
+                                                    "type": "line",
+                                                    "x1": 117.23076923076924,
+                                                    "y1": 10,
+                                                    "x2": 117.23076923076924,
+                                                    "y2": 490,
+                                                    "lineWidth": 1,
+                                                    "lineColor": "#E0E0E0"
+                                                },
+                                                {
+                                                    "type": "line",
+                                                    "x1": 136.76923076923077,
+                                                    "y1": 10,
+                                                    "x2": 136.76923076923077,
+                                                    "y2": 490,
+                                                    "lineWidth": 1,
+                                                    "lineColor": "#E0E0E0"
+                                                },
+                                                {
+                                                    "type": "line",
+                                                    "x1": 156.30769230769232,
+                                                    "y1": 10,
+                                                    "x2": 156.30769230769232,
+                                                    "y2": 490,
+                                                    "lineWidth": 1,
+                                                    "lineColor": "#E0E0E0"
+                                                },
+                                                {
+                                                    "type": "line",
+                                                    "x1": 175.84615384615387,
+                                                    "y1": 10,
+                                                    "x2": 175.84615384615387,
+                                                    "y2": 490,
+                                                    "lineWidth": 1,
+                                                    "lineColor": "#E0E0E0"
+                                                },
+                                                {
+                                                    "type": "line",
+                                                    "x1": 195.38461538461542,
+                                                    "y1": 10,
+                                                    "x2": 195.38461538461542,
+                                                    "y2": 490,
+                                                    "lineWidth": 1,
+                                                    "lineColor": "#E0E0E0"
+                                                },
+                                                {
+                                                    "type": "line",
+                                                    "x1": 214.92307692307693,
+                                                    "y1": 10,
+                                                    "x2": 214.92307692307693,
+                                                    "y2": 490,
+                                                    "lineWidth": 1,
+                                                    "lineColor": "#E0E0E0"
+                                                },
+                                                {
+                                                    "type": "line",
+                                                    "x1": 234.46153846153848,
+                                                    "y1": 10,
+                                                    "x2": 234.46153846153848,
+                                                    "y2": 490,
+                                                    "lineWidth": 1,
+                                                    "lineColor": "#E0E0E0"
+                                                }
+                                            ]
+                                        }]
+                                    },
+                                    {
+                                        "stack": [{
+                                            "relativePosition": {
+                                                "x": 78,
+                                                "y": 10
+                                            },
+                                            "canvas": [{
+                                                    "type": "polyline",
+                                                    "lineWidth": 3,
+                                                    "lineColor": "#1A237E",
+                                                    "points": [{
+                                                            "x": 151.81384615384616,
+                                                            "y": 24
+                                                        },
+                                                        {
+                                                            "x": 115.08153846153849,
+                                                            "y": 72
+                                                        },
+                                                        {
+                                                            "x": 139.11384615384617,
+                                                            "y": 120
+                                                        },
+                                                        {
+                                                            "x": 135.59692307692308,
+                                                            "y": 168
+                                                        },
+                                                        {
+                                                            "x": 92.61230769230771,
+                                                            "y": 216
+                                                        },
+                                                        {
+                                                            "x": 176.43230769230772,
+                                                            "y": 264
+                                                        },
+                                                        {
+                                                            "x": 199.68307692307692,
+                                                            "y": 312
+                                                        },
+                                                        {
+                                                            "x": 189.1323076923077,
+                                                            "y": 360
+                                                        },
+                                                        {
+                                                            "x": 129.14923076923077,
+                                                            "y": 408
+                                                        },
+                                                        {
+                                                            "x": 195.38461538461542,
+                                                            "y": 456
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "polyline",
+                                                    "lineWidth": 3,
+                                                    "lineColor": "#212121",
+                                                    "points": [{
+                                                            "x": 44.15692307692308,
+                                                            "y": 24
+                                                        },
+                                                        {
+                                                            "x": 37.31846153846154,
+                                                            "y": 72
+                                                        },
+                                                        {
+                                                            "x": 41.61692307692308,
+                                                            "y": 120
+                                                        },
+                                                        {
+                                                            "x": 43.96153846153847,
+                                                            "y": 168
+                                                        },
+                                                        {
+                                                            "x": 40.24923076923077,
+                                                            "y": 216
+                                                        },
+                                                        {
+                                                            "x": 42.39846153846154,
+                                                            "y": 264
+                                                        },
+                                                        {
+                                                            "x": 46.696923076923085,
+                                                            "y": 312
+                                                        },
+                                                        {
+                                                            "x": 42.59384615384616,
+                                                            "y": 360
+                                                        },
+                                                        {
+                                                            "x": 45.32923076923077,
+                                                            "y": 408
+                                                        },
+                                                        {
+                                                            "x": 34.77846153846154,
+                                                            "y": 456
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "ellipse",
+                                                    "x": 151.81384615384616,
+                                                    "y": 24,
+                                                    "color": "#C62828",
+                                                    "lineColor": "#1A237E",
+                                                    "lineWidth": 2,
+                                                    "fillOpacity": 0.9,
+                                                    "r1": 4.25,
+                                                    "r2": 4.25
+                                                },
+                                                {
+                                                    "type": "ellipse",
+                                                    "x": 44.15692307692308,
+                                                    "y": 24,
+                                                    "color": "#2E7D32",
+                                                    "lineColor": "#212121",
+                                                    "lineWidth": 2,
+                                                    "fillOpacity": 0.9,
+                                                    "r1": 4.25,
+                                                    "r2": 4.25
+                                                },
+                                                {
+                                                    "type": "ellipse",
+                                                    "x": 115.08153846153849,
+                                                    "y": 72,
+                                                    "color": "#C62828",
+                                                    "lineColor": "#1A237E",
+                                                    "lineWidth": 2,
+                                                    "fillOpacity": 0.9,
+                                                    "r1": 4.25,
+                                                    "r2": 4.25
+                                                },
+                                                {
+                                                    "type": "ellipse",
+                                                    "x": 37.31846153846154,
+                                                    "y": 72,
+                                                    "color": "#2E7D32",
+                                                    "lineColor": "#212121",
+                                                    "lineWidth": 2,
+                                                    "fillOpacity": 0.9,
+                                                    "r1": 4.25,
+                                                    "r2": 4.25
+                                                },
+                                                {
+                                                    "type": "ellipse",
+                                                    "x": 139.11384615384617,
+                                                    "y": 120,
+                                                    "color": "#C62828",
+                                                    "lineColor": "#1A237E",
+                                                    "lineWidth": 2,
+                                                    "fillOpacity": 0.9,
+                                                    "r1": 4.25,
+                                                    "r2": 4.25
+                                                },
+                                                {
+                                                    "type": "ellipse",
+                                                    "x": 41.61692307692308,
+                                                    "y": 120,
+                                                    "color": "#2E7D32",
+                                                    "lineColor": "#212121",
+                                                    "lineWidth": 2,
+                                                    "fillOpacity": 0.9,
+                                                    "r1": 4.25,
+                                                    "r2": 4.25
+                                                },
+                                                {
+                                                    "type": "ellipse",
+                                                    "x": 135.59692307692308,
+                                                    "y": 168,
+                                                    "color": "#C62828",
+                                                    "lineColor": "#1A237E",
+                                                    "lineWidth": 2,
+                                                    "fillOpacity": 0.9,
+                                                    "r1": 4.25,
+                                                    "r2": 4.25
+                                                },
+                                                {
+                                                    "type": "ellipse",
+                                                    "x": 43.96153846153847,
+                                                    "y": 168,
+                                                    "color": "#2E7D32",
+                                                    "lineColor": "#212121",
+                                                    "lineWidth": 2,
+                                                    "fillOpacity": 0.9,
+                                                    "r1": 4.25,
+                                                    "r2": 4.25
+                                                },
+                                                {
+                                                    "type": "ellipse",
+                                                    "x": 92.61230769230771,
+                                                    "y": 216,
+                                                    "color": "#FFFFFF",
+                                                    "lineColor": "#1A237E",
+                                                    "lineWidth": 2,
+                                                    "fillOpacity": 0.9,
+                                                    "r1": 4.25,
+                                                    "r2": 4.25
+                                                },
+                                                {
+                                                    "type": "ellipse",
+                                                    "x": 40.24923076923077,
+                                                    "y": 216,
+                                                    "color": "#2E7D32",
+                                                    "lineColor": "#212121",
+                                                    "lineWidth": 2,
+                                                    "fillOpacity": 0.9,
+                                                    "r1": 4.25,
+                                                    "r2": 4.25
+                                                },
+                                                {
+                                                    "type": "ellipse",
+                                                    "x": 176.43230769230772,
+                                                    "y": 264,
+                                                    "color": "#C62828",
+                                                    "lineColor": "#1A237E",
+                                                    "lineWidth": 2,
+                                                    "fillOpacity": 0.9,
+                                                    "r1": 4.25,
+                                                    "r2": 4.25
+                                                },
+                                                {
+                                                    "type": "ellipse",
+                                                    "x": 42.39846153846154,
+                                                    "y": 264,
+                                                    "color": "#2E7D32",
+                                                    "lineColor": "#212121",
+                                                    "lineWidth": 2,
+                                                    "fillOpacity": 0.9,
+                                                    "r1": 4.25,
+                                                    "r2": 4.25
+                                                },
+                                                {
+                                                    "type": "ellipse",
+                                                    "x": 199.68307692307692,
+                                                    "y": 312,
+                                                    "color": "#C62828",
+                                                    "lineColor": "#1A237E",
+                                                    "lineWidth": 2,
+                                                    "fillOpacity": 0.9,
+                                                    "r1": 4.25,
+                                                    "r2": 4.25
+                                                },
+                                                {
+                                                    "type": "ellipse",
+                                                    "x": 46.696923076923085,
+                                                    "y": 312,
+                                                    "color": "#2E7D32",
+                                                    "lineColor": "#212121",
+                                                    "lineWidth": 2,
+                                                    "fillOpacity": 0.9,
+                                                    "r1": 4.25,
+                                                    "r2": 4.25
+                                                },
+                                                {
+                                                    "type": "ellipse",
+                                                    "x": 189.1323076923077,
+                                                    "y": 360,
+                                                    "color": "#C62828",
+                                                    "lineColor": "#1A237E",
+                                                    "lineWidth": 2,
+                                                    "fillOpacity": 0.9,
+                                                    "r1": 4.25,
+                                                    "r2": 4.25
+                                                },
+                                                {
+                                                    "type": "ellipse",
+                                                    "x": 42.59384615384616,
+                                                    "y": 360,
+                                                    "color": "#2E7D32",
+                                                    "lineColor": "#212121",
+                                                    "lineWidth": 2,
+                                                    "fillOpacity": 0.9,
+                                                    "r1": 4.25,
+                                                    "r2": 4.25
+                                                },
+                                                {
+                                                    "type": "ellipse",
+                                                    "x": 129.14923076923077,
+                                                    "y": 408,
+                                                    "color": "#C62828",
+                                                    "lineColor": "#1A237E",
+                                                    "lineWidth": 2,
+                                                    "fillOpacity": 0.9,
+                                                    "r1": 4.25,
+                                                    "r2": 4.25
+                                                },
+                                                {
+                                                    "type": "ellipse",
+                                                    "x": 45.32923076923077,
+                                                    "y": 408,
+                                                    "color": "#2E7D32",
+                                                    "lineColor": "#212121",
+                                                    "lineWidth": 2,
+                                                    "fillOpacity": 0.9,
+                                                    "r1": 4.25,
+                                                    "r2": 4.25
+                                                },
+                                                {
+                                                    "type": "ellipse",
+                                                    "x": 195.38461538461542,
+                                                    "y": 456,
+                                                    "color": "#C62828",
+                                                    "lineColor": "#1A237E",
+                                                    "lineWidth": 2,
+                                                    "fillOpacity": 0.9,
+                                                    "r1": 4.25,
+                                                    "r2": 4.25
+                                                },
+                                                {
+                                                    "type": "ellipse",
+                                                    "x": 34.77846153846154,
+                                                    "y": 456,
+                                                    "color": "#2E7D32",
+                                                    "lineColor": "#212121",
+                                                    "lineWidth": 2,
+                                                    "fillOpacity": 0.9,
+                                                    "r1": 4.25,
+                                                    "r2": 4.25
+                                                }
+                                            ]
+                                        }]
+                                    },
+                                    {
+                                        "canvas": [{
+                                            "type": "rect",
+                                            "x": -3,
+                                            "y": 0,
+                                            "w": 0,
+                                            "h": 496,
+                                            "lineColor": "#FFFFFF"
+                                        }]
+                                    },
+                                    {
+                                        "columns": [{
+                                                "width": 68,
+                                                "style": "chart_p",
+                                                "color": "#757575",
+                                                "alignment": "right",
+                                                "text": [{
+                                                    "text": "Messungen"
+                                                }]
+                                            },
+                                            {
+                                                "width": 10,
+                                                "canvas": [{
+                                                    "type": "line",
+                                                    "x1": 0,
+                                                    "y1": 8,
+                                                    "x2": 15,
+                                                    "y2": 8,
+                                                    "lineWidth": 4,
+                                                    "lineColor": "#1A237E"
+                                                }]
+                                            },
+                                            {
+                                                "width": "*",
+                                                "style": "chart_p",
+                                                "alignment": "left",
+                                                "text": [{
+                                                        "text": "Eintritt EAS"
+                                                    },
+                                                    {
+                                                        "text": " (11.11.2016)",
+                                                        "color": "#757575"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "width": 10,
+                                                "canvas": [{
+                                                    "type": "line",
+                                                    "x1": 0,
+                                                    "y1": 8,
+                                                    "x2": 15,
+                                                    "y2": 8,
+                                                    "lineWidth": 4,
+                                                    "lineColor": "#212121"
+                                                }]
+                                            },
+                                            {
+                                                "width": "*",
+                                                "style": "chart_p",
+                                                "alignment": "left",
+                                                "text": [{
+                                                        "text": "Austritt EP"
+                                                    },
+                                                    {
+                                                        "text": " (19.12.2016)",
+                                                        "color": "#757575"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "width": "*",
+                                                "style": "chart_p",
+                                                "alignment": "left",
+                                                "text": [{
+                                                        "text": "Übertritt"
+                                                    },
+                                                    {
+                                                        "text": " (1.7.2017, Dropout: Patient verweigert Aufnahme )",
+                                                        "color": "#757575"
+                                                    }
+                                                ]
+                                            }
+                                        ],
+                                        "columnGap": 10
+                                    },
+                                    {
+                                        "columns": [{
+                                                "width": 68,
+                                                "style": "chart_p",
+                                                "color": "#757575",
+                                                "alignment": "right",
+                                                "text": [{
+                                                    "text": "Klinikstichprobe"
+                                                }]
+                                            },
+                                            {
+                                                "width": 10,
+                                                "text": ""
+                                            },
+                                            {
+                                                "width": "*",
+                                                "style": "chart_p",
+                                                "alignment": "left",
+                                                "text": [{
+                                                    "text": "Messzeitpunkt: Alle Messzeitpunkte, Geschlecht: Männer, Behandlungen: Alle Patienten (N=1234)"
+                                                }]
+                                            }
+                                        ],
+                                        "columnGap": 10
+                                    },
+                                    {
+                                        "columns": [{
+                                                "width": 68,
+                                                "style": "chart_p",
+                                                "color": "#757575",
+                                                "alignment": "right",
+                                                "text": [{
+                                                    "text": "Normstichprobe"
+                                                }]
+                                            },
+                                            {
+                                                "width": 10,
+                                                "text": ""
+                                            },
+                                            {
+                                                "width": "*",
+                                                "style": "chart_p",
+                                                "alignment": "left",
+                                                "text": [{
+                                                    "text": "Z-Werte wurden aufgrund der Normstichprobe nach Franke (2000) berechnet (N=300)."
+                                                }]
+                                            }
+                                        ],
+                                        "columnGap": 10
+                                    },
+                                    {
+                                        "columns": [{
+                                                "width": 68,
+                                                "style": "chart_p",
+                                                "color": "#757575",
+                                                "alignment": "right",
+                                                "text": [{
+                                                    "text": "Interpretation"
+                                                }]
+                                            },
+                                            {
+                                                "width": 10,
+                                                "text": ""
+                                            },
+                                            {
+                                                "width": "*",
+                                                "style": "chart_p",
+                                                "alignment": "left",
+                                                "text": [{
+                                                        "text": "Gesunde Ausprägung"
+                                                    },
+                                                    {
+                                                        "text": " (<=1)",
+                                                        "color": "#757575"
+                                                    },
+                                                    {
+                                                        "text": ", "
+                                                    },
+                                                    {
+                                                        "text": "Normale Ausprägung"
+                                                    },
+                                                    {
+                                                        "text": " (1-2)",
+                                                        "color": "#757575"
+                                                    },
+                                                    {
+                                                        "text": ", "
+                                                    },
+                                                    {
+                                                        "text": "Starke Ausprägung"
+                                                    },
+                                                    {
+                                                        "text": " (>=2)",
+                                                        "color": "#757575"
+                                                    }
+                                                ]
+                                            }
+                                        ],
+                                        "columnGap": 10
+                                    }
+                                ]
+                            }]
+                        ]
+                    }
+                }
+            ];
+
+
+            this.set('_d', d);
+            console.log('INIT _d', d);
+        },
+
+        _setDemoContent: function() {
+            this.set('content', this._d.debug_content);
+            this.set('content', JSON.stringify(this._d.debug_content, null, 2));
+            //console.warn('_setDemoContent: ', this._d.debug_content);
+        },
+
+        attached: function() {
+            this.__init();
+            console.warn('optinomic-demo-run attached.');
+        }
+    });
+    </script>
+</dom-module>
+
+<body>
+    <template is="dom-bind">
+        <h3>Demo: optinomic-chart-profile</h3>
+        <demo-snippet>
+            <optinomic-demo-run></optinomic-demo-run>
+        </demo-snippet>
+    </template>
+</body>
+
+</html>

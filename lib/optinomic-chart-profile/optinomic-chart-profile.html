@@ -16,7 +16,6 @@
 ## Porperties - Descripiton
 ### Options
 
-#### Example
 
 ```JAVASCRIPT
 var options = {
@@ -34,10 +33,14 @@ var options = {
     "show_score_profile_line": true,
     "show_score_circles": true,
     "show_settings_block": true,
+    "allow_toggle_settings_block": false,
     "range_alpha": 0.1,
     "vertical_grid_every_x": 1,
+    "norm_sample": "Z-Werte wurden aufgrund der Normstichprobe nach Franke (2000) berechnet (N=300).",
     "response_title_path": "calculation.info.mz.mz_typ",
-    "response_date_path": "calculation.info.filled"
+    "response_date_path": "calculation.info.filled",
+    "dropout": "calculation.info.mz.dropout",
+    "dropout_reason": "calculation.info.mz.dropout_reason"
 };
 ```
 
@@ -48,1613 +51,1832 @@ var options = {
 | __max__ | "auto" will find the min/max automatically for you. You can also hardcode the min or max by setting it as a number. _Default: "auto"_ |
 | __item_height__ | The height (px) of every scale from scales. _Default: 50_ |
 | __color_skin__ | measurements colors skin. Possible values so far are: `default`, `zebra`, `pink_dark_to_light`, `indigo_dark_to_light`, `grey_dark_to_light`  _Default: 'default'_ |
-| __show_settings_block__ | Should the elemet render the Settings-Tab? _Default: True_ |
+| __show_settings_block__ | Should the elemet render the Settings-Tab? Bei `false` wird die Übersicht der Messungen angezeigt. _Default: True_ |
+| __allow_toggle_settings_block__ | Darf der User zwischen Übersicht und "Settings-Tab" hin und herwechseln? _Default: True_ |
+| __response_title_path__ | Path to value: Expects a `String` - How should the measurement be called?  |
+| __response_date_path__ | Path to value: Expects a `String` - What ist the date of the measurment?  |
+| __dropout__ | Path to value: Expects a `boolean` - Is this measurement a dropout?  |
+| __dropout_reason__ | Path to value:: Expects a `String` - Reason for the dropout?  |
 
 
 @demo demo/index.html
 -->
 <dom-module id="optinomic-chart-profile">
-  <template>
-    <style include="iron-flex iron-flex-alignment">
-      :host {
-        display: block;
-        --grafic-width: 480px;
-        --grafic-height: 50px;
-        --grafic-margin-left: 0;
-        --grafic-margin-right: 0;
-        --grafic-top-space: 0;
-        --grafic-text-visibility: hidden;
-        --item-height: 50px;
-      }
+    <template>
+        <style include="iron-flex iron-flex-alignment">
+         :host {
+            display: block;
+            --grafic-width: 480px;
+            --grafic-height: 50px;
+            --grafic-margin-left: 0;
+            --grafic-margin-right: 0;
+            --grafic-top-space: 0;
+            --grafic-text-visibility: hidden;
+            --item-height: 50px;
+        }
 
-      div.relative {
-        position: relative;
-        width: 100%;
-        height: var(--grafic-height);
-      }
+        div.relative {
+            position: relative;
+            width: 100%;
+            height: var(--grafic-height);
+        }
 
-      div.absolute_left {
-        position: absolute;
-        top: var(--grafic-top-space);
-        left: 0;
-        width: var(--grafic-margin-left);
-        height: var(--grafic-height);
-        text-align: right;
-      }
+        div.absolute_left {
+            position: absolute;
+            top: var(--grafic-top-space);
+            left: 0;
+            width: var(--grafic-margin-left);
+            height: var(--grafic-height);
+            text-align: right;
+        }
 
-      div.absolute_left_mobile {
-        position: absolute;
-        top: var(--grafic-top-space);
-        left: 6px;
-        width: var(--grafic-width);
-        height: var(--grafic-height);
-      }
+        div.legend_left {
+            width: var(--grafic-margin-left) !important;
+            min-width: var(--grafic-margin-left) !important;
+        }
 
-      div.absolute_right {
-        position: absolute;
-        top: var(--grafic-top-space);
-        right: 0;
-        width: var(--grafic-margin-right);
-        height: var(--grafic-height);
-        visibility: var(--grafic-text-visibility);
-        text-align: left;
-      }
+        div.legend_right {
+            width: var(--grafic-margin-right) !important;
+            min-width: var(--grafic-margin-right) !important;
+        }
 
-      div.absolute_center {
-        position: absolute;
-        top: 0;
-        left: var(--grafic-margin-left);
-        width: var(--grafic-size);
-        height: var(--grafic-height);
-      }
+        div.legend_info {
+            width: 22px;
+        }
 
-      div.center {
-        margin-left: var(--grafic-margin-left);
-        margin-right: var(--grafic-margin-right);
-        width: var(--grafic-size);
-      }
 
-      div.vertical_grid_every_x {
-        position: absolute;
-        top: 0;
-        height: 20px;
-        margin-left: -3px;
-      }
 
-      div.description_item {
-        padding-left: 6px;
-        padding-right: 6px;
-        height: var(--item-height);
-        overflow: hidden;
-      }
+        div.absolute_left_mobile {
+            position: absolute;
+            top: var(--grafic-top-space);
+            left: 6px;
+            width: var(--grafic-width);
+            height: var(--grafic-height);
+        }
 
-      .description_item_title {
-        font-size: 12.5px;
-        font-weight: 400;
-        letter-spacing: 0.005em;
-        color: #212121;
-      }
+        div.absolute_right {
+            position: absolute;
+            top: var(--grafic-top-space);
+            right: 0;
+            width: var(--grafic-margin-right);
+            height: var(--grafic-height);
+            visibility: var(--grafic-text-visibility);
+            text-align: left;
+        }
 
-      .description_item_text {
-        font-size: 10.5px;
-        font-weight: 400;
-        letter-spacing: 0.005em;
-        color: #757575;
-        margin-top: -12px;
-      }
+        div.absolute_center {
+            position: absolute;
+            top: 0;
+            left: var(--grafic-margin-left);
+            width: var(--grafic-size);
+            height: var(--grafic-height);
+        }
 
-      .caption {
-        font-size: 10.6px;
-        letter-spacing: 0.020em;
-        line-height: 70% !important;
-        color: #757575;
-      }
+        div.center {
+            margin-left: var(--grafic-margin-left);
+            margin-right: var(--grafic-margin-right);
+            width: var(--grafic-size);
+        }
 
-      .grid-border-top {
-        border-top-color: #E0E0E0;
-        border-top-style: solid;
-        border-top-width: 1px;
-      }
+        div.vertical_grid_every_x {
+            position: absolute;
+            top: 0;
+            height: 20px;
+            margin-left: -3px;
+        }
 
-      .fade_in {
-        -webkit-animation: fadein 2s;
-        /* Safari, Chrome and Opera > 12.1 */
-        -moz-animation: fadein 2s;
+        div.description_item {
+            padding-left: 6px;
+            padding-right: 6px;
+            height: var(--item-height);
+            overflow: hidden;
+        }
+
+        .legend_left_text {
+            padding-left: 6px;
+            padding-right: 7px;
+            text-align: right;
+            color: #9E9E9E !important;
+            font-size: 11.5px;
+            font-weight: 400;
+            letter-spacing: 0.005em;
+        }
+
+        .description_item_title {
+            font-size: 11.5px;
+            font-weight: 400;
+            letter-spacing: 0.005em;
+            color: #212121;
+        }
+
+        .description_item_text {
+            font-size: 11.5px;
+            font-weight: 400;
+            letter-spacing: 0.005em;
+            color: #757575;
+            margin-top: -12px;
+        }
+
+        .caption {
+            font-size: 10.6px;
+            letter-spacing: 0.020em;
+            line-height: 70% !important;
+            color: #757575;
+        }
+
+        .grid-border-top {
+            border-top-color: #E0E0E0;
+            border-top-style: solid;
+            border-top-width: 1px;
+        }
+
+        .fade_in {
+            -webkit-animation: fadein 1s;
+            /* Safari, Chrome and Opera > 12.1 */
+            -moz-animation: fadein 1s;
+            /* Firefox < 16 */
+            -ms-animation: fadein 1s;
+            /* Internet Explorer */
+            -o-animation: fadein 1s;
+            /* Opera < 12.1 */
+            animation: fadein 1s;
+        }
+
+        .config_page {
+            padding-top: 12px;
+            padding-bottom: 24px;
+            min-height: 140px;
+            border-top-color: var(--paper-grey-100);
+            border-top-style: solid;
+            border-top-width: 1px;
+            margin-top: -1px;
+        }
+
+        .item {
+            display: block;
+            padding: 8px 16px;
+            margin-right: 24px;
+            background-color: var(--paper-grey-50);
+            min-height: 52px;
+        }
+
+        @keyframes fadein {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
         /* Firefox < 16 */
-        -ms-animation: fadein 2s;
+
+        @-moz-keyframes fadein {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        /* Safari, Chrome and Opera > 12.1 */
+
+        @-webkit-keyframes fadein {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
         /* Internet Explorer */
-        -o-animation: fadein 2s;
+
+        @-ms-keyframes fadein {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
         /* Opera < 12.1 */
-        animation: fadein 2s;
-      }
 
-      .config_page {
-        padding-top: 12px;
-        padding-bottom: 24px;
-        min-height: 140px;
-        border-bottom-color: var(--paper-grey-100);
-        border-bottom-style: solid;
-        border-bottom-width: 1px;
-        border-top-color: var(--paper-grey-100);
-        border-top-style: solid;
-        border-top-width: 1px;
-        margin-top: -1px;
-      }
-
-      .item {
-        display: block;
-        padding: 8px 16px;
-        margin-right: 24px;
-        background-color: var(--paper-grey-50);
-        min-height: 52px;
-      }
-      @keyframes fadein {
-        from {
-          opacity: 0;
+        @-o-keyframes fadein {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
         }
-        to {
-          opacity: 1;
-        }
-      }
-      /* Firefox < 16 */
-      @-moz-keyframes fadein {
-        from {
-          opacity: 0;
-        }
-        to {
-          opacity: 1;
-        }
-      }
-      /* Safari, Chrome and Opera > 12.1 */
-      @-webkit-keyframes fadein {
-        from {
-          opacity: 0;
-        }
-        to {
-          opacity: 1;
-        }
-      }
-      /* Internet Explorer */
-      @-ms-keyframes fadein {
-        from {
-          opacity: 0;
-        }
-        to {
-          opacity: 1;
-        }
-      }
-      /* Opera < 12.1 */
-      @-o-keyframes fadein {
-        from {
-          opacity: 0;
-        }
-        to {
-          opacity: 1;
-        }
-      }
 
-      paper-checkbox.styled {
-        margin-right: 12px;
-        align-self: center;
-        color: red !important;
-        --paper-checkbox-checked-color: var(--paper-grey-500);
-        --paper-checkbox-checked-ink-color: var(--paper-grey-500);
-        --paper-checkbox-unchecked-color: var(--paper-grey-900);
-        --paper-checkbox-unchecked-ink-color: var(--paper-grey-900);
-        --paper-checkbox-label-color: var(--paper-grey-900);
-        --paper-checkbox-label-spacing: 0;
-        --paper-checkbox-margin: 8px 16px 8px 0;
-        --paper-checkbox-vertical-align: top;
-      }
-
-      paper-checkbox .subtitle {
-        display: block;
-        font-size: 0.8em;
-        margin-top: 2px;
-        max-width: 150px;
-      }
-
-      paper-tabs {
-        font-family: 'Roboto', 'Noto', sans-serif;
-        -webkit-font-smoothing: antialiased;
-        width: 100%;
-        margin-bottom: 1px;
-        color: var(--paper-grey-700);
-        --paper-tabs-selection-bar-color: var(--paper-grey-500);
-      }
-
-      paper-tab {
-        --paper-tab-ink: var(--paper-indigo-500);
-      }
-
-      paper-tooltip.left {
-        --paper-tooltip-opacity: 1;
-        --paper-tooltip: {
-          width: var(--grafic-margin-left);
-          font-size: 14px;
-          margin-bottom: -12px !important;
+        paper-checkbox.styled {
+            margin-right: 12px;
+            align-self: center;
+            color: red !important;
+            --paper-checkbox-checked-color: var(--paper-grey-500);
+            --paper-checkbox-checked-ink-color: var(--paper-grey-500);
+            --paper-checkbox-unchecked-color: var(--paper-grey-900);
+            --paper-checkbox-unchecked-ink-color: var(--paper-grey-900);
+            --paper-checkbox-label-color: var(--paper-grey-900);
+            --paper-checkbox-label-spacing: 0;
+            --paper-checkbox-margin: 8px 16px 8px 0;
+            --paper-checkbox-vertical-align: top;
         }
-      }
 
-      paper-tooltip.right {
-        --paper-tooltip-opacity: 1;
-        --paper-tooltip: {
-          width: var(--grafic-margin-right);
-          font-size: 14px;
-          margin-bottom: -12px !important;
+        paper-checkbox .subtitle {
+            display: block;
+            font-size: 0.8em;
+            margin-top: 2px;
         }
-      }
 
-      iron-swipeable-pages > * {
-        -webkit-user-select: none;
-        /* Chrome all / Safari all */
-        -moz-user-select: none;
-        /* Firefox all */
-        -ms-user-select: none;
-        /* IE 10+ */
-        user-select: none;
-        /* Likely future */
-        cursor: default;
-      }
-      #grid_clinic_sample .item:last-of-type {
-        max-width: none;
-        width: calc(100% - 4px);
-      }
+        paper-tabs {
+            font-family: 'Roboto', 'Noto', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            width: 100%;
+            margin-bottom: 1px;
+            color: var(--paper-grey-700);
+            --paper-tabs-selection-bar-color: var(--paper-grey-500);
+        }
 
-    </style>
-    <!-- START -->
-    <template is="dom-if" if="[[this.start]]">
-      <div class="center">
-        <div class="layout horizontal flex">
-          <div class="flex">
-            <p style$="color:[[start.left_color]]">
-              [[start.left_title]]<span class="caption"><br>[[start.left_text]]</span>
-            </p>
-          </div>
-          <div class="flex">
-            <p style$="color:[[start.right_color]]; text-align:right">
-              [[start.right_title]]<span class="caption"><br>[[start.right_text]]</span>
-            </p>
-          </div>
-        </div>
-      </div>
-    </template>
-    <!-- GRAFIK -->
+        paper-tab {
+            --paper-tab-ink: var(--paper-indigo-500);
+        }
 
-    <div id="svg_grafic" class="relative fade_in">
-      <!-- Zahlenbeschriftung -->
-      <template is="dom-if" if="[[draw_chart]]">
+        paper-tooltip.left {
+            --paper-tooltip-opacity: 1;
+            --paper-tooltip: {
+                width: var(--grafic-margin-left);
+                font-size: 14px;
+                margin-bottom: -12px !important;
+            }
+        }
 
-        <div class="absolute_center fade_in">
-          <template is="dom-repeat" items="[[verticalGrid]]" as="g">
-            <template is="dom-if" if="[[!g.last]]">
-              <div class="vertical_grid_every_x" style$="left:[[g.x]]px">
-                <p class="caption flex caption" style="color:black">[[g.value]]</p>
-              </div>
-            </template>
-            <template is="dom-if" if="[[g.last]]">
-              <div class="vertical_grid_every_x" style$="left:[[g.x]]px; text-align:right;">
-                <p class="caption flex caption" style="color:black;">[[g.value]]</p>
-              </div>
-            </template>
-          </template>
-        </div>
-      </template>
+        paper-tooltip.right {
+            --paper-tooltip-opacity: 1;
+            --paper-tooltip: {
+                width: var(--grafic-margin-right);
+                font-size: 14px;
+                margin-bottom: -12px !important;
+            }
+        }
 
-      <!-- Grafik -->
-      <template is="dom-if" if="[[draw_chart]]" restamp="true">
-        <div class="absolute_center">
-          <template is="dom-if" if="[[scales_set]]">
-            <svg-container id="svg_container" view-box$="0 0 100 [[d.grafic_height]]" width="[[d.grafic_wight]]px" height$="[[d.grafic_height]]px">
-              <svg-component is="g" id="horizontalGrid">
-                <template is="dom-repeat" items="[[scales]]" as="scale">
-                  <svg-component is="line" x1="0" y1$="[[scale.bottomline]]" x2$="[[d.grafic_width]]" y2$="[[scale.bottomline]]" stroke$="[[d.color_grid]]" stroke-width="0.5"></svg-component>
-                  <template is="dom-if" if="[[scale.first]]">
-                    <svg-component is="line" x1="0" y1$="[[scale.topline]]" x2$="[[d.grafic_width]]" y2$="[[scale.topline]]" stroke$="[[d.color_grid]]" stroke-width="0.5"></svg-component>
-                  </template>
-                  <template is="dom-if" if="[[d.show_baseline]]">
-                    <svg-component is="line" x1="0" y1$="[[scale.baseline]]" x2$="[[d.grafic_width]]" y2$="[[scale.baseline]]" stroke$="[[d.color_grid_baseline]]" stroke-width="0.5"></svg-component>
-                  </template>
-                </template>
-              </svg-component>
-              <svg-component is="g" id="verticalGrid">
-                <template is="dom-repeat" items="[[verticalGrid]]" as="grid">
-                  <template is="dom-if" if="[[grid.zero]]">
-                    <svg-component is="line" x1$="[[grid.x]]" y1$="[[grid.y1]]" x2$="[[grid.x]]" y2$="[[grid.y2]]" stroke$="[[d.color_grid]]" stroke-width="3"></svg-component>
-                  </template>
-                  <template is="dom-if" if="[[!grid.zero]]">
-                    <svg-component is="line" x1$="[[grid.x]]" y1$="[[grid.y1]]" x2$="[[grid.x]]" y2$="[[grid.y2]]" stroke$="[[d.color_grid]]" stroke-width="0.5"></svg-component>
-                  </template>
-                </template>
-              </svg-component>
-            </svg-container>
-          </template>
-        </div>
-      </template>
-      <!-- Skalenbeschriftung: Links/Rechts -->
-      <template is="dom-if" if="[[d.wide]]">
-        <template is="dom-if" if="[[d.item_text_left_show]]">
-          <div class="absolute_left">
-            <template is="dom-repeat" id="left_beschriftung" items="[[scales]]" as="s">
-              <div class="description_item fade_in horizontal layout">
-                <div class="flex self-center">
-                  <div class="layout horizontal flex">
-                    <div class="flex">
-                      <p id$="[[s.id_left_text]]" class="description_item_title right">[[s.left_title]]</p>
-                      <template is="dom-if" if="[[d.show_scale_text]]">
-                        <p class="description_item_text right">[[s.left_text]]</p>
-                      </template>
-                      <template is="dom-if" if="[[!d.show_scale_text]]">
-                        <paper-tooltip class="left" position="top">[[s.left_text]]</paper-tooltip>
-                      </template>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </template>
-          </div>
-        </template>
-        <template is="dom-if" if="[[d.item_text_right_show]]">
-          <div class="absolute_right">
-            <template is="dom-repeat" id="right_beschriftung" items="[[scales]]" as="s">
-              <div class="description_item fade_in horizontal layout">
-                <div class="flex self-center">
-                  <div class="layout horizontal flex self-center">
-                    <div class="flex">
-                      <p id$="[[s.id_right_text]]" class="description_item_title">[[s.right_title]]</p>
-                      <template is="dom-if" if="[[d.show_scale_text]]">
-                        <p class="description_item_text">[[s.right_text]]</p>
-                      </template>
-                      <template is="dom-if" if="[[!d.show_scale_text]]">
-                        <paper-tooltip class="right" position="top">[[s.right_text]]</paper-tooltip>
-                      </template>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </template>
-          </div>
-        </template>
-      </template>
-      <!-- Skalenbeschriftung: Links | Mobile -->
-      <template is="dom-if" if="[[!d.wide]]">
-        <div class="absolute_left_mobile">
-          <template is="dom-repeat" id="right_beschriftung" items="[[scales]]" as="s">
-            <div class="description_item fade_in horizontal layout">
-              <div class="flex self-center">
+        iron-swipeable-pages>* {
+            -webkit-user-select: none;
+            /* Chrome all / Safari all */
+            -moz-user-select: none;
+            /* Firefox all */
+            -ms-user-select: none;
+            /* IE 10+ */
+            user-select: none;
+            /* Likely future */
+            cursor: default;
+        }
+
+        #grid_clinic_sample .item:last-of-type {
+            max-width: none;
+            width: calc(100% - 4px);
+        }
+        </style>
+        <span style="height:6px;">&nbsp;</span>
+        <!-- Stichprobe Norm -->
+        <template is="dom-if" if="[[d.norm_sample_defined]]">
+            <template is="dom-if" if="[[d.wide]]">
                 <div class="layout horizontal flex">
-                  <p class="description_item_title flex right">[[s.left_title]]</p>
+                    <div class="legend_left fade_in">
+                        <p class="legend_left_text" style="text-align:right">
+                            [[t.norm_sample]]
+                        </p>
+                    </div>
+                    <div class="flex">
+                        <p class="description_item_title">
+                            [[d.norm_sample]]
+                        </p>
+                    </div>
                 </div>
-              </div>
-            </div>
-          </template>
-        </div>
-      </template>
-      <!-- Ranges -->
-      <template is="dom-if" if="[[draw_chart]]" restamp="true">
-        <template is="dom-repeat" items="{{ranges}}" as="range">
-          <template is="dom-if" if="{{range.show}}">
-            <div class="absolute_center fade_in">
-              <svg-container id="svg_container_ranges" view-box$="0 0 100 [[d.grafic_height]]" width="[[d.grafic_wight]]px" height$="[[d.grafic_height]]px">
-                <svg-component is="g" class="fade">
-                  <svg-component is="rect" x$="[[range.x]]" y$="[[range.y]]" fill$="[[range.rgb]]" width$="[[range.width]]" height$="[[range.height]]" stroke-width="none"></svg-component>
-                  <svg-component is="line" x1$="[[range.line_x_left]]" y1$="[[range.line_y1]]" x2$="[[range.line_x_left]]" y2$="[[range.line_y2]]" stroke$="[[range.line_color]]" stroke-width="1"></svg-component>
-                  <svg-component is="line" x1$="[[range.line_x_right]]" y1$="[[range.line_y1]]" x2$="[[range.line_x_right]]" y2$="[[range.line_y2]]" stroke$="[[range.line_color]]" stroke-width="1"></svg-component>
-                </svg-component>
-              </svg-container>
-            </div>
-          </template>
+            </template>
+            <template is="dom-if" if="[[!d.wide]]">
+                <p class="description_item_title">
+                    <span style="color:#9E9E9E">[[t.norm_sample]]: </span>[[d.norm_sample]]
+                </p>
+            </template>
         </template>
-      </template>
-      <!-- Clinic Sample -->
-      <template is="dom-if" if="[[draw_chart]]" restamp="true">
-        <template is="dom-repeat" items="{{_clinic_sample_profiles}}" as="cs">
-          <template is="dom-if" if="{{cs.show}}">
-            <div class="absolute_center fade_in">
-              <svg-container id="svg_container_profiles" view-box$="0 0 100 [[d.grafic_height]]" width="[[d.grafic_wight]]px" height$="[[d.grafic_height]]px">
-                <!-- SVG - Grafik -->
-                <svg-component is="g" id="csProfile" class="fade">
-                  <svg-component is="polygon" points$="[[cs.points_str]]" fill$="[[cs.color_profile]]" stroke-width="0"></svg-component>
-                  <svg-component is="polyline" points$="[[cs.points_str_min]]" fill="none" stroke$="[[cs.color_line]]" stroke-width="1"></svg-component>
-                  <svg-component is="polyline" points$="[[cs.points_str_max]]" fill="none" stroke$="[[cs.color_line]]" stroke-width="1"></svg-component>
-                  <svg-component is="polyline" points$="[[cs.points_str_mean]]" fill="none" stroke$="[[cs.color_line_mean]]" stroke-width="2"></svg-component>
-                </svg-component>
-              </svg-container>
-            </div>
-          </template>
-        </template>
-      </template>
-      <!-- SVG - Profile -->
-      <template is="dom-if" if="[[draw_chart]]" restamp="true">
-        <template id="all_repeat" is="dom-repeat" items="{{_score_profiles}}" as="score">
-          <template is="dom-if" if="{{score.show}}">
-            <div class="absolute_center fade_in">
-              <svg-container id="svg_container_profiles" view-box$="0 0 100 [[d.grafic_height]]" width="[[d.grafic_wight]]px" height$="[[d.grafic_height]]px">
-                <svg-component is="g" id="scoreProfile" class="fade">
-                  <template is="dom-if" if="{{d.show_score_profile_line}}">
-                    <svg-component is="polyline" points$="[[score.points_str]]" fill="none" stroke$="[[score.color]]" stroke-width="5"></svg-component>
-                  </template>
-                  <template is="dom-if" if="{{d.show_score_vertical_line}}">
-                    <template is="dom-repeat" items="[[score.lines]]" as="line">
-                      <svg-component is="line" x1$="[[line.x]]" y1$="[[line.y1]]" x2$="[[line.x]]" y2$="[[line.y2]]" stroke$="[[score.color_line]]" stroke-width="5"></svg-component>
-                    </template>
-                  </template>
-                  <template is="dom-if" if="{{d.show_score_circles}}">
-                    <template is="dom-repeat" items="[[score.points]]" as="point">
-                      <svg-component is="circle" r="6" cx$="[[point.x]]" cy$="[[point.y]]" fill$="[[point.fill]]" stroke$="[[point.stroke]]" stroke-width="2"></svg-component>
-                    </template>
-                  </template>
-                </svg-component>
-              </svg-container>
-            </div>
-          </template>
-        </template>
-      </template>
-    </div>
-
-    <!-- TAB -->
-    <div class="">
-
-      <template is="dom-if" if="[[d.show_settings_block]]">
-        <div>
-          <paper-tabs selected="{{d.tab_selected}}" on-iron-select="__tabChanged" autoselect autoselect-delay="100" scrollable fit-container>
-            <paper-tab>{{t.measurements}}</paper-tab>
-            <paper-tab>{{t.clinic_sample}}</paper-tab>
-            <paper-tab>{{t.ranges}}</paper-tab>
-          </paper-tabs>
-          <iron-pages selected="{{d.tab_selected}}">
-            <div class="config_page">
-              <!-- Toggle Messungen -->
-              <g-r-i-d min-column-width="250" gutter="4" row-height="" shown="{{animate_grid_0}}">
-                <template is="dom-repeat" items="{{_score_profiles}}" as="score">
-                  <div class="item" style$="border: 1px solid {{score.color}}; background-color: {{score.color_rgb}};">
-                    <paper-checkbox checked="{{score.show}}" class="styled">
-                      <span>
-                        {{score.title}}
-                      </span>
-                      <span class="subtitle">
-                        {{score.date}}
-                      </span>
-                    </paper-checkbox>
-                  </div>
-                </template>
-              </g-r-i-d>
-            </div>
-            <div class="config_page fade_in">
-              <!-- Clinic-Sample-Wrapper -->
-              <g-r-i-d id="grid_clinic_sample" colums="1" gutter="4" row-height="" shown="{{animate_grid_1}}">
-                <template is="dom-if" if="{{!clinic_samples.empty}}">
-                  <template is="dom-repeat" items="{{_clinic_sample_profiles}}" as="cs">
-                    <div class="item" style$="border: 1px solid {{cs.color}}; background-color: {{cs.color_bg}}; width:100%;">
-                      <paper-checkbox checked="{{cs.show}}" class="styled">
-                        <span>
-                          {{cs.name}}
-                        </span>
-                      </paper-checkbox>
+        <!-- Stichprobe Klinik -->
+        <template is="dom-if" if="[[cs.available]]">
+            <template is="dom-if" if="[[d.wide]]">
+                <div class="layout horizontal flex">
+                    <div class="legend_left fade_in">
+                        <p class="legend_left_text" style="text-align:right">
+                            [[t.clinic_sample]]
+                        </p>
                     </div>
-                  </template>
-                  <div class="item" style="border: 1px solid black; width:100%;">
-                    <optinomic-clinic-sample-selector on-clinic-sample-changed="__csChanged" data_dive="[[clinic_sample_dive]]" clinic_sample="[[clinic_samples]]" data_dive_path="statistics" return_data="{{clinic_sample_data}}"></optinomic-clinic-sample-selector>
-                  </div>
-                </template>
-                <template is="dom-if" if="{{clinic_samples.empty}}">
-                  <div class="item" style="border: 1px solid #263238; background-color: #ECEFF1; width:100%;">
-                    <span style="color: #263238;">
-                      Keine Klinichstichprobe vorhanden.
-                    </span><br>
-                    <span class="subtitle">
-                      No clinic samples availabe.
-                    </span>
-                  </div>
-                </template>
-              </g-r-i-d>
-            </div>
-            <div class="config_page fade_in">
-              <!-- Ranges -->
-              <g-r-i-d min-column-width="360" gutter="4" row-height="" shown="{{animate_grid_2}}">
-                <template is="dom-if" if="{{d.ranges_available}}">
-                  <template is="dom-repeat" items="{{ranges}}" as="range">
-                    <div class="item" style$="border: 1px solid {{range.color}}; background-color: {{range.color_bg}};">
-                      <paper-checkbox checked="{{range.show}}" class="styled">
-                        <span>
-                          {{range.text}}
-                        </span>
-                        <span class="subtitle">
-                          {{range.from_to}}
-                        </span>
-                      </paper-checkbox>
+                    <div class="flex">
+                        <p class="description_item_title">
+                            [[cs.name]]
+                        </p>
                     </div>
-                  </template>
+                </div>
+            </template>
+            <template is="dom-if" if="[[!d.wide]]">
+                <p class="description_item_title">
+                    <span style="color:#9E9E9E">[[t.clinic_sample]]: </span>[[cs.name]]
+                </p>
+            </template>
+        </template>
+        <!-- Interpretation -->
+        <template is="dom-if" if="[[d.norm_sample_defined]]">
+            <template is="dom-if" if="[[d.wide]]">
+                <div class="layout horizontal flex">
+                    <div class="legend_left fade_in">
+                        <p class="legend_left_text" style="text-align:right">
+                            [[t.ranges]]
+                        </p>
+                    </div>
+                    <div class="flex">
+                        <p class="description_item_title">
+                            <template is="dom-repeat" items="{{ranges}}" as="range">
+                                <span>{{range.text}} <span style="color:#9E9E9E">({{range.from_to}})</span>
+                                <template is="dom-if" if="{{!range.last}}">,&nbsp;</template>
+                                </span>
+                            </template>
+                        </p>
+                    </div>
+                </div>
+            </template>
+            <template is="dom-if" if="[[!d.wide]]">
+                <p class="description_item_title">
+                    <span style="color:#9E9E9E">[[t.ranges]]: </span>
+                    <template is="dom-repeat" items="{{ranges}}" as="range">
+                        <span>{{range.text}} <span style="color:#9E9E9E">({{range.from_to}})</span>
+                        <template is="dom-if" if="{{!range.last}}">,&nbsp;</template>
+                        </span>
+                    </template>
+                </p>
+            </template>
+        </template>
+        <!-- START -->
+        <template is="dom-if" if="[[start]]">
+            <template is="dom-if" if="[[d.wide]]">
+                <div class="layout horizontal flex">
+                    <div class="legend_left fade_in">
+                        <p class="legend_left_text" style$="text-align:right; color:[[start.left_color]] !important">
+                            [[start.left_title]]
+                        </p>
+                    </div>
+                    <div class="flex">
+                        <p class="description_item_title">
+                            [[start.left_text]]
+                        </p>
+                    </div>
+                    <div class="flex">
+                        <p class="description_item_title" style="text-align:right">
+                            [[start.right_text]]
+                        </p>
+                    </div>
+                    <div class="legend_right fade_in">
+                        <p class="legend_left_text" style$="text-align:left; color:[[start.right_color]] !important">
+                            [[start.right_title]]
+                        </p>
+                    </div>
+                </div>
+            </template>
+            <template is="dom-if" if="[[!d.wide]]">
+                <div class="center fade_in">
+                    <div class="layout horizontal flex">
+                        <div class="flex">
+                            <p class="description_item_title">
+                                <span style$="color:[[start.left_color]]">[[start.left_title]]</span>
+                                <br>[[start.left_text]]
+                            </p>
+                        </div>
+                        <div class="flex">
+                            <p class="description_item_title" style="text-align:right">
+                                <span style$="color:[[start.right_color]]">[[start.right_title]]</span>
+                                <br>[[start.right_text]]
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </template>
+        <!-- GRAFIK -->
+        <div id="svg_grafic" class="relative fade_in">
+            <!-- Zahlenbeschriftung -->
+            <template is="dom-if" if="[[draw_chart]]">
+                <div class="absolute_center fade_in">
+                    <template is="dom-repeat" items="[[verticalGrid]]" as="g">
+                        <template is="dom-if" if="[[d.topnumber_hide_first_last]]">
+                            <template is="dom-if" if="[[!g.first_last]]">
+                                <div class="vertical_grid_every_x" style$="left:[[g.x]]px">
+                                    <p class="caption flex caption" style="color:black">[[g.value]]</p>
+                                </div>
+                            </template>
+                        </template>
+                        <template is="dom-if" if="[[!d.topnumber_hide_first_last]]">
+                            <template is="dom-if" if="[[!g.last]]">
+                                <div class="vertical_grid_every_x" style$="left:[[g.x]]px">
+                                    <p class="caption flex caption" style="color:black">[[g.value]]</p>
+                                </div>
+                            </template>
+                            <template is="dom-if" if="[[g.last]]">
+                                <div class="vertical_grid_every_x" style$="left:[[g.x]]px; text-align:right;">
+                                    <p class="caption flex caption" style="color:black;">[[g.value]]</p>
+                                </div>
+                            </template>
+                        </template>
+                    </template>
+                </div>
+            </template>
+            <!-- Grafik -->
+            <template is="dom-if" if="[[draw_chart]]" restamp="true">
+                <div class="absolute_center">
+                    <template is="dom-if" if="[[scales_set]]">
+                        <svg-container id="svg_container" view-box$="0 0 100 [[d.grafic_height]]" width="[[d.grafic_wight]]px" height$="[[d.grafic_height]]px">
+                            <svg-component is="g" id="horizontalGrid">
+                                <template is="dom-repeat" items="[[scales]]" as="scale">
+                                    <svg-component is="line" x1="0" y1$="[[scale.bottomline]]" x2$="[[d.grafic_width]]" y2$="[[scale.bottomline]]" stroke$="[[d.color_grid]]" stroke-width="0.5"></svg-component>
+                                    <template is="dom-if" if="[[scale.first]]">
+                                        <svg-component is="line" x1="0" y1$="[[scale.topline]]" x2$="[[d.grafic_width]]" y2$="[[scale.topline]]" stroke$="[[d.color_grid]]" stroke-width="0.5"></svg-component>
+                                    </template>
+                                    <template is="dom-if" if="[[d.show_baseline]]">
+                                        <svg-component is="line" x1="0" y1$="[[scale.baseline]]" x2$="[[d.grafic_width]]" y2$="[[scale.baseline]]" stroke$="[[d.color_grid_baseline]]" stroke-width="0.5"></svg-component>
+                                    </template>
+                                </template>
+                            </svg-component>
+                            <svg-component is="g" id="verticalGrid">
+                                <template is="dom-repeat" items="[[verticalGrid]]" as="grid">
+                                    <template is="dom-if" if="[[grid.zero]]">
+                                        <svg-component is="line" x1$="[[grid.x]]" y1$="[[grid.y1]]" x2$="[[grid.x]]" y2$="[[grid.y2]]" stroke$="[[d.color_grid]]" stroke-width="3"></svg-component>
+                                    </template>
+                                    <template is="dom-if" if="[[!grid.zero]]">
+                                        <svg-component is="line" x1$="[[grid.x]]" y1$="[[grid.y1]]" x2$="[[grid.x]]" y2$="[[grid.y2]]" stroke$="[[d.color_grid]]" stroke-width="0.5"></svg-component>
+                                    </template>
+                                </template>
+                            </svg-component>
+                        </svg-container>
+                    </template>
+                </div>
+            </template>
+            <!-- Skalenbeschriftung: Links/Rechts -->
+            <template is="dom-if" if="[[d.wide]]">
+                <template is="dom-if" if="[[d.item_text_left_show]]">
+                    <div class="absolute_left">
+                        <template is="dom-repeat" id="left_beschriftung" items="[[scales]]" as="s">
+                            <div class="description_item fade_in horizontal layout">
+                                <div class="flex self-center">
+                                    <div class="layout horizontal flex">
+                                        <div class="flex">
+                                            <p id$="[[s.id_left_text]]" class="description_item_title right">[[s.left_title]]</p>
+                                            <template is="dom-if" if="[[d.show_scale_text]]">
+                                                <p class="description_item_text right">[[s.left_text]]</p>
+                                            </template>
+                                            <template is="dom-if" if="[[!d.show_scale_text]]">
+                                                <paper-tooltip class="left" position="top">[[s.left_text]]</paper-tooltip>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
                 </template>
-                <template is="dom-if" if="{{!d.ranges_available}}">
-                  <div class="item" style="border: 1px solid #263238; background-color: #ECEFF1;">
-                    <span style="color: #263238;">
-                      Keine Interpretation vorhanden.
-                    </span><br>
-                    <span class="subtitle">
-                      No ranges availabe.
-                    </span>
-                  </div>
+                <template is="dom-if" if="[[d.item_text_right_show]]">
+                    <div class="absolute_right">
+                        <template is="dom-repeat" id="right_beschriftung" items="[[scales]]" as="s">
+                            <div class="description_item fade_in horizontal layout">
+                                <div class="flex self-center">
+                                    <div class="layout horizontal flex self-center">
+                                        <div class="flex">
+                                            <p id$="[[s.id_right_text]]" class="description_item_title">[[s.right_title]]</p>
+                                            <template is="dom-if" if="[[d.show_scale_text]]">
+                                                <p class="description_item_text">[[s.right_text]]</p>
+                                            </template>
+                                            <template is="dom-if" if="[[!d.show_scale_text]]">
+                                                <paper-tooltip class="right" position="top">[[s.right_text]]</paper-tooltip>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
                 </template>
-              </g-r-i-d>
-            </div>
-          </iron-pages>
+            </template>
+            <!-- Skalenbeschriftung: Links | Mobile -->
+            <template is="dom-if" if="[[!d.wide]]">
+                <div class="absolute_left_mobile">
+                    <template is="dom-repeat" id="right_beschriftung" items="[[scales]]" as="s">
+                        <div class="description_item fade_in horizontal layout">
+                            <div class="flex self-center">
+                                <div class="layout horizontal flex">
+                                    <p class="description_item_title flex right">[[s.left_title]]</p>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </template>
+            <!-- Ranges -->
+            <template is="dom-if" if="[[draw_chart]]" restamp="true">
+                <template is="dom-repeat" items="{{ranges}}" as="range">
+                    <template is="dom-if" if="{{range.show}}">
+                        <div class="absolute_center fade_in">
+                            <svg-container id="svg_container_ranges" view-box$="0 0 100 [[d.grafic_height]]" width="[[d.grafic_wight]]px" height$="[[d.grafic_height]]px">
+                                <svg-component is="g" class="fade">
+                                    <svg-component is="rect" x$="[[range.x]]" y$="[[range.y]]" fill$="[[range.rgb]]" width$="[[range.width]]" height$="[[range.height]]" stroke-width="none"></svg-component>
+                                    <svg-component is="line" x1$="[[range.line_x_left]]" y1$="[[range.line_y1]]" x2$="[[range.line_x_left]]" y2$="[[range.line_y2]]" stroke$="[[range.line_color]]" stroke-width="1"></svg-component>
+                                    <svg-component is="line" x1$="[[range.line_x_right]]" y1$="[[range.line_y1]]" x2$="[[range.line_x_right]]" y2$="[[range.line_y2]]" stroke$="[[range.line_color]]" stroke-width="1"></svg-component>
+                                </svg-component>
+                            </svg-container>
+                        </div>
+                    </template>
+                </template>
+            </template>
+            <!-- Clinic Sample -->
+            <template is="dom-if" if="[[draw_chart]]" restamp="true">
+                <template is="dom-repeat" items="{{_clinic_sample_profiles}}" as="cs">
+                    <template is="dom-if" if="{{cs.show}}">
+                        <div class="absolute_center fade_in">
+                            <svg-container id="svg_container_profiles" view-box$="0 0 100 [[d.grafic_height]]" width="[[d.grafic_wight]]px" height$="[[d.grafic_height]]px">
+                                <!-- SVG - Grafik -->
+                                <svg-component is="g" id="csProfile" class="fade">
+                                    <svg-component is="polygon" points$="[[cs.points_str]]" fill$="[[cs.color_profile]]" stroke-width="0"></svg-component>
+                                    <svg-component is="polyline" points$="[[cs.points_str_min]]" fill="none" stroke$="[[cs.color_line]]" stroke-width="1"></svg-component>
+                                    <svg-component is="polyline" points$="[[cs.points_str_max]]" fill="none" stroke$="[[cs.color_line]]" stroke-width="1"></svg-component>
+                                    <svg-component is="polyline" points$="[[cs.points_str_mean]]" fill="none" stroke$="[[cs.color_line_mean]]" stroke-width="2"></svg-component>
+                                </svg-component>
+                            </svg-container>
+                        </div>
+                    </template>
+                </template>
+            </template>
+            <!-- SVG - Profile -->
+            <template is="dom-if" if="[[draw_chart]]" restamp="true">
+                <template id="all_repeat" is="dom-repeat" items="{{_score_profiles}}" as="score">
+                    <template is="dom-if" if="[[!score.dropout_is]]">
+                        <template is="dom-if" if="{{score.show}}">
+                            <div class="absolute_center fade_in">
+                                <svg-container id="svg_container_profiles" view-box$="0 0 100 [[d.grafic_height]]" width="[[d.grafic_wight]]px" height$="[[d.grafic_height]]px">
+                                    <svg-component is="g" id="scoreProfile" class="fade">
+                                        <template is="dom-if" if="{{d.show_score_profile_line}}">
+                                            <svg-component is="polyline" points$="[[score.points_str]]" fill="none" stroke$="[[score.color]]" stroke-width="5"></svg-component>
+                                        </template>
+                                        <template is="dom-if" if="{{d.show_score_vertical_line}}">
+                                            <template is="dom-repeat" items="[[score.lines]]" as="line">
+                                                <svg-component is="line" x1$="[[line.x]]" y1$="[[line.y1]]" x2$="[[line.x]]" y2$="[[line.y2]]" stroke$="[[score.color_line]]" stroke-width="5"></svg-component>
+                                            </template>
+                                        </template>
+                                        <template is="dom-if" if="{{d.show_score_circles}}">
+                                            <template is="dom-repeat" items="[[score.points]]" as="point">
+                                                <svg-component is="circle" r="6" cx$="[[point.x]]" cy$="[[point.y]]" fill$="[[point.fill]]" stroke$="[[point.stroke]]" stroke-width="2"></svg-component>
+                                            </template>
+                                        </template>
+                                    </svg-component>
+                                </svg-container>
+                            </div>
+                        </template>
+                    </template>
+                </template>
+            </template>
         </div>
-      </template>
-    </div>
-  </template>
-  <script>
+        <!-- TAB -->
+        <div class="">
+            <template is="dom-if" if="[[!d.show_settings_block]]" restamp="true">
+                <!-- Overview -->
+                <div class="layout horizontal flex" style="margin-top: 6px;">
+                    <div class="legend_left fade_in" style="margin-top: 2px;">
+                        <template is="dom-if" if="[[d.allow_toggle_settings_block]]" restamp="true">
+                            <paper-icon-button icon="settings" on-tap="__toggleSettingsBlock" style="color:#E0E0E0"></paper-icon-button>
+                        </template>
+                    </div>
+                    <div class="flex">
+                        <g-r-i-d min-column-width="150" gutter="4" row-height="" shown="{{animate_grid_0}}">
+                            <template is="dom-if" if="[[draw_chart]]" restamp="true">
+                                <template is="dom-repeat" items="{{_score_profiles}}" as="score">
+                                    <div on-tap="__toggleScore" class="layout horizontal flex" style="padding:0; margin:0; cursor: crosshair;">
+                                        <div class="legend_info">
+                                            <template is="dom-if" if="[[score.show]]">
+                                                <p style$="font-size:64px; height:8px;  margin-top:-18px; padding:0; color:[[score.color]] ">
+                                                    -
+                                                </p>
+                                            </template>
+                                        </div>
+                                        <div class="flex" style="padding:0; margin: 0">
+                                            <p class="description_item_title">
+                                                [[score.title]] [[score.show]]
+                                                <template is="dom-if" if="[[score.dropout_is]]">
+                                                    | [[score.dropout_reason]]
+                                                </template>
+                                                <span style="color:#9E9E9E"><br>[[score.date]]</span>
+                                                <template is="dom-if" if="[[score.dropout_is]]"> | <span style="color:#F44336">Dropout</span></template>
+                                                &nbsp;
+                                            </p>
+                                        </div>
+                                    </div>
+                                </template>
+                            </template>
+                        </g-r-i-d>
+                    </div>
+                </div>
+            </template>
+            <div hidden="[[!d.show_settings_block]]">
+                <div class="layout horizontal flex">
+                    <template is="dom-if" if="[[d.allow_toggle_settings_block]]" restamp="true">
+                        <div class="fade_in">
+                            <paper-icon-button icon="close" on-tap="__toggleSettingsBlock" style="color:#E0E0E0;margin-top:8px;"></paper-icon-button>
+                        </div>
+                    </template>
+                    <div class="flex">
+                        <paper-tabs selected="{{d.tab_selected}}" on-iron-select="__tabChanged" autoselect autoselect-delay="100" scrollable fit-container>
+                            <paper-tab>{{t.measurements}}</paper-tab>
+                            <paper-tab>{{t.clinic_sample}}</paper-tab>
+                            <paper-tab>{{t.ranges}}</paper-tab>
+                        </paper-tabs>
+                    </div>
+                </div>
+                <iron-pages selected="{{d.tab_selected}}">
+                    <template is="dom-if" if="[[d.show_settings_block]]" restamp="true">
+                        <div class="config_page">
+                            <!-- Toggle Messungen -->
+                            <g-r-i-d min-column-width="250" gutter="4" row-height="" shown="{{animate_grid_0}}">
+                                <template is="dom-repeat" items="{{_score_profiles}}" as="score">
+                                    <template is="dom-if" if="[[score.dropout_is]]">
+                                        <div class="item" style="border:1px solid #F44336; background-color:#FFEBEE;">
+                                            <paper-checkbox checked="{{score.show}}" class="styled" disabled="[[score.dropout_is]]">
+                                                <span>[[score.title]] | <span style="color:#F44336">Dropout</span></span>
+                                                <span class="subtitle">[[score.date]] | [[score.dropout_reason]]</span>
+                                            </paper-checkbox>
+                                        </div>
+                                    </template>
+                                    <template is="dom-if" if="[[!score.dropout_is]]">
+                                        <div class="item" style$="border:1px solid {{score.color}}; background-color:{{score.color_rgb}};">
+                                            <paper-checkbox checked="{{score.show}}" class="styled">
+                                                <span>[[score.title]]</span>
+                                                <span class="subtitle">[[score.date]]</span>
+                                            </paper-checkbox>
+                                        </div>
+                                    </template>
+                                </template>
+                            </g-r-i-d>
+                        </div>
+                        <div class="config_page fade_in">
+                            <!-- Clinic-Sample-Wrapper -->
+                            <g-r-i-d id="grid_clinic_sample" colums="1" gutter="4" row-height="" shown="{{animate_grid_1}}">
+                                <template is="dom-if" if="{{!clinic_samples.empty}}">
+                                    <template is="dom-repeat" items="{{_clinic_sample_profiles}}" as="cs">
+                                        <div class="item" style$="border: 1px solid {{cs.color}}; background-color: {{cs.color_bg}}; width:100%;">
+                                            <paper-checkbox checked="{{cs.show}}" class="styled">
+                                                <span>{{cs.name}}</span>
+                                            </paper-checkbox>
+                                        </div>
+                                    </template>
+                                    <div class="item" style="border: 1px solid black; width:100%;">
+                                        <optinomic-clinic-sample-selector on-clinic-sample-changed="__csChanged" data_dive="[[clinic_sample_dive]]" clinic_sample="[[clinic_samples]]" data_dive_path="statistics" return_data="{{clinic_sample_data}}"></optinomic-clinic-sample-selector>
+                                    </div>
+                                </template>
+                                <template is="dom-if" if="{{clinic_samples.empty}}">
+                                    <div class="item" style="border: 1px solid #263238; background-color: #ECEFF1; width:100%;">
+                                        <span style="color: #263238;">Keine Klinichstichprobe vorhanden.</span>
+                                        <br>
+                                        <span class="subtitle">No clinic samples availabe.</span>
+                                    </div>
+                                </template>
+                            </g-r-i-d>
+                        </div>
+                        <div class="config_page fade_in">
+                            <!-- Ranges -->
+                            <g-r-i-d min-column-width="360" gutter="4" row-height="" shown="{{animate_grid_2}}">
+                                <template is="dom-if" if="{{d.ranges_available}}">
+                                    <template is="dom-repeat" items="{{ranges}}" as="range">
+                                        <div class="item" style$="border: 1px solid {{range.color}}; background-color: {{range.color_bg}};">
+                                            <paper-checkbox checked="{{range.show}}" class="styled">
+                                                <span>{{range.text}}</span>
+                                                <span class="subtitle">{{range.from_to}}</span>
+                                            </paper-checkbox>
+                                        </div>
+                                    </template>
+                                </template>
+                                <template is="dom-if" if="{{!d.ranges_available}}">
+                                    <div class="item" style="border: 1px solid #263238; background-color: #ECEFF1;">
+                                        <span style="color: #263238;">Keine Interpretation vorhanden.</span>
+                                        <br>
+                                        <span class="subtitle">No ranges availabe.</span>
+                                    </div>
+                                </template>
+                            </g-r-i-d>
+                        </div>
+                    </template>
+                </iron-pages>
+            </div>
+        </div>
+    </template>
+    <script>
     Polymer({
 
-      is: 'optinomic-chart-profile',
+        is: 'optinomic-chart-profile',
 
-      __translate: function (given_language) {
-        var t = {
-          "language": given_language
-        };
+        behaviors: [Polymer.IronResizableBehavior],
 
-        if (given_language === 'de') {
-          t.to = "bis";
-        } else {
-          t.to = "to";
-        };
+        listeners: {
+            'iron-resize': '__onIronResize'
+        },
 
-        if (given_language === 'de') {
-          t.measurements = "Messung";
-        } else {
-          t.measurements = "Measurement";
-        };
+        properties: {
+            language: {
+                type: String,
+                value: 'de'
+            },
+            options: {
+                type: Object,
+                observer: 'onInit'
+            },
+            start: {
+                type: Object
+            },
+            scales: {
+                type: Object,
+                observer: 'onInit'
+            },
+            scores: {
+                type: Object,
+                observer: 'onInit'
+            },
+            ranges: {
+                type: Object
+            },
+            clinic_samples: {
+                type: Object
+            },
+            clinic_sample_dive: {
+                type: Array,
+                notify: true
+            },
+            _clinic_sample_profiles: {
+                type: Array,
+                notify: true
+            }
+        },
 
-        if (given_language === 'de') {
-          t.clinic_sample = "Klinikstichprobe";
-        } else {
-          t.clinic_sample = "Clinical Sample";
-        };
 
-        if (given_language === 'de') {
-          t.ranges = "Interpretation";
-        } else {
-          t.ranges = "Ranges";
-        };
-
-        this.t = t;
-
-        // console.log('__translate (t):', this.t);
-      },
-
-      __init: function () {
-        // start @ Properties
-        this.start = this.start === undefined
-          ? null
-          : this.start;
-
-        // Scales @ Properties
-        this.scales = this.scales === undefined
-          ? []
-          : this.scales;
-
-        // Ranges @ Properties
-        this.ranges = this.ranges === undefined
-          ? []
-          : this.ranges;
-
-        // Scores @ Properties
-        this.scores = this.scores === undefined
-          ? {}
-          : this.scores;
-
-        // clinic_samples @ Properties
-        this.clinic_samples = this.clinic_samples === undefined
-          ? {
-            "empty": true
-          }
-          : this.clinic_samples;
-
-        var init_dive_path = [];
-        if ('dimensions' in this.clinic_samples) {
-          this.clinic_samples.dimensions.forEach(function (dim, dimID) {
-            init_dive_path.push(dim.array.length - 1);
-          });
-        };
-
-        this.clinic_sample_dive = this.clinic_sample_dive === undefined
-          ? init_dive_path
-          : this.clinic_sample_dive;
-
-        // Options @ Properties
-        var d = this.options === undefined
-          ? {}
-          : this.options;
-        d.color_grid = d.color_grid === undefined
-          ? "#795548"
-          : d.color_grid;
-        d.color_grid_baseline = d.color_grid_baseline === undefined
-          ? hexToRGB(d.color_grid, 0.4)
-          : d.color_grid_baseline;
-        d.color_clinic_sample = d.color_clinic_sample === undefined
-          ? "#673AB7"
-          : d.color_clinic_sample;
-
-        d.show_baseline = d.show_baseline === undefined
-          ? false
-          : d.show_baseline;
-        d.show_score_vertical_line = d.show_score_vertical_line === undefined
-          ? false
-          : d.show_score_vertical_line;
-        d.show_score_profile_line = d.show_score_profile_line === undefined
-          ? true
-          : d.show_score_profile_line;
-        d.show_score_circles = d.show_score_circles === undefined
-          ? true
-          : d.show_score_circles;
-
-        d.show_scale_text = d.show_scale_text === undefined
-          ? false
-          : d.show_scale_text;
-        d.show_settings_block = d.show_settings_block === undefined
-          ? true
-          : d.show_settings_block;
-
-        d.item_height = d.item_height === undefined
-          ? 50
-          : d.item_height;
-        d.item_text_left = d.item_text_left === undefined
-          ? 120
-          : d.item_text_left;
-        d.item_text_left_show = true;
-        if (d.item_text_left === 0) {
-          d.item_text_left_show = false;
-        };
-        d.item_text_right = d.item_text_right === undefined
-          ? 120
-          : d.item_text_right;
-        d.item_text_right_show = true;
-        if (d.item_text_right === 0) {
-          d.item_text_right_show = false;
-        };
-        d.response_title_path = d.response_title_path === undefined
-          ? null
-          : d.response_title_path;
-        d.response_date_path = d.response_date_path === undefined
-          ? null
-          : d.response_date_path;
-        d.min = d.min === undefined
-          ? "auto"
-          : d.min;
-        d.max = d.max === undefined
-          ? "auto"
-          : d.max;
-        d.range_alpha = d.range_alpha === undefined
-          ? 0.1
-          : d.range_alpha;
-        d.vertical_grid_every_x = d.vertical_grid_every_x === undefined
-          ? 1
-          : d.vertical_grid_every_x;
-
-        d.ranges_available = false;
-        if (this.ranges.length > 0) {
-          d.ranges_available = true;
-        };
-
-        // Resize
-        d.wide = false;
-        d.wide_breakpoint = d.wide_breakpoint === undefined
-          ? 520
-          : d.wide_breakpoint;
-
-        // Grafic Size
-        d.grafic_top_space = 20;
-        d.grafic_width = d.grafic_width === undefined
-          ? 480
-          : d.grafic_width;
-        d.grafic_margin_left = d.item_text_left;
-        d.grafic_margin_right = d.item_text_right;
-        d.grafic_text_visibility = 'hidden';
-        d.grafic_height = d.item_height * (this.scales.length) + d.grafic_top_space + 1;
-
-        // Tabs
-        d.tab_selected = 0;
-
-        // Color Skin
-        d.color_skin = d.color_skin === undefined
-          ? 'default'
-          : d.color_skin;
-
-        console.log('(✓) Options', d);
-
-        // Set Data
-        this.set('d', d);
-
-      },
-
-      __setScales: function () {
-        var d = this.get('d');
-        var scales = this.get('scales');
-        var scores = this.get('scores.data');
-
-        __getScorePath = function (current_score, path) {
-          var data_dive = JSON.parse(JSON.stringify(current_score));
-          var dots_count = (path.split(".").length - 1);
-
-          if (dots_count === 0) {
-            return data_dive[path]
-          };
-
-          var dive = [];
-          for (i = 0; i < dots_count; i++) {
-            var n = path.indexOf(".");
-            var item = path.substring(0, n);
-            path = path.substring(n + 1, path.length);
-            dive.push(item);
-            if (i === dots_count - 1) {
-              dive.push(path);
-            };
-          };
-
-          var return_value = null;
-
-          //console.log('__getScorePath', data_dive, dive);
-
-          for (i = 0; i < dive.length; i++) {
-            data_dive = data_dive[dive[i]];
-            if (i === dots_count) {
-              return_value = data_dive;
-
-              return return_value;
-            };
-          };
-        };
-
-        if ((scales !== undefined) && (scales !== null)) {
-          scales.forEach(function (scale, scaleID) {
-            scale.id = scaleID;
-            scale.id_left_text = scaleID + "_left_text";
-            scale.id_right_text = scaleID + "_right_text";;
-            scale.topline = scaleID * d.item_height + d.grafic_top_space;
-            scale.baseline = scale.topline + (d.item_height / 2);
-            scale.bottomline = scale.topline + d.item_height;
-
-            scale.first = false;
-            if (scaleID === 0) {
-              scale.first = true;
+        __translate: function(given_language) {
+            var t = {
+                "language": given_language
             };
 
-            scale.last = false;
-            if (scaleID === scales.length - 1) {
-              scale.last = true;
-            };
-
-            scale.scores = [];
-
-            if ((scores !== undefined) && (scores !== null)) {
-              scores.forEach(function (score, scoreID) {
-                var score_obj = {
-                  "value": null
-                };
-
-                // Get Values
-                if (scale.score_path) {
-                  score_obj.value = this.__getScorePath(score, scale.score_path);
-                };
-
-                if (d.response_title_path) {
-                  score_obj.title = this.__getScorePath(score, d.response_title_path);
-                } else {
-                  score_obj.title = 'Unbekannt'
-                };
-
-                if (d.response_date_path) {
-                  score_obj.date = this.__getScorePath(score, d.response_date_path);
-                } else {
-                  score_obj.date = null
-                };
-
-                scale.scores.push(score_obj);
-              });
-            };
-          });
-        };
-        // Auto Min/Max
-        var do_min = false;
-        if ((d.min === 'auto') || (d.min === undefined)) {
-          do_min = true;
-        } else {
-          item_min = parseInt(d.min);
-          this.set('d.item_min', item_min);
-        };
-
-        var do_max = false;
-        if ((d.max === 'auto') || (d.max === undefined)) {
-          do_max = true;
-        } else {
-          item_max = parseInt(d.max);
-          this.set('d.item_max', item_max);
-        };
-
-        if (do_max || do_min) {
-          var min_max = __autoMinMax(do_min, do_max, d, this.scales);
-          this.set('d.item_min', min_max.item_min);
-          this.set('d.item_max', min_max.item_max);
-        };
-
-        // Set Data
-        this.set('scales_set', true);
-
-        // console.log('(✓) Scales', this.scales); Follow the white Rabbit
-        this.__setRanges();
-        this.__setVerticalGrid();
-        this.__setScoreProfiles();
-
-      },
-
-      __setVerticalGrid: function () {
-
-        var d = this.get('d');
-        var every = d.vertical_grid_every_x;
-        var every_counter = 0;
-
-        vGrid = [];
-        for (i = d.item_min; i < d.item_max + 1; i++) {
-          every_counter = every_counter + 1;
-
-          var grid_object = {
-            "count": i - d.item_min,
-            "value": i,
-            "x": __getXPos(d.item_min, d.item_max, d.grafic_width, i),
-            "y1": d.grafic_top_space,
-            "y2": d.grafic_height - 1,
-            "zero": false,
-            "first": false,
-            "last": false
-          };
-
-          if (i === 0) {
-            grid_object.zero = true;
-          };
-
-          if ((i - d.item_min) === 0) {
-            grid_object.first = true;
-          };
-
-          if ((i - d.item_max) === 0) {
-            grid_object.last = true;
-          };
-
-          if ((every_counter === every) || (i === d.item_min) || (i === d.item_max) || (i === 0)) {
-            vGrid.push(grid_object);
-            every_counter = 0;
-          };
-        };
-
-        // Set Data
-        this.set('verticalGrid', vGrid);
-        // console.log('(✓) vGrid', this.verticalGrid, this.d);
-      },
-
-      __setRanges: function () {
-        var ranges = JSON.parse(JSON.stringify(this.get('ranges')));
-        var d = this.get('d');
-        var t = this.get('t');
-
-        if (ranges.length > 0) {
-          ranges.forEach(function (range, rangeID) {
-            range.id = rangeID;
-            range.color_bg = hexToRGB(range.color, 0.1);
-            range.rgb = hexToRGB(range.color, d.range_alpha);
-            range.show = range.show === undefined
-              ? true
-              : range.show;
-
-            range.from_to = "";
-            range.start = range.range_start;
-            range.stop = range.range_stop;
-
-            if (range.range_start === -999) {
-              range.start = d.item_min;
-              range.from_to = "<= ";
+            if (given_language === 'de') {
+                t.to = "bis";
             } else {
-              range.from_to = range.from_to + range.start + " " + t.to + " ";
+                t.to = "to";
             };
 
-            if (range.range_stop === 999) {
-              range.stop = d.item_max;
-              range.from_to = ">= " + range.start;
+            if (given_language === 'de') {
+                t.measurements = "Messung";
             } else {
-              range.from_to = range.from_to + range.stop;
+                t.measurements = "Measurement";
             };
 
-            range.start_pos = __getXPos(d.item_min, d.item_max, d.grafic_width, range.start);
-            range.stop_pos = __getXPos(d.item_min, d.item_max, d.grafic_width, range.stop);
-
-            range.width = range.stop_pos - range.start_pos;
-            range.x = __getXPos(d.item_min, d.item_max, d.grafic_width, range.start);
-            range.y = d.grafic_top_space;
-
-            range.height = d.grafic_height - d.grafic_top_space - 1;
-
-            range.line_x_left = range.x + 1;
-            range.line_x_right = range.x + range.width - 1;
-            range.line_y1 = d.grafic_top_space;
-            range.line_y2 = d.grafic_height - 1;
-            range.line_color = hexToRGB(range.color, (d.range_alpha * 2));
-
-          });
-
-          // Set Data
-          this.set('ranges', ranges);
-          // console.log('(✓) Ranges', this.ranges);
-        };
-
-      },
-
-      __setScoreProfiles: function () {
-
-        var d = this.get('d');
-        var ranges = this.get('ranges');
-        var scales = this.get('scales');
-
-        var my_min = d.item_min;
-        var my_max = d.item_max;
-        var my_100 = d.grafic_width;
-
-        var scores_points = [];
-        var scores_lines = [];
-        scales.forEach(function (scale, scaleID) {
-          scale.scores.forEach(function (score, scoreID) {
-
-            score.value_x = __getXPos(my_min, my_max, my_100, score.value);
-            score.value_y = scale.baseline;
-
-            var my_color = getColor(scoreID, d.color_skin);
-
-            var score_obj = {
-              "id": scoreID,
-              "title": score.title,
-              "date": formatDateCH(score.date),
-              "points": [],
-              "lines": [],
-              "points_str": "",
-              "color": my_color,
-              "color_line": hexToRGB(my_color, 0.8),
-              "color_rgb": hexToRGB(my_color, 0.1),
-              "show": true
+            if (given_language === 'de') {
+                t.clinic_sample = "Klinikstichprobe";
+            } else {
+                t.clinic_sample = "Clinical sample";
             };
 
-            var points_obj = {
-              "value": score.value,
-              "x": score.value_x,
-              "y": score.value_y,
-              "stroke": my_color,
-              "fill": "white"
+            if (given_language === 'de') {
+                t.norm_sample = "Normstichprobe";
+            } else {
+                t.norm_sample = "Norm sample";
             };
 
-            var line_obj = {
-              "y1": scale.topline,
-              "y2": scale.bottomline,
-              "x": score.value_x
+            if (given_language === 'de') {
+                t.ranges = "Interpretation";
+            } else {
+                t.ranges = "Ranges";
             };
 
-            // Einfärben der Circles
+            this.t = t;
+
+            // console.log('__translate (t):', this.t);
+        },
+
+        __init: function() {
+            // start @ Properties
+            this.start = this.start === undefined ? null : this.start;
+
+            // Scales @ Properties
+            this.scales = this.scales === undefined ? [] : this.scales;
+
+            // Ranges @ Properties
+            this.ranges = this.ranges === undefined ? [] : this.ranges;
+
+
+            // Scores @ Properties
+            this.scores = this.scores === undefined ? {} : this.scores;
+
+            // clinic_samples @ Properties
+            this.clinic_samples = this.clinic_samples === undefined ? { "empty": true } : this.clinic_samples;
+
+            var init_dive_path = [];
+            if ('dimensions' in this.clinic_samples) {
+                this.clinic_samples.dimensions.forEach(function(dim, dimID) {
+                    init_dive_path.push(dim.array.length - 1);
+                });
+            };
+
+            this.clinic_sample_dive = this.clinic_sample_dive === undefined ? init_dive_path : this.clinic_sample_dive;
+
+            // Options @ Properties
+            var d = this.options === undefined ? {} : this.options;
+            d.color_grid = d.color_grid === undefined ? "#795548" : d.color_grid;
+            d.topnumber_hide_first_last = d.topnumber_hide_first_last === undefined ? false : d.topnumber_hide_first_last;
+
+
+            d.color_grid_baseline = d.color_grid_baseline === undefined ? hexToRGB(d.color_grid, 0.4) : d.color_grid_baseline;
+            d.color_clinic_sample = d.color_clinic_sample === undefined ? "#673AB7" : d.color_clinic_sample;
+
+            d.show_baseline = d.show_baseline === undefined ? false : d.show_baseline;
+            d.show_score_vertical_line = d.show_score_vertical_line === undefined ? false : d.show_score_vertical_line;
+            d.show_score_profile_line = d.show_score_profile_line === undefined ? true : d.show_score_profile_line;
+            d.show_score_circles = d.show_score_circles === undefined ? true : d.show_score_circles;
+
+            d.show_scale_text = d.show_scale_text === undefined ? false : d.show_scale_text;
+
+            d.show_settings_block = d.show_settings_block === undefined ? false : d.show_settings_block;
+
+            d.allow_toggle_settings_block = d.allow_toggle_settings_block === undefined ? true : d.allow_toggle_settings_block;
+
+            d.item_height = d.item_height === undefined ? 50 : d.item_height;
+            d.item_text_left = d.item_text_left === undefined ? 120 : d.item_text_left;
+            d.item_text_left_show = true;
+            if (d.item_text_left === 0) {
+                d.item_text_left_show = false;
+            };
+            d.item_text_right = d.item_text_right === undefined ? 120 : d.item_text_right;
+            d.item_text_right_show = true;
+            if (d.item_text_right === 0) {
+                d.item_text_right_show = false;
+            };
+
+            // Legende Minimum links
+            if (d.item_text_left <= 62) {
+                d.legend_left = 62;
+            } else {
+                d.legend_left = d.item_text_left;
+            };
+
+
+            d.response_title_path = d.response_title_path === undefined ? null : d.response_title_path;
+            d.response_date_path = d.response_date_path === undefined ? null : d.response_date_path;
+            d.min = d.min === undefined ? "auto" : d.min;
+            d.max = d.max === undefined ? "auto" : d.max;
+            d.range_alpha = d.range_alpha === undefined ? 0.1 : d.range_alpha;
+            d.vertical_grid_every_x = d.vertical_grid_every_x === undefined ? 1 : d.vertical_grid_every_x;
+
+            d.ranges_available = false;
+            if (this.ranges.length > 0) {
+                d.ranges_available = true;
+            };
+
+            if ("norm_sample" in d) {
+                d.norm_sample_defined = true;
+            } else {
+                d.norm_sample_defined = false;
+            };
+
+
+            // Resize
+            d.wide = false;
+            d.wide_breakpoint = d.wide_breakpoint === undefined ? 520 : d.wide_breakpoint;
+
+            // Grafic Size
+            d.grafic_top_space = 20;
+            d.grafic_width = d.grafic_width === undefined ? 480 : d.grafic_width;
+            d.grafic_margin_left = d.item_text_left;
+            d.grafic_margin_right = d.item_text_right;
+            d.grafic_text_visibility = 'hidden';
+            d.grafic_height = d.item_height * (this.scales.length) + d.grafic_top_space + 1;
+
+            // Tabs
+            d.tab_selected = 0;
+
+            // Color Skin
+            d.color_skin = d.color_skin === undefined ? 'default' : d.color_skin;
+
+            // console.log('(✓) Options', d);
+
+            // Set Data
+            this.set('d', d);
+        },
+
+        __setScales: function(full) {
+            full = full === undefined ? true : false;
+            var d = this.get('d');
+            var scales = this.get('scales');
+            var scores = this.get('scores.data');
+
+            __getScorePath = function(current_score, path) {
+                var data_dive = JSON.parse(JSON.stringify(current_score));
+                var dots_count = (path.split(".").length - 1);
+
+                if (dots_count === 0) {
+                    return data_dive[path]
+                };
+
+                var dive = [];
+                for (i = 0; i < dots_count; i++) {
+                    var n = path.indexOf(".");
+                    var item = path.substring(0, n);
+                    path = path.substring(n + 1, path.length);
+                    dive.push(item);
+                    if (i === dots_count - 1) {
+                        dive.push(path);
+                    };
+                };
+
+                var return_value = null;
+
+                //console.log('__getScorePath', data_dive, dive);
+
+                for (i = 0; i < dive.length; i++) {
+                    data_dive = data_dive[dive[i]];
+                    if (i === dots_count) {
+                        return_value = data_dive;
+
+                        return return_value;
+                    };
+                };
+            };
+
+            if ((scales !== undefined) && (scales !== null)) {
+                scales.forEach(function(scale, scaleID) {
+                    scale.id = scaleID;
+                    scale.id_left_text = scaleID + "_left_text";
+                    scale.id_right_text = scaleID + "_right_text";;
+                    scale.topline = scaleID * d.item_height + d.grafic_top_space;
+                    scale.baseline = scale.topline + (d.item_height / 2);
+                    scale.bottomline = scale.topline + d.item_height;
+
+                    scale.first = false;
+                    if (scaleID === 0) {
+                        scale.first = true;
+                    };
+
+                    scale.last = false;
+                    if (scaleID === scales.length - 1) {
+                        scale.last = true;
+                    };
+
+                    scale.scores = [];
+
+                    if ((scores !== undefined) && (scores !== null)) {
+                        scores.forEach(function(score, scoreID) {
+                            var score_obj = {
+                                "value": null,
+                                "dropout_is": false,
+                                "dropout_reason": ""
+                            };
+
+                            // Get Values
+                            if (scale.score_path) {
+                                score_obj.value = this.__getScorePath(score, scale.score_path);
+                            };
+
+                            if (d.response_title_path) {
+                                score_obj.title = this.__getScorePath(score, d.response_title_path);
+                            } else {
+                                score_obj.title = 'Unbekannt'
+                            };
+
+                            if (d.response_date_path) {
+                                score_obj.date = this.__getScorePath(score, d.response_date_path);
+                            } else {
+                                score_obj.date = null
+                            };
+
+                            if ("dropout" in d) {
+                                if (d.dropout) {
+                                    if (this.__getScorePath(score, d.dropout) === true) {
+                                        score_obj.dropout_is = true;
+                                        score_obj.dropout_reason = this.__getScorePath(score, d.dropout_reason);
+                                    };
+                                };
+                            };
+
+                            scale.scores.push(score_obj);
+                        });
+                    };
+                });
+            };
+
+            // Auto Min/Max
+            var do_min = false;
+            if ((d.min === 'auto') || (d.min === undefined)) {
+                do_min = true;
+            } else {
+                item_min = parseInt(d.min);
+                this.set('d.item_min', item_min);
+            };
+
+            var do_max = false;
+            if ((d.max === 'auto') || (d.max === undefined)) {
+                do_max = true;
+            } else {
+                item_max = parseInt(d.max);
+                this.set('d.item_max', item_max);
+            };
+
+            if (do_max || do_min) {
+                var min_max = __autoMinMax(do_min, do_max, d, this.scales);
+                this.set('d.item_min', min_max.item_min);
+                this.set('d.item_max', min_max.item_max);
+            };
+
+            // Set Data
+            this.set('scales_set', true);
+
+            // console.log('(✓) Scales', this.scales); Follow the white Rabbit
+            if (full) {
+                this.__setRanges();
+                this.__setVerticalGrid();
+                this.__setScoreProfiles();
+            };
+        },
+
+        __setVerticalGrid: function() {
+
+            var d = this.get('d');
+            var every = d.vertical_grid_every_x;
+            var every_counter = 0;
+
+            vGrid = [];
+            for (i = d.item_min; i < d.item_max + 1; i++) {
+                every_counter = every_counter + 1;
+
+                var grid_object = {
+                    "count": i - d.item_min,
+                    "value": i,
+                    "x": __getXPos(d.item_min, d.item_max, d.grafic_width, i),
+                    "y1": d.grafic_top_space,
+                    "y2": d.grafic_height - 1,
+                    "zero": false,
+                    "first": false,
+                    "last": false,
+                    "first_last": false
+                };
+
+                if (i === 0) {
+                    grid_object.zero = true;
+                };
+
+                if ((i - d.item_min) === 0) {
+                    grid_object.first = true;
+                };
+
+                if ((i - d.item_max) === 0) {
+                    grid_object.last = true;
+                };
+
+                if (grid_object.first || grid_object.last) {
+                    grid_object.first_last = true;
+                };
+
+                if ((every_counter === every) || (i === d.item_min) || (i === d.item_max) || (i === 0)) {
+                    vGrid.push(grid_object);
+                    every_counter = 0;
+                };
+            };
+
+            // Set Data
+            this.set('verticalGrid', vGrid);
+            // console.log('(✓) vGrid', this.verticalGrid, this.d);
+        },
+
+        __setRanges: function() {
+            var ranges = JSON.parse(JSON.stringify(this.get('ranges')));
+            var d = this.get('d');
+            var t = this.get('t');
+
             if (ranges.length > 0) {
-              ranges.forEach(function (range, rangeID) {
 
-                if (score.value_x >= range.start_pos && score.value_x <= range.stop_pos) {
-                  points_obj.fill = range.color;
-                }
+                ranges.forEach(function(range, rangeID) {
+                    range.id = rangeID;
+                    range.color_bg = hexToRGB(range.color, 0.1);
+                    range.rgb = hexToRGB(range.color, d.range_alpha);
+                    range.show = range.show === undefined ?
+                        true :
+                        range.show;
 
-              });
+
+                    range.from_to = "";
+                    range.start = range.range_start;
+                    range.stop = range.range_stop;
+
+                    if (range.range_start === -999) {
+                        range.start = d.item_min;
+                        range.from_to = "<=";
+                    } else {
+                        range.from_to = ">" + range.start + " " + t.to + " ";
+                    };
+
+                    if (range.range_stop === 999) {
+                        range.stop = d.item_max;
+                        range.from_to = ">=" + range.stop;
+                    } else {
+                        range.from_to = range.from_to + range.stop;
+                    };
+
+                    if (rangeID === ranges.length - 1) {
+                        range.last = true;
+                    } else {
+                        range.last = false;
+                    };
+
+
+
+                    range.start_pos = __getXPos(d.item_min, d.item_max, d.grafic_width, range.start);
+                    range.stop_pos = __getXPos(d.item_min, d.item_max, d.grafic_width, range.stop);
+
+                    range.width = range.stop_pos - range.start_pos;
+                    range.x = __getXPos(d.item_min, d.item_max, d.grafic_width, range.start);
+                    range.y = d.grafic_top_space;
+
+                    range.height = d.grafic_height - d.grafic_top_space - 1;
+
+                    range.line_x_left = range.x + 1;
+                    range.line_x_right = range.x + range.width - 1;
+                    range.line_y1 = d.grafic_top_space;
+                    range.line_y2 = d.grafic_height - 1;
+                    range.line_color = hexToRGB(range.color, (d.range_alpha * 2));
+                });
+
+                // Set Data
+                this.set('ranges', ranges);
+                // console.log('(✓) Ranges', this.ranges);
             };
+        },
 
-            scores_points[scoreID] = scores_points[scoreID] === undefined
-              ? score_obj
-              : scores_points[scoreID];
-            scores_points[scoreID].points.push(points_obj);
-            scores_points[scoreID].points_str = scores_points[scoreID].points_str + score.value_x + ',' + score.value_y + ' ';
+        __setScoreProfiles: function() {
 
-            scores_lines[scoreID] = scores_lines[scoreID] === undefined
-              ? score_obj
-              : scores_lines[scoreID];
-            scores_lines[scoreID].lines.push(line_obj);
+            var d = this.get('d');
+            var ranges = this.get('ranges');
+            var scales = this.get('scales');
 
-          });
-        });
+            var my_min = d.item_min;
+            var my_max = d.item_max;
+            var my_100 = d.grafic_width;
 
-        this.set('_score_profiles', scores_points);
-        // console.log('(✓) score_profiles', this._score_profiles);
+            var scores_points = [];
+            var scores_lines = [];
+            scales.forEach(function(scale, scaleID) {
+                scale.scores.forEach(function(score, scoreID) {
 
-      },
+                    score.value_x = __getXPos(my_min, my_max, my_100, score.value);
+                    score.value_y = scale.baseline;
 
-      __csChanged: function (e) {
+                    var my_color = getColor(scoreID, d.color_skin);
 
-        var d = this.get('d');
-        var scales = this.get('scales');
+                    var score_obj = {
+                        "id": scoreID,
+                        "title": score.title,
+                        "date": formatDateCH(score.date),
+                        "points": [],
+                        "lines": [],
+                        "points_str": "",
+                        "color": my_color,
+                        "color_line": hexToRGB(my_color, 0.8),
+                        "color_rgb": hexToRGB(my_color, 0.1),
+                        "dropout_is": score.dropout_is,
+                        "dropout_reason": score.dropout_reason
+                    };
 
-        if (e !== undefined) {
-          if (e.detail !== undefined) {
-            var clinic_sample_name = e.detail;
-          } else {
-            var clinic_sample_name = 'AUTO';
-          };
-        };
+                    if ("show" in score) {
+                        score_obj.show = score.show;
+                        console.error(score);
+                    } else {
+                        score_obj.show = true;
+                    };
 
-        var clinic_sample_data = this.get('clinic_sample_data');
-        var clinic_sample_profiles = [];
-        // var clinic_sample_profiles = clinic_sample_profiles === undefined ?[] : clinic_sample_profiles;
-        var clone_clinic_sample_profiles = JSON.parse(JSON.stringify(clinic_sample_profiles));
+                    if (score.dropout_is) {
+                        score_obj.show = false;
+                    };
 
-        var my_min = d.item_min;
-        var my_max = d.item_max;
-        var my_100 = d.grafic_width;
 
-        var abstand = d.item_height / 5;
+                    var points_obj = {
+                        "value": score.value,
+                        "x": score.value_x,
+                        "y": score.value_y,
+                        "stroke": my_color,
+                        "fill": "white"
+                    };
 
-        var scores_points_min = [];
-        var scores_points_max = [];
-        var scores_points_mean = [];
+                    var line_obj = {
+                        "y1": scale.topline,
+                        "y2": scale.bottomline,
+                        "x": score.value_x
+                    };
 
-        function sortByKey(array, key) {
-          return array.sort(function (a, b) {
-            var x = a[key];
-            var y = b[key];
-            return ((x < y)
-              ? -1
-              : ((x > y)
-                ? 1
-                : 0));
-          });
-        };
+                    // Einfärben der Circles
+                    if (ranges.length > 0) {
+                        ranges.forEach(function(range, rangeID) {
 
-        clone_clinic_sample_profiles.forEach(function (cs, csID) {
-          cs.show = false;
-        });
+                            if (score.value_x >= range.start_pos && score.value_x <= range.stop_pos) {
+                                points_obj.fill = range.color;
+                            }
 
-        scales.forEach(function (scale, scaleID) {
-          var data = clinic_sample_data[scale.clinic_sample_var];
-          scale.clinic_sample_min = data['mean_1sd_min'];
-          scale.clinic_sample_max = data['mean_1sd_plus'];
-          scale.clinic_sample_mean = data['mean'];
+                        });
+                    };
 
-          if (clinic_sample_name.indexOf("(N=") === -1) {
-            clinic_sample_name = e.detail + " (N=" + data['n'] + ")";
-          };
+                    scores_points[scoreID] = scores_points[scoreID] === undefined ? score_obj : scores_points[scoreID];
+                    scores_points[scoreID].points.push(points_obj);
+                    scores_points[scoreID].points_str = scores_points[scoreID].points_str + score.value_x + ',' + score.value_y + ' ';
 
-          var points_obj_min = {};
-          var points_obj_max = {};
-          var points_obj_mean = {};
+                    scores_lines[scoreID] = scores_lines[scoreID] === undefined ? score_obj : scores_lines[scoreID];
+                    scores_lines[scoreID].lines.push(line_obj);
 
-          if (scaleID === 0) {
-            points_obj_min = {
-              "value": scale.clinic_sample_min,
-              "x": __getXPos(my_min, my_max, my_100, scale.clinic_sample_min),
-              "y": scale.topline,
-              "scaleID": scaleID
-            };
-            points_obj_max = {
-              "value": scale.clinic_sample_max,
-              "x": __getXPos(my_min, my_max, my_100, scale.clinic_sample_max),
-              "y": scale.topline,
-              "scaleID": 999.5 - scaleID
-            };
-            points_obj_mean = {
-              "value": scale.clinic_sample_mean,
-              "x": __getXPos(my_min, my_max, my_100, scale.clinic_sample_mean),
-              "y": scale.topline,
-              "scaleID": scaleID
-            };
-          } else {
-            points_obj_min = {
-              "value": scale.clinic_sample_min,
-              "x": __getXPos(my_min, my_max, my_100, scale.clinic_sample_min),
-              "y": scale.topline + abstand,
-              "scaleID": scaleID
-            };
-            points_obj_max = {
-              "value": scale.clinic_sample_max,
-              "x": __getXPos(my_min, my_max, my_100, scale.clinic_sample_max),
-              "y": scale.topline + abstand,
-              "scaleID": 999.5 - scaleID
-            };
-            points_obj_mean = {
-              "value": scale.clinic_sample_mean,
-              "x": __getXPos(my_min, my_max, my_100, scale.clinic_sample_mean),
-              "y": scale.topline + abstand,
-              "scaleID": scaleID
-            };
-          };
-          scores_points_min.push(points_obj_min);
-          scores_points_max.push(points_obj_max);
-          scores_points_mean.push(points_obj_mean);
+                });
+            });
 
-          if (scaleID === scales.length - 1) {
-            points_obj_min = {
-              "value": scale.clinic_sample_min,
-              "x": __getXPos(my_min, my_max, my_100, scale.clinic_sample_min),
-              "y": scale.bottomline,
-              "scaleID": scaleID
-            };
-            points_obj_max = {
-              "value": scale.clinic_sample_max,
-              "x": __getXPos(my_min, my_max, my_100, scale.clinic_sample_max),
-              "y": scale.bottomline,
-              "scaleID": 999 - scaleID
-            };
-            points_obj_mean = {
-              "value": scale.clinic_sample_mean,
-              "x": __getXPos(my_min, my_max, my_100, scale.clinic_sample_mean),
-              "y": scale.bottomline,
-              "scaleID": scaleID
-            };
-          } else {
-            points_obj_min = {
-              "value": scale.clinic_sample_min,
-              "x": __getXPos(my_min, my_max, my_100, scale.clinic_sample_min),
-              "y": scale.bottomline - abstand,
-              "scaleID": scaleID
-            };
-            points_obj_max = {
-              "value": scale.clinic_sample_max,
-              "x": __getXPos(my_min, my_max, my_100, scale.clinic_sample_max),
-              "y": scale.bottomline - abstand,
-              "scaleID": 999 - scaleID
-            };
-            points_obj_mean = {
-              "value": scale.clinic_sample_mean,
-              "x": __getXPos(my_min, my_max, my_100, scale.clinic_sample_mean),
-              "y": scale.bottomline - abstand,
-              "scaleID": scaleID
-            };
-          };
-          scores_points_min.push(points_obj_min);
-          scores_points_max.push(points_obj_max);
-          scores_points_mean.push(points_obj_mean);
+            this.set('_score_profiles', scores_points);
+            console.log('(✓) score_profiles', this._score_profiles);
+        },
 
-        });
-        this.set('scales', scales);
+        __csChanged: function(e) {
 
-        var cs_profile = {
-          "name": clinic_sample_name,
-          "show": true,
-          "color": d.color_clinic_sample,
-          "color_bg": hexToRGB(d.color_clinic_sample, 0.1),
-          "color_profile": hexToRGB(d.color_clinic_sample, 0.3),
-          "color_line": hexToRGB(d.color_clinic_sample, 0.8),
-          "color_line_mean": hexToRGB('#FFFFFF', 0.5)
-        };
-        cs_profile.points_str = "";
-        cs_profile.points_str_min = "";
-        cs_profile.points_str_max = "";
-        cs_profile.points_str_mean = "";
-        scores_points_min.forEach(function (p, pID) {
-          cs_profile.points_str = cs_profile.points_str + p.x + "," + p.y + " ";
-          cs_profile.points_str_min = cs_profile.points_str_min + p.x + "," + p.y + " ";
-        });
-        scores_points_max = sortByKey(scores_points_max, 'scaleID');
-        scores_points_max.forEach(function (p, pID) {
-          cs_profile.points_str = cs_profile.points_str + p.x + "," + p.y + " ";
-          cs_profile.points_str_max = cs_profile.points_str_max + p.x + "," + p.y + " ";
-        });
-        scores_points_mean.forEach(function (p, pID) {
-          cs_profile.points_str_mean = cs_profile.points_str_mean + p.x + "," + p.y + " ";
-        });
+            var d = this.get('d');
+            var scales = this.get('scales');
 
-        clone_clinic_sample_profiles.push(cs_profile);
-        this.set('_clinic_sample_profiles', clone_clinic_sample_profiles);
-
-        // console.log('YEAAAAHHH: __csChanged to', clinic_sample_data, this._clinic_sample_profiles);
-      },
-
-      __refreshChart: function () {
-
-        var myNode = document.getElementById("svg_grafic");
-        myNode.innerHTML = '';
-        myNode.appendChild(this.myProfiles);
-
-        this.$.all_repeat.render();
-      },
-
-      __resizeGrafic: function (follow) {
-
-        follow = follow === undefined
-          ? true
-          : false;
-
-        var d = this.get('d');
-        d.wide = d.wide === undefined
-          ? false
-          : d.wide;
-
-        var full_width = this.$.svg_grafic.offsetWidth;
-
-        //console.error('full_width', full_width); this.set('d.grafic_width', 480);
-
-        if (d.wide) {
-          this.set('d.grafic_width', full_width - (this.d.grafic_margin_left + this.d.grafic_margin_right));
-          this.set('d.grafic_text_visibility', 'visible');
-
-          this.customStyle['--grafic-margin-left'] = this.d.grafic_margin_left + 'px';
-          this.customStyle['--grafic-margin-right'] = this.d.grafic_margin_right + 'px';
-        } else {
-          this.set('d.grafic_width', full_width);
-          this.set('d.grafic_text_visibility', 'hidden');
-
-          this.customStyle['--grafic-margin-left'] = '0px';
-          this.customStyle['--grafic-margin-right'] = '0px';
-        };
-
-        // Apply
-        this.customStyle['--grafic-top-space'] = this.d.grafic_top_space + 'px';
-        this.customStyle['--item-height'] = this.d.item_height + 'px';
-        this.customStyle['--grafic-height'] = this.d.grafic_height + 'px';
-        this.customStyle['--grafic-size'] = this.d.grafic_width + 'px';
-        this.customStyle['--grafic-text-visibility'] = this.d.grafic_text_visibility;
-
-        this.updateStyles();
-
-        // Follow the white Rabbit
-        if (follow) {
-          this.__setScales();
-        };
-        this.__redrawChart();
-      },
-
-      __onIronResize: function () {
-        var width = Math.floor(this.offsetWidth);
-        //var height = Math.floor(this.parent.offsetHeight);
-
-        if (this.d !== undefined) {
-
-          if (width <= this.d.wide_breakpoint) {
-            this.set('d.wide', false);
-          } else {
-            this.set('d.wide', true);
-          };
-
-          // console.warn('__onIronResize', width, this.d);
-          this.__resizeGrafic();
-
-        };
-      },
-
-      __tabChanged: function () {
-        var d = this.get('d');
-
-        d.animate_grid_0 = false;
-        d.animate_grid_1 = false;
-        d.animate_grid_2 = false;
-
-        str_var = "animate_grid_" + d.tab_selected;
-        d[str_var] = true;
-
-        // console.log('__tabChanged', d.tab_selected, d.animate_grid_0, d.animate_grid_1, d.animate_grid_2); Set Data
-        this.set('animate_grid_0', d.animate_grid_0);
-        this.set('animate_grid_1', d.animate_grid_1);
-        this.set('animate_grid_2', d.animate_grid_2);
-      },
-
-      __redrawChart: function () {
-        this.set('draw_chart', false);
-
-        this.debounce('__redrawChart', function () {
-          setTimeout(function () {
-
-            // console.error('__redrawChart Now');
-
-            this.__setScales(false);
-
-            if (this._clinic_sample_profiles !== undefined) {
-              if (this._clinic_sample_profiles[0].name !== undefined) {
-                var fake_event = {
-                  "detail": this._clinic_sample_profiles[0].name
+            if (e !== undefined) {
+                if (e.detail !== undefined) {
+                    var clinic_sample_name = e.detail;
+                } else {
+                    var clinic_sample_name = 'AUTO';
                 };
-                this.__csChanged(fake_event);
-              };
             };
 
-            this.set('draw_chart', true);
+            var clinic_sample_data = this.get('clinic_sample_data');
+            var clinic_sample_profiles = [];
+            // var clinic_sample_profiles = clinic_sample_profiles === undefined ?[] : clinic_sample_profiles;
+            var clone_clinic_sample_profiles = JSON.parse(JSON.stringify(clinic_sample_profiles));
 
-          }.bind(this), 50);
-        }, 350);
-      },
+            var my_min = d.item_min;
+            var my_max = d.item_max;
+            var my_100 = d.grafic_width;
 
-      behaviors: [Polymer.IronResizableBehavior],
+            var abstand = d.item_height / 5;
 
-      listeners: {
-        'iron-resize': '__onIronResize'
-      },
+            var scores_points_min = [];
+            var scores_points_max = [];
+            var scores_points_mean = [];
 
-      properties: {
-        language: {
-          type: String,
-          value: 'de'
+            function sortByKey(array, key) {
+                return array.sort(function(a, b) {
+                    var x = a[key];
+                    var y = b[key];
+                    return ((x < y) ?
+                        -1 :
+                        ((x > y) ?
+                            1 :
+                            0));
+                });
+            };
+
+            clone_clinic_sample_profiles.forEach(function(cs, csID) {
+                cs.show = false;
+            });
+
+            scales.forEach(function(scale, scaleID) {
+                var data = clinic_sample_data[scale.clinic_sample_var];
+                scale.clinic_sample_min = data['mean_1sd_min'];
+                scale.clinic_sample_max = data['mean_1sd_plus'];
+                scale.clinic_sample_mean = data['mean'];
+
+                if (clinic_sample_name.indexOf("(N=") === -1) {
+                    clinic_sample_name = e.detail + " (N=" + data['n'] + ")";
+                };
+
+                var points_obj_min = {};
+                var points_obj_max = {};
+                var points_obj_mean = {};
+
+                if (scaleID === 0) {
+                    points_obj_min = {
+                        "value": scale.clinic_sample_min,
+                        "x": __getXPos(my_min, my_max, my_100, scale.clinic_sample_min),
+                        "y": scale.topline,
+                        "scaleID": scaleID
+                    };
+                    points_obj_max = {
+                        "value": scale.clinic_sample_max,
+                        "x": __getXPos(my_min, my_max, my_100, scale.clinic_sample_max),
+                        "y": scale.topline,
+                        "scaleID": 999.5 - scaleID
+                    };
+                    points_obj_mean = {
+                        "value": scale.clinic_sample_mean,
+                        "x": __getXPos(my_min, my_max, my_100, scale.clinic_sample_mean),
+                        "y": scale.topline,
+                        "scaleID": scaleID
+                    };
+                } else {
+                    points_obj_min = {
+                        "value": scale.clinic_sample_min,
+                        "x": __getXPos(my_min, my_max, my_100, scale.clinic_sample_min),
+                        "y": scale.topline + abstand,
+                        "scaleID": scaleID
+                    };
+                    points_obj_max = {
+                        "value": scale.clinic_sample_max,
+                        "x": __getXPos(my_min, my_max, my_100, scale.clinic_sample_max),
+                        "y": scale.topline + abstand,
+                        "scaleID": 999.5 - scaleID
+                    };
+                    points_obj_mean = {
+                        "value": scale.clinic_sample_mean,
+                        "x": __getXPos(my_min, my_max, my_100, scale.clinic_sample_mean),
+                        "y": scale.topline + abstand,
+                        "scaleID": scaleID
+                    };
+                };
+                scores_points_min.push(points_obj_min);
+                scores_points_max.push(points_obj_max);
+                scores_points_mean.push(points_obj_mean);
+
+                if (scaleID === scales.length - 1) {
+                    points_obj_min = {
+                        "value": scale.clinic_sample_min,
+                        "x": __getXPos(my_min, my_max, my_100, scale.clinic_sample_min),
+                        "y": scale.bottomline,
+                        "scaleID": scaleID
+                    };
+                    points_obj_max = {
+                        "value": scale.clinic_sample_max,
+                        "x": __getXPos(my_min, my_max, my_100, scale.clinic_sample_max),
+                        "y": scale.bottomline,
+                        "scaleID": 999 - scaleID
+                    };
+                    points_obj_mean = {
+                        "value": scale.clinic_sample_mean,
+                        "x": __getXPos(my_min, my_max, my_100, scale.clinic_sample_mean),
+                        "y": scale.bottomline,
+                        "scaleID": scaleID
+                    };
+                } else {
+                    points_obj_min = {
+                        "value": scale.clinic_sample_min,
+                        "x": __getXPos(my_min, my_max, my_100, scale.clinic_sample_min),
+                        "y": scale.bottomline - abstand,
+                        "scaleID": scaleID
+                    };
+                    points_obj_max = {
+                        "value": scale.clinic_sample_max,
+                        "x": __getXPos(my_min, my_max, my_100, scale.clinic_sample_max),
+                        "y": scale.bottomline - abstand,
+                        "scaleID": 999 - scaleID
+                    };
+                    points_obj_mean = {
+                        "value": scale.clinic_sample_mean,
+                        "x": __getXPos(my_min, my_max, my_100, scale.clinic_sample_mean),
+                        "y": scale.bottomline - abstand,
+                        "scaleID": scaleID
+                    };
+                };
+                scores_points_min.push(points_obj_min);
+                scores_points_max.push(points_obj_max);
+                scores_points_mean.push(points_obj_mean);
+
+            });
+            this.set('scales', scales);
+
+            var cs_profile = {
+                "name": clinic_sample_name,
+                "show": true,
+                "color": d.color_clinic_sample,
+                "color_bg": hexToRGB(d.color_clinic_sample, 0.1),
+                "color_profile": hexToRGB(d.color_clinic_sample, 0.3),
+                "color_line": hexToRGB(d.color_clinic_sample, 0.8),
+                "color_line_mean": hexToRGB('#FFFFFF', 0.5)
+            };
+            cs_profile.points_str = "";
+            cs_profile.points_str_min = "";
+            cs_profile.points_str_max = "";
+            cs_profile.points_str_mean = "";
+            scores_points_min.forEach(function(p, pID) {
+                cs_profile.points_str = cs_profile.points_str + p.x + "," + p.y + " ";
+                cs_profile.points_str_min = cs_profile.points_str_min + p.x + "," + p.y + " ";
+            });
+            scores_points_max = sortByKey(scores_points_max, 'scaleID');
+            scores_points_max.forEach(function(p, pID) {
+                cs_profile.points_str = cs_profile.points_str + p.x + "," + p.y + " ";
+                cs_profile.points_str_max = cs_profile.points_str_max + p.x + "," + p.y + " ";
+            });
+            scores_points_mean.forEach(function(p, pID) {
+                cs_profile.points_str_mean = cs_profile.points_str_mean + p.x + "," + p.y + " ";
+            });
+
+            clone_clinic_sample_profiles.push(cs_profile);
+            this.set('_clinic_sample_profiles', clone_clinic_sample_profiles);
+
+            var cs = {
+                "available": false,
+                "name": ""
+            };
+
+            if (clone_clinic_sample_profiles.length > 0) {
+                cs.name = clone_clinic_sample_profiles[0].name;
+                cs.available = true;
+            };
+            this.set('cs', cs);
+            // console.log('YEAAAAHHH: __csChanged to', clinic_sample_data, this._clinic_sample_profiles, cs);
         },
-        options: {
-          type: Object
+
+        __refreshChart: function() {
+
+            var myNode = document.getElementById("svg_grafic");
+            myNode.innerHTML = '';
+            myNode.appendChild(this.myProfiles);
+
+            this.$.all_repeat.render();
         },
-        start: {
-          type: Object
+
+        __resizeGrafic: function(follow) {
+
+            follow = follow === undefined ?
+                true :
+                false;
+
+            var d = this.get('d');
+            d.wide = d.wide === undefined ?
+                false :
+                d.wide;
+
+            var full_width = this.$.svg_grafic.offsetWidth;
+
+            //console.error('full_width', full_width); this.set('d.grafic_width', 480);
+
+            if (d.wide) {
+                this.set('d.grafic_width', full_width - (this.d.grafic_margin_left + this.d.grafic_margin_right));
+                this.set('d.grafic_text_visibility', 'visible');
+
+                this.customStyle['--grafic-margin-left'] = this.d.grafic_margin_left + 'px';
+                this.customStyle['--grafic-margin-right'] = this.d.grafic_margin_right + 'px';
+            } else {
+                this.set('d.grafic_width', full_width);
+                this.set('d.grafic_text_visibility', 'hidden');
+
+                this.customStyle['--grafic-margin-left'] = '0px';
+                this.customStyle['--grafic-margin-right'] = '0px';
+            };
+
+            // Apply
+            this.customStyle['--grafic-top-space'] = this.d.grafic_top_space + 'px';
+            this.customStyle['--item-height'] = this.d.item_height + 'px';
+            this.customStyle['--grafic-height'] = this.d.grafic_height + 'px';
+            this.customStyle['--grafic-size'] = this.d.grafic_width + 'px';
+            this.customStyle['--grafic-text-visibility'] = this.d.grafic_text_visibility;
+
+            this.updateStyles();
+
+            // Follow the white Rabbit
+            if (follow) {
+                this.__setScales();
+            };
+            this.__redrawChart();
         },
-        scales: {
-          type: Object,
-          observer: 'onInit'
+
+        __onIronResize: function() {
+            var width = Math.floor(this.offsetWidth);
+            //var height = Math.floor(this.parent.offsetHeight);
+
+            if (this.d !== undefined) {
+
+                if (width <= this.d.wide_breakpoint) {
+                    this.set('d.wide', false);
+                } else {
+                    this.set('d.wide', true);
+                };
+
+                // console.warn('__onIronResize', width, this.d);
+                this.__resizeGrafic();
+
+            };
         },
-        scores: {
-          type: Object,
-          observer: 'onInit'
+
+        __tabChanged: function() {
+            var d = this.get('d');
+
+            d.animate_grid_0 = false;
+            d.animate_grid_1 = false;
+            d.animate_grid_2 = false;
+
+            str_var = "animate_grid_" + d.tab_selected;
+            d[str_var] = true;
+
+            // console.log('__tabChanged', d.tab_selected, d.animate_grid_0, d.animate_grid_1, d.animate_grid_2); Set Data
+            this.set('animate_grid_0', d.animate_grid_0);
+            this.set('animate_grid_1', d.animate_grid_1);
+            this.set('animate_grid_2', d.animate_grid_2);
         },
-        ranges: {
-          type: Object
+
+        __tabChanged: function() {
+            var d = this.get('d');
+
+            d.animate_grid_0 = false;
+            d.animate_grid_1 = false;
+            d.animate_grid_2 = false;
+
+            str_var = "animate_grid_" + d.tab_selected;
+            d[str_var] = true;
+
+            // console.log('__tabChanged', d.tab_selected, d.animate_grid_0, d.animate_grid_1, d.animate_grid_2); Set Data
+            this.set('animate_grid_0', d.animate_grid_0);
+            this.set('animate_grid_1', d.animate_grid_1);
+            this.set('animate_grid_2', d.animate_grid_2);
         },
-        clinic_samples: {
-          type: Object
+
+        __redrawChart: function() {
+            this.set('draw_chart', false);
+
+            this.debounce('__redrawChart', function() {
+                setTimeout(function() {
+
+                    // console.error('__redrawChart Now');
+
+                    this.__setScales(true);
+
+                    if (this._clinic_sample_profiles !== undefined) {
+                        if (this._clinic_sample_profiles[0].name !== undefined) {
+                            var fake_event = {
+                                "detail": this._clinic_sample_profiles[0].name
+                            };
+                            this.__csChanged(fake_event);
+                        };
+                    };
+
+                    this.set('draw_chart', true);
+
+                }.bind(this), 50);
+            }, 350);
         },
-        clinic_sample_dive: {
-          type: Array,
-          notify: true
+
+        __toggleSettingsBlock: function() {
+            this.set('d.show_settings_block', !this.d.show_settings_block);
         },
-        _clinic_sample_profiles: {
-          type: Array,
-          notify: true
+
+        __toggleScore: function(oEvent) {
+            _score_profiles = this.get('_score_profiles');
+            var current_score = oEvent.model.get('score');
+            current_score.show = !current_score.show;
+            _score_profiles[current_score.id] = current_score;
+            this.set('_score_profiles', _score_profiles);
+            this.__redrawChart();
+            console.warn('___toggleScore', current_score, _score_profiles);
+        },
+
+        onInit: function() {
+            this.debounce('onInit', function() {
+                this.__init();
+            }, 250);
+        },
+
+        ready: function() {
+            this.__translate(this.language);
+        },
+
+        attached: function() {
+            this.set('draw_chart', false);
+        },
+
+        get_parent() {
+            if (this.parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
+                return this.parentNode.host;
+            }
+            return this.parentNode;
         }
-      },
-
-      onInit: function () {
-        this.debounce('onInit', function () {
-          // console.error('onInit');
-          this.__init();
-        }, 250);
-      },
-
-      ready: function () {
-        this.__translate(this.language);
-      },
-
-      attached: function () {
-        this.set('draw_chart', false);
-      },
-
-      get _parent() {
-        if (this.parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
-          return this.parentNode.host;
-        }
-        return this.parentNode;
-      }
     });
 
-    getColor = function (id, color_skin) {
-      color_skin = color_skin === undefined
-        ? 'default'
-        : color_skin;
+    getColor = function(id, color_skin) {
+        color_skin = color_skin === undefined ? 'default' : color_skin;
 
-      var colors = [];
+        var colors = [];
 
-      if (color_skin === 'default') {
-        colors.push("#3F51B5");
-        colors.push("#E91E63");
-        colors.push("#00BCD4");
-        colors.push("#8BC34A");
-        colors.push("#FFC107");
-        colors.push("#795548");
+        if (color_skin === 'default') {
+            colors.push("#3F51B5");
+            colors.push("#E91E63");
+            colors.push("#00BCD4");
+            colors.push("#8BC34A");
+            colors.push("#FFC107");
+            colors.push("#795548");
 
-        colors.push("#673AB7");
-        colors.push("#F44336");
-        colors.push("#03A9F4");
-        colors.push("#4CAF50");
-        colors.push("#FFEB3B");
-        colors.push("#FF5722");
+            colors.push("#673AB7");
+            colors.push("#F44336");
+            colors.push("#03A9F4");
+            colors.push("#4CAF50");
+            colors.push("#FFEB3B");
+            colors.push("#FF5722");
 
-        colors.push("#2196F3");
-        colors.push("#9C27B0");
-        colors.push("#009688");
-        colors.push("#CDDC39");
-        colors.push("#FF9800");
-        colors.push("#607D8B");
-      };
+            colors.push("#2196F3");
+            colors.push("#9C27B0");
+            colors.push("#009688");
+            colors.push("#CDDC39");
+            colors.push("#FF9800");
+            colors.push("#607D8B");
+        };
 
-      if (color_skin === 'grey_dark_to_light') {
-        colors.push("#212121");
-        colors.push("#616161");
-        colors.push("#9E9E9E");
-        colors.push("#E0E0E0");
-        colors.push("#F5F5F5");
-      };
+        if (color_skin === 'grey_dark_to_light') {
+            // 800, 500, 300, 50
+            colors.push("#424242");
+            colors.push("#9E9E9E");
+            colors.push("#E0E0E0");
+            colors.push("#FAFAFA");
+        };
 
-      if (color_skin === 'indigo_dark_to_light') {
-        colors.push("#1A237E");
-        colors.push("#303F9F");
-        colors.push("#3F51B5");
-        colors.push("#7986CB");
-        colors.push("#C5CAE9");
-      };
+        if (color_skin === 'indigo_dark_to_light') {
+            colors.push("#283593");
+            colors.push("#3F51B5");
+            colors.push("#7986CB");
+            colors.push("#E8EAF6");
+        };
 
-      if (color_skin === 'pink_dark_to_light') {
-        colors.push("#880E4F");
-        colors.push("#C2185B");
-        colors.push("#E91E63");
-        colors.push("#F06292");
-        colors.push("#F8BBD0");
-      };
+        if (color_skin === 'pink_dark_to_light') {
+            colors.push("#AD1457");
+            colors.push("#E91E63");
+            colors.push("#7986CB");
+            colors.push("#E8EAF6");
+        };
 
-      if (color_skin === 'indigo_grey_pink') {
-        colors.push("#1A237E");
-        colors.push("#212121");
-        colors.push("#880E4F");
-        colors.push("#3F51B5");
-        colors.push("#9E9E9E");
-        colors.push("#E91E63");
-        colors.push("#C5CAE9");
-        colors.push("#F5F5F5");
-        colors.push("#F8BBD0");
-      };
+        if (color_skin === 'indigo_grey_pink') {
+            colors.push("#1A237E");
+            colors.push("#212121");
+            colors.push("#880E4F");
+            colors.push("#3F51B5");
+            colors.push("#9E9E9E");
+            colors.push("#E91E63");
+            colors.push("#C5CAE9");
+            colors.push("#F5F5F5");
+            colors.push("#F8BBD0");
+        };
 
-      if (color_skin === 'zebra') {
-        colors.push("#212121");
-        colors.push("#EEEEEE");
-      };
+        if (color_skin === 'zebra') {
+            colors.push("#212121");
+            colors.push("#EEEEEE");
+        };
 
-      if (id > colors.length - 1) {
-        var floor = Math.floor(id / colors.length);
-        var corrected = id - floor - 1;
-
-        console.error('SKIN >: ', color_skin, id, colors.length, floor, corrected);
-        return colors[corrected];
-      } else {
-        return colors[id];
-      };
-
+        if (id > colors.length - 1) {
+            var floor = Math.floor(id / colors.length);
+            var corrected = id - (floor * colors.length);
+            return colors[corrected];
+        } else {
+            return colors[id];
+        };
     };
 
-    hexToRGB = function (hex, alpha) {
-      var h = "0123456789ABCDEF";
-      var r = h.indexOf(hex[1]) * 16 + h.indexOf(hex[2]);
-      var g = h.indexOf(hex[3]) * 16 + h.indexOf(hex[4]);
-      var b = h.indexOf(hex[5]) * 16 + h.indexOf(hex[6]);
-      if (alpha)
-        return "rgba(" + r + ", " + g + ", " + b + ", " + alpha + ")";
-      else
-        return "rgb(" + r + ", " + g + ", " + b + ")";
-      }
-    ;
+    hexToRGB = function(hex, alpha) {
+        var h = "0123456789ABCDEF";
+        var r = h.indexOf(hex[1]) * 16 + h.indexOf(hex[2]);
+        var g = h.indexOf(hex[3]) * 16 + h.indexOf(hex[4]);
+        var b = h.indexOf(hex[5]) * 16 + h.indexOf(hex[6]);
+        if (alpha)
+            return "rgba(" + r + ", " + g + ", " + b + ", " + alpha + ")";
+        else
+            return "rgb(" + r + ", " + g + ", " + b + ")";
+    };
 
-    __autoMinMax = function (do_min, do_max, d, all_scales) {
-      // Init
-      if (do_min) {
-        d.item_min = 0;
-      };
-      if (do_max) {
-        d.item_max = 0;
-      };
+    __autoMinMax = function(do_min, do_max, d, all_scales) {
+        // Init
+        if (do_min) {
+            d.item_min = 0;
+        };
+        if (do_max) {
+            d.item_max = 0;
+        };
 
-      // Check in scales/scores
-      all_scales.forEach(function (scale, scaleID) {
-        scale.scores.forEach(function (score, scoreID) {
-          if (do_min) {
-            if (score.value < d.item_min) {
-              d.item_min = score.value;
-            };
-          };
-          if (do_max) {
-            if (score.value > d.item_max) {
-              d.item_max = score.value;
-            };
-          };
+        // Check in scales/scores
+        all_scales.forEach(function(scale, scaleID) {
+            scale.scores.forEach(function(score, scoreID) {
+                if (do_min) {
+                    if (score.value < d.item_min) {
+                        d.item_min = score.value;
+                    };
+                };
+                if (do_max) {
+                    if (score.value > d.item_max) {
+                        d.item_max = score.value;
+                    };
+                };
+            });
         });
-      });
 
-      //Round a number upward to its nearest integer:
+        //Round a number upward to its nearest integer:
 
-      if (do_min) {
-        if (d.item_min < 0) {
-          d.item_min = Math.ceil(Math.abs(d.item_min)) + 1;
-          d.item_min = d.item_min * -1;
+        if (do_min) {
+            if (d.item_min < 0) {
+                d.item_min = Math.ceil(Math.abs(d.item_min)) + 1;
+                d.item_min = d.item_min * -1;
+            } else {
+                d.item_min = Math.ceil(Math.abs(d.item_min)) + 1;
+            };
+            if (d.item_min > 0) {
+                d.item_min = 0
+            };
         } else {
-          d.item_min = Math.ceil(Math.abs(d.item_min)) + 1;
+            d.item_min = d.min;
         };
-        if (d.item_min > 0) {
-          d.item_min = 0
-        };
-      } else {
-        d.item_min = d.min;
-      };
-      if (do_max) {
-        if (d.item_max < 0) {
-          d.item_max = Math.ceil(Math.abs(d.item_max)) + 1;
-          d.item_max = d.item_max * -1;
+        if (do_max) {
+            if (d.item_max < 0) {
+                d.item_max = Math.ceil(Math.abs(d.item_max)) + 1;
+                d.item_max = d.item_max * -1;
+            } else {
+                d.item_max = Math.ceil(Math.abs(d.item_max)) + 1;
+            };
         } else {
-          d.item_max = Math.ceil(Math.abs(d.item_max)) + 1;
+            d.item_max = d.max;
         };
-      } else {
-        d.item_max = d.max;
-      };
 
-      return d;
+        return d;
     };
 
-    __getXPos = function (min, max, svg_width_100, current_value) {
-      var width_value = null
-      if (current_value !== undefined) {
-        current_value = current_value;
+    __getXPos = function(min, max, svg_width_100, current_value) {
+        var width_value = null
+        if (current_value !== undefined) {
+            current_value = current_value;
 
-        var width_100 = Math.abs(min) + Math.abs(max);
-        width_value = (svg_width_100 / width_100) * (current_value + Math.abs(min));
-      };
-      return width_value;
+            var width_100 = Math.abs(min) + Math.abs(max);
+            width_value = (svg_width_100 / width_100) * (current_value + Math.abs(min));
+        };
+        return width_value;
     };
 
-    formatDateCH = function (date_string) {
-      if ((date_string !== undefined) && (date_string !== null)) {
+    formatDateCH = function(date_string) {
+        if ((date_string !== undefined) && (date_string !== null)) {
 
-        // 1952-11-19T00:00:00.000000000000Z
-        var year = parseInt(date_string.substring(0, 4));
-        var month = parseInt(date_string.substring(5, 7));
-        var day = parseInt(date_string.substring(8, 10));
-        var date_string_return = day + "." + month + "." + year
+            // 1952-11-19T00:00:00.000000000000Z
+            var year = parseInt(date_string.substring(0, 4));
+            var month = parseInt(date_string.substring(5, 7));
+            var day = parseInt(date_string.substring(8, 10));
+            var date_string_return = day + "." + month + "." + year
 
-        return date_string_return;
-      } else {
-        return null;
-      }
+            return date_string_return;
+        } else {
+            return null;
+        }
     };
-  </script>
+    </script>
 </dom-module>
 <!--
 http://plnkr.co/edit/pegYFTcr9koAZEg7pTMf?p=preview
 -->
 <dom-module id="svg-container">
-  <template>
-    <svg id="svg" version="1.1" xmlns="http://www.w3.org/2000/svg" width="100%" preserveAspectRatio="xMinYMin meet"></svg>
-    <content select="svg-component"></content>
-  </template>
-  <script>
+    <template>
+        <svg id="svg" version="1.1" xmlns="http://www.w3.org/2000/svg" width="100%" preserveAspectRatio="xMinYMin meet"></svg>
+        <content select="svg-component"></content>
+    </template>
+    <script>
     Polymer({
-      is: 'svg-container',
+        is: 'svg-container',
 
-      attached: function () {
-        for (var i = 0; i < this.attributes.length; i++) {
-          this.$.svg.setAttribute(Polymer.CaseMap.dashToCamelCase(this.attributes[i].name), this.attributes[i].value);
+        attached: function() {
+            for (var i = 0; i < this.attributes.length; i++) {
+                this.$.svg.setAttribute(Polymer.CaseMap.dashToCamelCase(this.attributes[i].name), this.attributes[i].value);
+            }
         }
-      }
     });
-  </script>
+    </script>
 </dom-module>
 <dom-module id="svg-component">
-  <template>
-    <content select="svg-component"></content>
-  </template>
-  <script>
+    <template>
+        <content select="svg-component"></content>
+    </template>
+    <script>
     SvgComponent = Polymer({
-      is: 'svg-component',
+        is: 'svg-component',
 
-      _node: {},
+        _node: {},
 
-      _namespace: 'http://www.w3.org/2000/svg',
+        _namespace: 'http://www.w3.org/2000/svg',
 
-      get rootElement() {
-        if (this.parentNode.nodeName === 'SVG-CONTAINER')
-          return this.parentNode.$.svg;
-        else
-          return this.parentNode._node;
-        }
-      ,
+        get rootElement() {
+            if (this.parentNode.nodeName === 'SVG-CONTAINER')
+                return this.parentNode.$.svg;
+            else
+                return this.parentNode._node;
+        },
 
-      factoryImpl: function (attributes) {
-        for (var key in attributes)
-          this.setAttribute(key, attributes[key]);
-        }
-      ,
+        factoryImpl: function(attributes) {
+            for (var key in attributes)
+                this.setAttribute(key, attributes[key]);
+        },
 
-      attached: function () {
-        var is = this.attributes.is.value;
+        attached: function() {
+            var is = this.attributes.is.value;
 
-        if (is !== undefined) {
-          this._node = document.createElementNS(this._namespace, is);
+            if (is !== undefined) {
+                this._node = document.createElementNS(this._namespace, is);
 
-          for (var i = 0; i < this.attributes.length; i++) {
-            if (this.attributes[i].name !== 'is')
-              this._node.setAttribute(this.attributes[i].name, this.attributes[i].value);
+                for (var i = 0; i < this.attributes.length; i++) {
+                    if (this.attributes[i].name !== 'is')
+                        this._node.setAttribute(this.attributes[i].name, this.attributes[i].value);
+                }
+                this.rootElement.appendChild(this._node);
             }
-          this.rootElement.appendChild(this._node);
         }
-      }
     });
-  </script>
+    </script>
 </dom-module>
