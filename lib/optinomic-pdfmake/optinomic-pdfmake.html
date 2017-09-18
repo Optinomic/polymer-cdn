@@ -283,7 +283,7 @@
         _create_dd: function() {
 
 
-            if (this._hasValue(this.headerLeft) && this._hasValue(this.headerRight) && this._hasValue(this.documentTitle) && this._hasValue(this.content) && this._hasValue(this.pageSize) && this._hasValue(this.pageOrientation)) {
+            if (this._hasValue(this.headerLeft) && this._hasValue(this.headerRight) && this._hasValue(this.documentTitle) && this._hasValue(this.content)) {
 
 
                 var create_dd = {
@@ -374,6 +374,7 @@
 
                 // Set Content
                 var given_content = this.get('content');
+
                 if (typeof given_content === 'string' || given_content instanceof String) {
                     given_content = JSON.parse(given_content);
                 };
@@ -382,12 +383,17 @@
                     console.log('PDF :: Content was not array - try to push:', given_content);
                     create_dd.content = [];
                     create_dd.content.push(given_content);
+                } else {
+                    if (Object.prototype.toString.call(given_content) === '[object Array]') {
+                        create_dd.content = given_content;
+                    };    
                 };
+
 
                 if (Object.prototype.toString.call(create_dd.content) === '[object Array]') {
                     this.set('_dd', create_dd);
                     this.set('_dd_ready', true);
-                    console.log('PDF :: Document Definition is ready:', this._dd);
+                    console.log('PDF :: Document Definition (' + this.documentTitle + ') is ready:', this._dd);
                 };
 
 

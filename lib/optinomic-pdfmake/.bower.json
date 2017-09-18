@@ -14,15 +14,15 @@
     "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
   },
   "homepage": "https://github.com/Optinomic/optinomic-pdfmake",
-  "version": "0.0.2",
-  "_release": "0.0.2",
+  "version": "0.0.3",
+  "_release": "0.0.3",
   "_resolution": {
     "type": "version",
-    "tag": "v0.0.2",
-    "commit": "f869e654d4057f349fd48222f4bc881f26abfdbb"
+    "tag": "v0.0.3",
+    "commit": "c71c468f2453f36eee072fd7a4d297549d595e8a"
   },
   "_source": "https://github.com/Optinomic/optinomic-pdfmake.git",
-  "_target": "^0.0.2",
+  "_target": "^0.0.3",
   "_originalSource": "Optinomic/optinomic-pdfmake",
   "_direct": true
 }
