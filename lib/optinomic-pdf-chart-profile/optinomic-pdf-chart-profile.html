@@ -89,23 +89,24 @@ var options = {
                 reflectToAttribute: true
             },
             clinic_samples: {
-                type: Object
+                type: Object,
+                observer: '__init'
             },
             clinic_sample_dive: {
                 type: Array,
-                notify: true
+                observer: '__init'
             }
 
         },
 
         __init: function() {
 
-
-            if (this._hasValue(this.options) && this._hasValue(this.scales) && this._hasValue(this.scores) && this._hasValue(this.ranges)) {
-
-
-                this._pdfmake_chart_zscore(this.scores, this.options, this.scales);
-            };
+            this.debounce('_srChanged', function() {
+                if (this._hasValue(this.options) && this._hasValue(this.scales) && this._hasValue(this.scores) && this._hasValue(   this.ranges)) {
+    
+                    this._pdfmake_chart_zscore(this.scores, this.options);
+                };
+            }, 250);
 
         },
 
@@ -238,7 +239,7 @@ var options = {
                 };
 
 
-                console.log('<optinomic-pdf-chart-profile>', d);
+                console.log("<optinomic-pdf-chart-profile>", d);
                 return d;
             }.bind(this);
 
@@ -512,7 +513,6 @@ var options = {
                     "canvas": []
                 };
 
-                console.warn('d', d);
                 d.ranges.forEach(function(range, rangeID) {
 
 
@@ -671,6 +671,11 @@ var options = {
 
                 // ---- Gewünschte Klinikstichprobe schreiben ----
                 var have_dive = this._hasValue(this.clinic_sample_dive);
+                if (have_dive.length > 0) {
+                    have_dive = true;
+                } else {
+                    have_dive = false;
+                };
 
                 if ((!have_dive) && (this._hasValue(this.clinic_samples))) {
                     // Klinikstichprobe jedoch kein Dive vorhanden
@@ -686,14 +691,18 @@ var options = {
                     // Klinikstichprobe & Dive vorhanden
 
                     // ---- Set ----
-                    clinic_sample_dive.defined = true;
 
 
                     //  Get Statistics Data from clinic_sample_dive
                     var dive_data = d.ks.data;
+                    // console.warn("? - 1", dive_data, clinic_sample_dive.array);
+                    
                     clinic_sample_dive.array.forEach(function(dive, diveID) {
-                        dive_data = dive_data[dive]
+                        dive_data = JSON.parse(JSON.stringify(dive_data[dive]));
                     });
+
+
+                    // console.warn("? - 2", dive_data);
                     clinic_sample_dive.data = JSON.parse(JSON.stringify(dive_data.statistics));
 
 
@@ -708,9 +717,11 @@ var options = {
                         clinic_sample_dive.text = clinic_sample_dive.text + dim_text;
                     });
                     clinic_sample_dive.text = clinic_sample_dive.text + " (N=" + clinic_sample_dive.data.somatisierung_scale_score.n + ")";
+
+                    clinic_sample_dive.defined = true;
                 };
 
-                console.warn('clinic_sample_dive', clinic_sample_dive);
+                // console.warn("clinic_sample_dive", clinic_sample_dive);
                 return clinic_sample_dive;
             }.bind(this);
 
@@ -1051,7 +1062,7 @@ var options = {
                 };
 
 
-                console.error('scores', scores);
+                // console.error("scores", scores);
 
                 init.scores.forEach(function(score, scoreID) {
 
@@ -1122,7 +1133,7 @@ var options = {
 
                 var start = this.get('start');
 
-                console.warn('_legende_start', start, init);
+                // console.warn("_legende_start", start, init);
 
                 var return_object = {};
 
@@ -1449,7 +1460,6 @@ var options = {
             // console.log(JSON.stringify(chart, null, 2));
             // chart.init = init;
 
-            console.log(chart);
             this.set('pdfContent', chart);
 
             return chart;

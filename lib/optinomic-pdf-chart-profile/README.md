@@ -2,6 +2,11 @@
 
 `optinomic-pdf-chart-profile` creates awesome PDFMake Chart-Profiles. Designed for Optionmic-Apps. 
 
+### Installation
+```
+bower install -save Optinomic/optinomic-pdfmake-chart-profile
+```
+
 
 ## Porperties - Descripiton
 ### pdf-content
