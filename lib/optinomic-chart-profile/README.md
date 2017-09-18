@@ -3,8 +3,8 @@
 `optinomic-chart-profile` creates awesome Chart-Profiles. Designed for Optionmic-Apps.
 
 ## Porperties - Descripiton
-### Options
 
+### Options
 
 ```JAVASCRIPT
 var options = {
@@ -22,6 +22,7 @@ var options = {
     "show_score_profile_line": true,
     "show_score_circles": true,
     "show_settings_block": true,
+    "show_ranges_overview": true,
     "allow_toggle_settings_block": false,
     "range_alpha": 0.1,
     "vertical_grid_every_x": 1,
@@ -32,6 +33,21 @@ var options = {
     "dropout_reason": "calculation.info.mz.dropout_reason"
 };
 ```
+
+### Start
+
+```JAVASCRIPT
+
+var start = {
+    "left_title": "Geringe Ausprägung",
+    "left_text": "Eine längere Beschreibung bzgl. der geringen Ausprägung.",
+    "left_color": "#4CAF50",
+    "right_title": "Starke Ausprägung",
+    "right_text": "Eine längere Beschreibung der starken Ausprägung kann hier gesetzt werden.",
+    "right_color": "#F44336"
+}
+```
+
 
 #### Details
 | Property  |  Description  |
