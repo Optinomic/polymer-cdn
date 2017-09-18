@@ -71,6 +71,14 @@ var options = {
             start: {
                 type: Object
             },
+            clinic_samples: {
+                type: Object,
+                observer: '__init'
+            },
+            clinic_sample_dive: {
+                type: Array,
+                observer: '__init'
+            },
             scales: {
                 type: Object,
                 observer: '__init'
@@ -87,15 +95,8 @@ var options = {
                 type: Object,
                 notify: true,
                 reflectToAttribute: true
-            },
-            clinic_samples: {
-                type: Object,
-                observer: '__init'
-            },
-            clinic_sample_dive: {
-                type: Array,
-                observer: '__init'
             }
+            
 
         },
 
@@ -103,7 +104,7 @@ var options = {
 
             this.debounce('_srChanged', function() {
                 if (this._hasValue(this.options) && this._hasValue(this.scales) && this._hasValue(this.scores) && this._hasValue(   this.ranges)) {
-    
+
                     this._pdfmake_chart_zscore(this.scores, this.options);
                 };
             }, 250);
@@ -206,6 +207,26 @@ var options = {
                     d.ks = null;
                 };
 
+
+
+                var ks_dive = {
+                    "defined": false,
+                    "text": "",
+                    "data": null,
+                    "array": []
+                };
+
+
+                var clinic_sample_dive = this.get('clinic_sample_dive');
+                if ((clinic_sample_dive !== null) && (clinic_sample_dive !== undefined)) {
+                    ks_dive.array = clinic_sample_dive;
+                    if (ks_dive.array.length > 0) {
+                        ks_dive.defined = true;    
+                    };
+                };
+
+
+                d.ks_dive = ks_dive;
 
                 // Auto Min/Max
                 d.options.do_min = false;
@@ -670,24 +691,21 @@ var options = {
                 };
 
                 // ---- Gewünschte Klinikstichprobe schreiben ----
-                var have_dive = this._hasValue(this.clinic_sample_dive);
-                if (have_dive.length > 0) {
-                    have_dive = true;
-                } else {
-                    have_dive = false;
+                if (d.ks_dive.defined) {
+                    clinic_sample_dive = d.ks_dive;
                 };
-
-                if ((!have_dive) && (this._hasValue(this.clinic_samples))) {
+                
+                if ((!d.ks_dive.defined) && (this._hasValue(this.clinic_samples))) {
                     // Klinikstichprobe jedoch kein Dive vorhanden
 
                     // Default = last
                     this.clinic_samples.dimensions.forEach(function(dim, dimID) {
                         clinic_sample_dive.array.push(dim.array.length - 1);
                     });
-                    have_dive = true;
+                    console.log("Defaultstichprobe erstellt!");
                 };
 
-                if ((have_dive) && (this._hasValue(this.clinic_samples))) {
+                if ((d.ks_dive.defined) && (this._hasValue(this.clinic_samples))) {
                     // Klinikstichprobe & Dive vorhanden
 
                     // ---- Set ----
@@ -695,21 +713,19 @@ var options = {
 
                     //  Get Statistics Data from clinic_sample_dive
                     var dive_data = d.ks.data;
-                    // console.warn("? - 1", dive_data, clinic_sample_dive.array);
                     
-                    clinic_sample_dive.array.forEach(function(dive, diveID) {
+                    d.ks_dive.array.forEach(function(dive, diveID) {
                         dive_data = JSON.parse(JSON.stringify(dive_data[dive]));
                     });
 
 
-                    // console.warn("? - 2", dive_data);
                     clinic_sample_dive.data = JSON.parse(JSON.stringify(dive_data.statistics));
 
 
                     // Build KS:  Text
                     clinic_sample_dive.text = "";
                     d.ks.dimensions.forEach(function(dim, dimID) {
-                        var pos = clinic_sample_dive.array[dimID];
+                        var pos = d.ks_dive.array[dimID];
                         var dim_text = dim.name + ": " + dim.array[pos].text;
                         if (dimID !== d.ks.dimensions.length - 1) {
                             dim_text = dim_text + ", "

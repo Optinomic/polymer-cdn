@@ -25,6 +25,15 @@
             font-family: 'Roboto', 'Noto', sans-serif;
         }
 
+        p,
+        .body-1 {
+            font-size: 14.7px;
+            font-weight: 400;
+            letter-spacing: 0.010em;
+            line-height: 21px;
+            color: #212121;
+        }
+
         .caption {
             padding: 12px;
             color: #E0E0E0;
@@ -65,7 +74,7 @@
                     <p style="color:#E0E0E0">[[loadingString]]</p>
                 </template>
                 <template is="dom-if" if="[[_dd_ready]]">
-                    <p style="padding-top:2px;">[[documentTitle]]</p>
+                    <p>[[documentTitle]]</p>
                 </template>
             </div>
             <div style="padding-top:6px;">
