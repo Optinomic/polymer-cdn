@@ -140,9 +140,9 @@
         // -------------------------------------
         __open_pdf: function() {
             this._create_dd();
-            var dd = {};
-            dd = JSON.parse(JSON.stringify(this._addLogo(this.get('_dd'))));
             var doc_title = this._create_document_name(this.documentTitle, this.headerLeft);
+            var dd = {};
+            dd = JSON.parse(JSON.stringify(this.get('_dd')));
             console.log('PDF | open :: ' + doc_title, dd);
             pdfMake.createPdf(dd).open();
         },
@@ -150,9 +150,8 @@
         __download_pdf: function() {
             this._create_dd();
             var doc_title = this._create_document_name(this.documentTitle, this.headerLeft);
-            var dd = this._addLogo(this.get('_dd'));
             var dd = {};
-            dd = JSON.parse(JSON.stringify(this._addLogo(this.get('_dd'))));
+            dd = JSON.parse(JSON.stringify(this.get('_dd')));
             console.log('PDF | download :: ' + doc_title, dd);
             pdfMake.createPdf(dd).download(doc_title);
         },
@@ -391,7 +390,7 @@
 
 
                 if (Object.prototype.toString.call(create_dd.content) === '[object Array]') {
-                    this.set('_dd', create_dd);
+                    this.set('_dd', this._addLogo(create_dd));
                     this.set('_dd_ready', true);
                     console.log('PDF :: Document Definition (' + this.documentTitle + ') is ready:', this._dd);
                 };
