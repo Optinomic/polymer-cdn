@@ -21,15 +21,15 @@
     "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
   },
   "homepage": "https://github.com/Optinomic/optinomic-chart-profile",
-  "version": "0.1.2",
-  "_release": "0.1.2",
+  "version": "0.1.3",
+  "_release": "0.1.3",
   "_resolution": {
     "type": "version",
-    "tag": "v0.1.2",
-    "commit": "f3bfb8dd9d7a950fb5f63ce6baed540099467b94"
+    "tag": "v0.1.3",
+    "commit": "eee6641cd8f82a11bdd474c47e16cb8652b06493"
   },
   "_source": "https://github.com/Optinomic/optinomic-chart-profile.git",
-  "_target": "^0.1.2",
+  "_target": "^0.1.3",
   "_originalSource": "Optinomic/optinomic-chart-profile",
   "_direct": true
 }
