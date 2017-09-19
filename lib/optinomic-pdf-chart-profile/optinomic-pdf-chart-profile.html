@@ -1112,6 +1112,8 @@ var options = {
 
                     var title = _getDataPath(score, init.options.response_title_path);
                     var date = _getDataPath(score, init.options.response_date_path);
+                    date = _formatDateCH(date);
+
                     var dropout_text = "";
 
                     if (score.dropout_have) {
