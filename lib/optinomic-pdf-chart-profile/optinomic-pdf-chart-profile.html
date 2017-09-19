@@ -894,7 +894,7 @@ var options = {
 
                             if (init.options.response_date_path) {
                                 score_obj.date = _getDataPath(score, init.options.response_date_path);
-                                score_obj.date = this._formatDateCH(score_obj.date);
+                                score_obj.date = _formatDateCH(score_obj.date);
                             };
 
                             if ("dropout_flag" in init.options) {
@@ -1396,6 +1396,21 @@ var options = {
                 };
             };
 
+            var _formatDateCH = function(date_string) {
+                if ((date_string !== undefined) && (date_string !== null)) {
+
+                    // 1952-11-19T00:00:00.000000000000Z
+                    var year = parseInt(date_string.substring(0, 4));
+                    var month = parseInt(date_string.substring(5, 7));
+                    var day = parseInt(date_string.substring(8, 10));
+                    var date_string_return = day + "." + month + "." + year
+
+                    return date_string_return;
+                } else {
+                    return null;
+                }
+            };
+
 
             // Run
             var init = _init(scores, definition);
@@ -1490,20 +1505,6 @@ var options = {
             };
         },
 
-        _formatDateCH: function(date_string) {
-            if ((date_string !== undefined) && (date_string !== null)) {
-
-                // 1952-11-19T00:00:00.000000000000Z
-                var year = parseInt(date_string.substring(0, 4));
-                var month = parseInt(date_string.substring(5, 7));
-                var day = parseInt(date_string.substring(8, 10));
-                var date_string_return = day + "." + month + "." + year
-
-                return date_string_return;
-            } else {
-                return null;
-            }
-        },
 
         ready: function() {},
 
