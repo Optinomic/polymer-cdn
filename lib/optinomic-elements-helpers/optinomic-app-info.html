@@ -154,7 +154,6 @@
 
 
                 var make_pdf = {
-                    "id": "app_description",
                     "style": "p",
                     "text": [{
                             "text": _current_app.app.short_description,
@@ -170,10 +169,26 @@
                     ]
                 };
 
+
+
                 var copy_make_pdf = JSON.parse(JSON.stringify(make_pdf));
 
-                this.set('pdfContent', copy_make_pdf);
-                this.fire('pdfready-app-info', copy_make_pdf);
+                var keep_together = {
+                    "id": "app_description",
+                    "layout": "noBorders",
+                    "table": {
+                        "dontBreakRows": true,
+                        "headerRows": 0,
+                        "body": [
+                            [{
+                                "stack": chart_stack
+                            }]
+                        ]
+                    }
+                };
+
+                this.set('pdfContent', keep_together);
+                this.fire('pdfready-app-info', keep_together);
 
                 // console.log('(PDF) App-Info', this.pdfContent);
             };
