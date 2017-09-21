@@ -37,7 +37,7 @@
         </style>
         <!-- START -->
         <template is="dom-if" if="[[_current_app.found]]">
-            <div>
+            <div style="margin-bottom:12px;">
                 <div class="button_top">
                     <div hidden$="[[_show_help]]">
                         <paper-icon-button class="grey" on-tap="__toggleHelp" icon="help-outline"></paper-icon-button>
@@ -87,22 +87,26 @@
                         "app": {}
                     };
                     if ((this.appId !== null) && (this.appId !== undefined)) {
-                        if ((state.apps.all.patient_modules !== null) && (state.apps.all.patient_modules !== undefined)) {
-                            var appId = this.appId;
-                            state.apps.all.patient_modules.forEach(function(pm, appID) {
-                                if (pm.identifier === appId) {
-                                    return_obj = return_obj = {
-                                        "found": true,
-                                        "app": pm
-                                    };
+                        if ((state.apps !== null) && (state.apps !== undefined)) {
+                            if ((state.apps.all !== null) && (state.apps.all !== undefined)) {
+                                if ((state.apps.all.patient_modules !== null) && (state.apps.all.patient_modules !== undefined)) {
+                                    var appId = this.appId;
+                                    state.apps.all.patient_modules.forEach(function(pm, appID) {
+                                        if (pm.identifier === appId) {
+                                            return_obj = return_obj = {
+                                                "found": true,
+                                                "app": pm
+                                            };
+                                        };
+                                    });
                                 };
-                            });
+                            };
                         };
                     };
                     return return_obj;
                 },
                 observer: '_buildPDF'
-            },
+            }
             pdfContent: {
                 type: Object,
                 reflectToAttribute: true,
