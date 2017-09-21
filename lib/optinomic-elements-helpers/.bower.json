@@ -1,15 +1,15 @@
 {
   "name": "optinomic-elements-helpers",
   "homepage": "https://github.com/Optinomic/optinomic-elements-helpers",
-  "version": "0.0.6",
-  "_release": "0.0.6",
+  "version": "0.0.7",
+  "_release": "0.0.7",
   "_resolution": {
     "type": "version",
-    "tag": "v0.0.6",
-    "commit": "7bf5ec1c69cd55dfa7e13f681ca908a0650a61b9"
+    "tag": "v0.0.7",
+    "commit": "140ab62e21b33c3ab1d7ced07dac5c45e4ff89d2"
   },
   "_source": "https://github.com/Optinomic/optinomic-elements-helpers.git",
-  "_target": "^0.0.6",
+  "_target": "^0.0.7",
   "_originalSource": "Optinomic/optinomic-elements-helpers",
   "_direct": true
 }
