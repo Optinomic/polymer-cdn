@@ -131,6 +131,12 @@ var options = {
                     d.options.topnumber_hide_first_last = false;
                 };
 
+                if ("show_ranges_overview" in d.options) {
+                    d.options.show_ranges_overview = d.options.show_ranges_overview;
+                } else {
+                    d.options.show_ranges_overview = true;
+                };
+
                 if ("item_text_left" in d.options) {
                     d.options.item_text_left = d.options.item_text_left;
                 } else {
@@ -1464,7 +1470,9 @@ var options = {
                 chart_top.push({ "text": "", "margin": [0, 0, 0, 6] });
                 chart_top.push(_legende_normstichprobe(init));
                 chart_top.push(_legende_klinikstichprobe(init));
-                chart_top.push(_legende_interpretation(init));
+                if (init.options.show_ranges_overview) {
+                    chart_top.push(_legende_interpretation(init));
+                };
                 chart_top.push(_legende_start(init));
                 chart_top.push({ "text": "", "margin": [0, 0, 0, 6] });
 
