@@ -189,8 +189,7 @@ var start = {
             font-size: 11.5px;
             font-weight: 400;
             letter-spacing: 0.005em;
-            color: #757575;
-            margin-top: -12px;
+            color: #616161;
         }
 
         .caption {
@@ -541,13 +540,19 @@ var start = {
                             <div class="flex self-center">
                                 <div class="layout horizontal flex">
                                     <div class="flex">
-                                        <p id$="[[s.id_left_text]]" class="description_item_title right">[[s.left_title]]</p>
+                                        <p id$="[[s.id_left_text]]" class="description_item_title right">[[s.left_title]]
                                         <template is="dom-if" if="[[d.show_scale_text]]">
-                                            <p class="description_item_text right">[[s.left_text]]</p>
+                                            <template is="dom-if" if="[[s.left_title]]">
+                                                <template is="dom-if" if="[[s.left_text]]">
+                                                    <span class="description_item_title" style="margin-left:-2px;">: &nbsp;</span>
+                                                </template>
+                                            </template>
+                                            <span class="description_item_text">[[s.left_text]]</span>
                                         </template>
                                         <template is="dom-if" if="[[!d.show_scale_text]]">
                                             <paper-tooltip class="left" position="top">[[s.left_text]]</paper-tooltip>
                                         </template>
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -562,13 +567,19 @@ var start = {
                             <div class="flex self-center">
                                 <div class="layout horizontal flex self-center">
                                     <div class="flex">
-                                        <p id$="[[s.id_right_text]]" class="description_item_title">[[s.right_title]]</p>
+                                        <p id$="[[s.id_right_text]]" class="description_item_title">[[s.right_title]]
                                         <template is="dom-if" if="[[d.show_scale_text]]">
-                                            <p class="description_item_text">[[s.right_text]]</p>
+                                            <template is="dom-if" if="[[s.right_title]]">
+                                                <template is="dom-if" if="[[s.right_text]]">
+                                                    <span class="description_item_title" style="margin-left:-2px;">: &nbsp;</span>
+                                                </template>
+                                            </template>
+                                            <span class="description_item_text">[[s.right_text]]</span>
                                         </template>
                                         <template is="dom-if" if="[[!d.show_scale_text]]">
                                             <paper-tooltip class="right" position="top">[[s.right_text]]</paper-tooltip>
                                         </template>
+                                        </p>
                                     </div>
                                 </div>
                             </div>
