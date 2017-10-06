@@ -727,6 +727,12 @@ var options = {
 
                     clinic_sample_dive.data = JSON.parse(JSON.stringify(dive_data.statistics));
 
+                    var n_value = 0;
+                    for (var property in clinic_sample_dive.data) {
+                        if (clinic_sample_dive.data.hasOwnProperty(property)) {
+                            n_value = clinic_sample_dive.data[property].n;
+                        };
+                    };
 
                     // Build KS:  Text
                     clinic_sample_dive.text = "";
@@ -738,7 +744,11 @@ var options = {
                         };
                         clinic_sample_dive.text = clinic_sample_dive.text + dim_text;
                     });
-                    clinic_sample_dive.text = clinic_sample_dive.text + " (N=" + clinic_sample_dive.data.somatisierung_scale_score.n + ")";
+
+                    if (n_value !== 0) {
+                        clinic_sample_dive.text = clinic_sample_dive.text + " (N=" + n_value + ")";
+                    };
+
 
                     clinic_sample_dive.defined = true;
                 };

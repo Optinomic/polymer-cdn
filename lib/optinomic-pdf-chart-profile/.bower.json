@@ -12,15 +12,15 @@
     "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
   },
   "homepage": "https://github.com/Optinomic/optinomic-pdfmake-chart-profile",
-  "version": "0.0.7",
-  "_release": "0.0.7",
+  "version": "0.0.8",
+  "_release": "0.0.8",
   "_resolution": {
     "type": "version",
-    "tag": "v0.0.7",
-    "commit": "24f6941740ea10d94c6ec5e86a2dc3fb7fd9c41f"
+    "tag": "v0.0.8",
+    "commit": "60a6db69e4623a29469570221f0ee187cd56e5a9"
   },
   "_source": "https://github.com/Optinomic/optinomic-pdfmake-chart-profile.git",
-  "_target": "^0.0.7",
+  "_target": "^0.0.8",
   "_originalSource": "Optinomic/optinomic-pdfmake-chart-profile",
   "_direct": true
 }

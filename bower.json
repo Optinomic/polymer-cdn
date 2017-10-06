@@ -39,7 +39,7 @@
     "optinomic-clinic-sample-selector": "Optinomic/optinomic-clinic-sample-selector#^0.0.5",
     "optinomic-app-page-readme": "Optinomic/optinomic-app-page-readme#latest",
     "optinomic-app-page-admin": "Optinomic/optinomic-app-page-admin#latest",
-    "optinomic-pdf-chart-profile": "Optinomic/optinomic-pdfmake-chart-profile#^0.0.7",
+    "optinomic-pdf-chart-profile": "Optinomic/optinomic-pdfmake-chart-profile#^0.0.8",
     "optinomic-pdfmake": "Optinomic/optinomic-pdfmake#^0.0.6",
     "optinomic-elements-helpers": "Optinomic/optinomic-elements-helpers#^0.0.8",
     "google-chart": "^2.0.0"
