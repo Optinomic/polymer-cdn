@@ -164,7 +164,7 @@
                             "bold": true
                         },
                         {
-                            "text": " "
+                            "text": "  "
                         },
                         {
                             "text": _current_inner_app.app.description,
@@ -191,8 +191,8 @@
                     }
                 };
 
-                this.set('pdfContent', keep_together);
-                this.fire('pdfready-app-info', keep_together);
+                this.set('pdfContent', arry_make_pdf);
+                this.fire('pdfready-app-info', arry_make_pdf);
 
                 // console.log('(PDF) App-Info', this.pdfContent);
             };
