@@ -157,22 +157,29 @@
             if (_current_inner_app.found) {
 
 
+                // var make_pdf = {
+                //     "id": "app_description",
+                //     "margin": [0, 0, 0, 0],
+                //     "style": "p",
+                //     "text": [{
+                //             "text": _current_inner_app.app.short_description,
+                //             "bold": true
+                //         },
+                //         {
+                //             "text": "  "
+                //         },
+                //         {
+                //             "text": _current_inner_app.app.description,
+                //             "bold": false
+                //         }
+                //     ]
+                // };
+
                 var make_pdf = {
-                    "id": "app_description",
-                    "margin": [0, 0, 0, 0],
+                    "id": "app_description_text",
+                    "text": _current_inner_app.app.short_description + ": " + _current_inner_app.app.description,
                     "style": "p",
-                    "text": [{
-                            "text": _current_inner_app.app.short_description,
-                            "bold": true
-                        },
-                        {
-                            "text": "  "
-                        },
-                        {
-                            "text": _current_inner_app.app.description,
-                            "bold": false
-                        }
-                    ]
+                    "margin": [0, 0, 0, 0]
                 };
 
                 // var arry_make_pdf = [];
