@@ -37,7 +37,7 @@
         </style>
         <template is="dom-if" if="[[_d]]">
             <div class="element_container">
-                <optinomic-pdfmake header-left="{{headerLeft}}" header-right="{{headerRight}}" footer-left="{{footerLeft}}" document-title="{{documentTitle}}" content="{{content}}"></optinomic-pdfmake>
+                <optinomic-pdfmake header-left="{{headerLeft}}" header-right="{{headerRight}}" footer-left="{{footerLeft}}" document-title="{{documentTitle}}" content="{{content}}" hide-page-numbers></optinomic-pdfmake>
             </div>
             <div>&nbsp;</div>
             <div class="element_container">
@@ -50,6 +50,7 @@
                 <paper-input label="Document Title" value="{{documentTitle}}"></paper-input>
                 <paper-input label="Header Left" value="{{headerLeft}}"></paper-input>
                 <paper-input label="Header Right" value="{{headerRight}}"></paper-input>
+                <paper-input label="Footer Left" value="{{footerLeft}}"></paper-input>
                 <paper-textarea label="Content" value="{{content}}" auto-focus></paper-textarea>
             </div>
         </template>
@@ -69,6 +70,11 @@
             headerRight: {
                 type: String,
                 value: "Klinik Name",
+                observer: '_debug_observer'
+            },
+            footerLeft: {
+                type: String,
+                value: "Title",
                 observer: '_debug_observer'
             },
             documentTitle: {

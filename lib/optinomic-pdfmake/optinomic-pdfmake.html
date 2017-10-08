@@ -93,17 +93,18 @@
         properties: {
             headerLeft: {
                 type: String,
-                value: "Patient Name (Geburtsdatum)",
-                observer: '_create_dd'
+                value: ""
             },
             headerRight: {
                 type: String,
-                value: "Klinik",
-                observer: '_create_dd'
+                value: ""
+            },
+            footerLeft: {
+                type: String,
+                value: ""
             },
             documentTitle: {
-                type: String,
-                observer: '_create_dd'
+                type: String
             },
             content: {
                 type: Array,
@@ -122,6 +123,10 @@
                 value: '...'
             },
             hideLogo: {
+                type: Boolean,
+                value: false
+            },
+            hidePageNumbers: {
                 type: Boolean,
                 value: false
             },
@@ -156,6 +161,7 @@
             var doc_title = this._create_document_name(this.documentTitle, this.headerLeft);
             var dd = {};
             dd = JSON.parse(JSON.stringify(this.get('_dd')));
+            dd = this._addFooter(dd);
             console.log('PDF | open :: ' + doc_title, dd);
             pdfMake.createPdf(dd).open();
         },
@@ -165,6 +171,7 @@
             var doc_title = this._create_document_name(this.documentTitle, this.headerLeft);
             var dd = {};
             dd = JSON.parse(JSON.stringify(this.get('_dd')));
+            dd = this._addFooter(dd);
             console.log('PDF | download :: ' + doc_title, dd);
             pdfMake.createPdf(dd).download(doc_title);
         },
@@ -172,6 +179,33 @@
         // -------------------------------------
         // Functions
         // -------------------------------------
+
+        _addFooter: function(dd) {
+
+            if (this.hidePageNumbers) {
+
+                dd.footer = { "text": this.footerLeft, "alignment": "left", "style": "footer" };
+
+            } else {
+
+                var footer = function(currentPage, pageCount) {
+                    var obj = {
+                        "columns": [
+                            { "text": "[[footerLeft]]", "alignment": "left", "style": "footer" },
+                            { "text": "Seite " + currentPage.toString() + "/" + pageCount.toString(), "alignment": "right", "style": "footer" }
+                        ]
+                    };
+                    return obj;
+                };
+
+                var footer_string = footer.toString();
+                footer_string = footer_string.replace("[[footerLeft]]", this.footerLeft);
+                eval('dd.footer=' + footer_string);
+
+            };
+
+            return dd;
+        },
 
         _addLogo: function(dd) {
 
@@ -300,7 +334,7 @@
         _create_dd: function() {
 
 
-            if (this._hasValue(this.headerLeft) && this._hasValue(this.headerRight) && this._hasValue(this.documentTitle) && this._hasValue(this.content)) {
+            if (this._hasValue(this.content)) {
 
 
                 var create_dd = {
@@ -319,14 +353,6 @@
                         ]
                     },
                     "content": [],
-                    "footer": function(currentPage, pageCount) {
-                        var obj = {
-                            "columns": [
-                                { "text": "Seite " + currentPage.toString() + "/" + pageCount.toString(), "alignment": "right", "style": "footer" }
-                            ]
-                        };
-                        return obj;
-                    },
                     "styles": {
                         "header": {
                             "fontSize": 11,
