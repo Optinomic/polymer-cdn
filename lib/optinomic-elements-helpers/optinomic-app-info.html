@@ -126,8 +126,7 @@
             _show_help = !_show_help;
 
             var readme_box = this.$$('#readme');
-            // var readme_box = this.$.readme;
-            readme_box.innerHTML = this._current_inner_app.app.readme_html;
+            readme_box.innerHTML = this._current_inner_app.app.readme.html;
 
             var collapse_help = this.$$('#collapse_help');
             collapse_help.toggle();

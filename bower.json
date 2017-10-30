@@ -41,7 +41,7 @@
     "optinomic-app-page-admin": "Optinomic/optinomic-app-page-admin#latest",
     "optinomic-pdf-chart-profile": "Optinomic/optinomic-pdfmake-chart-profile#^0.0.8",
     "optinomic-pdfmake": "Optinomic/optinomic-pdfmake#^0.0.7",
-    "optinomic-elements-helpers": "Optinomic/optinomic-elements-helpers#^0.0.14",
+    "optinomic-elements-helpers": "Optinomic/optinomic-elements-helpers#^0.0.15",
     "google-chart": "^2.0.0"
   },
   "resolutions": {
