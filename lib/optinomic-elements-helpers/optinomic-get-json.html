@@ -1,0 +1,140 @@
+<link rel="import" href="iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="iron-flex-layout/iron-flex-layout-classes.html">
+<dom-module id="optinomic-get-json">
+    <template>
+        <style include="shared-styles">
+         :host {
+            display: block;
+        }
+
+        .result_group {
+            border-top-color: #EEEEEE;
+            border-top-style: solid;
+            border-top-width: 1px;
+            padding-left: 12px;
+        }
+        </style>
+        <div id="element">
+            <div class="result_group">
+                <div class="horizontal">
+                    <div>
+                        <img style="margin-top:7px; margin-right:12px;" height="32px;" src="data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTguMC4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4PSIwcHgiIHk9IjBweCIgdmlld0JveD0iMCAwIDMxNy4wMDEgMzE3LjAwMSIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgMzE3LjAwMSAzMTcuMDAxOyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIgd2lkdGg9IjE2cHgiIGhlaWdodD0iMTZweCI+CjxwYXRoIGQ9Ik0yNzAuODI1LDcwLjU1TDIxMi4xNywzLjY2QzIxMC4xMywxLjMzNCwyMDcuMTg3LDAsMjA0LjA5MywwSDU1Ljk0MUM0OS4wNzYsMCw0My41MSw1LjU2Niw0My41MSwxMi40MzFWMzA0LjU3ICBjMCw2Ljg2Niw1LjU2NiwxMi40MzEsMTIuNDMxLDEyLjQzMWgyMDUuMTE4YzYuODY2LDAsMTIuNDMyLTUuNTY2LDEyLjQzMi0xMi40MzJWNzcuNjMzICBDMjczLjQ5MSw3NS4wMjcsMjcyLjU0NCw3Mi41MSwyNzAuODI1LDcwLjU1eiBNNTUuOTQxLDMwNS4wNzNWMTIuNDMySDE5OS45NHY2My42MDFjMCwzLjQzMSwyLjc4LDYuMjE2LDYuMjE2LDYuMjE2aDU0LjkwMyAgbDAuMDA2LDIyMi44MjRINTUuOTQxeiIgZmlsbD0iIzc1NzU3NSIvPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8L3N2Zz4K" />
+                    </div>
+                    <div class="flex">
+                        <p>[[name]]
+                            <span class="caption"><br>[[_filename]].json</span>
+                        </p>
+                    </div>
+                    <div>
+                        <template is="dom-if" if="[[_created_JSON]]" restamp="true">
+                            <paper-button class="grey" on-tap="__onDownloadJSON">JSON</paper-button>
+                            <a href="#" id="fileLinkJSON" hidden download$="[[_filename]].json"></a>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+    <script>
+    Polymer({
+        is: 'optinomic-get-json',
+
+        behaviors: [],
+
+        properties: {
+            data: {
+                type: Object,
+                observer: '_data_ready'
+            },
+            name: {
+                type: String
+            }
+        },
+
+
+        // -----------------------------
+        // User-Click Functions
+        // -----------------------------
+
+        __onDownloadJSON(e) {
+            e.preventDefault();
+
+            // File Content
+            var content = JSON.stringify(this.data, null, 2);
+
+            var jsonLink = this.$$('#fileLinkJSON');
+            const link = this._createFile(content);
+
+            // console.log('File Content', content, jsonLink);
+
+            jsonLink.href = link;
+            jsonLink.click();
+        },
+
+        _createFile(text) {
+            const textBlob = new Blob([text], { type: 'text/plain' });
+            return window.URL.createObjectURL(textBlob);
+        },
+
+
+        // -----------------------------
+        // Functions
+        // -----------------------------
+
+        _createFileName: function() {
+
+            var d = new Date();
+            var y = d.getFullYear();
+            var m = d.getMonth() + 1;
+            var t = d.getUTCDate();
+
+            var _date_time = t + "." + m + "." + y + ", " + d.getHours() + ":" + d.getMinutes();
+            this.set('_date_time', _date_time);
+
+            if (m < 10) {
+                m = "0" + m;
+            };
+
+            if (t < 10) {
+                t = "0" + t;
+            };
+
+            var fn = ""
+            fn = y + "_" + m + "_" + t;
+
+            if ((this.name !== null) && (this.name !== undefined)) {
+                fn = fn + " - " + this.name;
+            } else {
+                fn = fn + " - Data";
+            };
+
+            this.set('_filename', fn);
+        },
+
+        // -----------------------------
+        // Observer
+        // -----------------------------
+
+        _data_ready: function() {
+            this.debounce('_data_ready', function() {
+                if ((this.data !== null) && (this.data !== undefined)) {
+
+                    this._createFileName();
+                    this.set('_created_JSON', true);
+
+                };
+            }, 250);
+        },
+
+
+        // -----------------------------
+        // Lifecycle
+        // -----------------------------
+
+        ready: function() {
+            this.set('_created_JSON', false);
+        }
+
+    });
+    </script>
+</dom-module>
