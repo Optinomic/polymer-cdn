@@ -42,7 +42,8 @@
     "optinomic-pdf-chart-profile": "Optinomic/optinomic-pdfmake-chart-profile#^0.0.8",
     "optinomic-pdfmake": "Optinomic/optinomic-pdfmake#^0.0.7",
     "optinomic-elements-helpers": "Optinomic/optinomic-elements-helpers#^0.0.16",
-    "google-chart": "^2.0.0"
+    "google-chart": "^2.0.0",
+    "plotly-plot": "^0.5.0"
   },
   "resolutions": {
     "polymer": "^1.3.0",
