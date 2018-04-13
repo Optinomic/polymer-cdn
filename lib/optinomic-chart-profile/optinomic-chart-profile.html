@@ -1833,6 +1833,17 @@ var start = {
 
             var width_100 = Math.abs(min) + Math.abs(max);
             width_value = (svg_width_100 / width_100) * (current_value + Math.abs(min));
+            width_value_max = (svg_width_100 / width_100) * (Math.abs(max) + Math.abs(min));
+                    
+            if (width_value > width_value_max) {
+                width_value = width_value_max;    
+                // console.warn('_getXPos', width_100, width_value, width_value_max);
+            };
+
+            if (width_value < 0) {
+                width_value = 0;    
+                // console.warn('_getXPos', width_100, width_value, width_value_max);
+            };
         };
         return width_value;
     };

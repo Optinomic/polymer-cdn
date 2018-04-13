@@ -53,6 +53,7 @@ var options = {
 
 @demo demo/index.html
 -->
+
 <dom-module id="optinomic-pdf-chart-profile">
     <script>
     Polymer({
@@ -1329,6 +1330,11 @@ var options = {
                     
                     if (width_value > width_value_max) {
                         width_value = width_value_max;    
+                        // console.warn('_getXPos', width_100, width_value, width_value_max);
+                    };
+
+                    if (width_value < 0) {
+                        width_value = 0;    
                         // console.warn('_getXPos', width_100, width_value, width_value_max);
                     };
                 };
