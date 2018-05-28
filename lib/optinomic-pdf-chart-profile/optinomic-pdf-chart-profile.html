@@ -53,7 +53,6 @@ var options = {
 
 @demo demo/index.html
 -->
-
 <dom-module id="optinomic-pdf-chart-profile">
     <script>
     Polymer({
@@ -727,7 +726,13 @@ var options = {
                     });
 
 
-                    clinic_sample_dive.data = JSON.parse(JSON.stringify(dive_data.statistics));
+                    try {
+                        clinic_sample_dive.data = JSON.parse(JSON.stringify(dive_data.statistics));
+                        // console.error('DATA', clinic_sample_dive);
+                    } catch (err) {
+                        clinic_sample_dive.data = {};
+                    };
+                    // clinic_sample_dive.data = JSON.parse(JSON.stringify(dive_data.statistics));
 
                     var n_value = 0;
                     for (var property in clinic_sample_dive.data) {
@@ -783,10 +788,10 @@ var options = {
                 var ks_line_points = [];
                 var stufe = 7;
                 d.scales.forEach(function(scale, scaleID) {
-                    var ks_var = d.ks_dive.data[scale.clinic_sample_var];
-                    var mean_1sd_min = ks_var.mean_1sd_min;
-                    var mean_1sd_plus = ks_var.mean_1sd_plus;
-                    var mean = ks_var.mean;
+                    var ks_var = d.ks_dive.data[scale.clinic_sample_var] || {};
+                    var mean_1sd_min = ks_var.mean_1sd_min || 0;
+                    var mean_1sd_plus = ks_var.mean_1sd_plus || 0;
+                    var mean = ks_var.mean || 0;
 
                     var my_y_1 = (scaleID * d.options.item_height) + stufe;
                     if (scaleID === 0) {
@@ -832,10 +837,10 @@ var options = {
 
                     var scaleIDCorrected = clone_scales.length - 1 - scaleID;
 
-                    var ks_var = d.ks_dive.data[scale.clinic_sample_var];
-                    var mean_1sd_min = ks_var.mean_1sd_min;
-                    var mean_1sd_plus = ks_var.mean_1sd_plus;
-                    var mean = ks_var.mean;
+                    var ks_var = d.ks_dive.data[scale.clinic_sample_var] || {};
+                    var mean_1sd_min = ks_var.mean_1sd_min || 0;
+                    var mean_1sd_plus = ks_var.mean_1sd_plus || 0;
+                    var mean = ks_var.mean || 0;
 
                     var my_y_1 = (scaleIDCorrected * d.options.item_height) + (d.options.item_height - stufe);
                     var my_y_2 = (scaleIDCorrected * d.options.item_height) + stufe;
@@ -1327,18 +1332,18 @@ var options = {
                     var width_100 = Math.abs(min) + Math.abs(max);
                     width_value = (svg_width_100 / width_100) * (current_value + Math.abs(min));
                     width_value_max = (svg_width_100 / width_100) * (Math.abs(max) + Math.abs(min));
-                    
+
                     if (width_value > width_value_max) {
-                        width_value = width_value_max;    
+                        width_value = width_value_max;
                         // console.warn('_getXPos', width_100, width_value, width_value_max);
                     };
 
                     if (width_value < 0) {
-                        width_value = 0;    
+                        width_value = 0;
                         // console.warn('_getXPos', width_100, width_value, width_value_max);
                     };
                 };
-                
+
                 return width_value;
             };
 

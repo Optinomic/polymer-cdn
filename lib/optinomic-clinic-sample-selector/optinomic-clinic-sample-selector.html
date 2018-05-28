@@ -19,236 +19,235 @@ So you can listen to the event like:
 @demo demo/index.html
 -->
 <dom-module id="optinomic-clinic-sample-selector">
-  <template>
-    <style include="shared-styles iron-flex iron-flex-alignment">
-      :host {
-        display: block;
-      }
+    <template>
+        <style include="shared-styles iron-flex iron-flex-alignment">
+         :host {
+            display: block;
+        }
 
-      .clear-button {
-        visibility: hidden;
-      }
-
-    </style>
-
-    <template is="dom-if" if="[[horizontal]]">
-      <div class="layout horizontal">
-        <template is="dom-if" if="[[init_done]]" restamp="true">
-          <template is="dom-repeat" items="[[clinic_sample_dimensions]]" as="d">
-            <div class="flex">
-              <vaadin-combo-box id$="[[index]]" label="[[d.name]]" items="[[d.array]]" item-label-path="text" item-value-path="id" value="[[d.selected]]" on-value-changed="__valueChanged" required auto-validate error-message="'This is required'">
-                <paper-icon-button icon="remove-circle" class="clear-button"></paper-icon-button>
-                <template>
-                  [[item.text]]
+        .clear-button {
+            visibility: hidden;
+        }
+        </style>
+        <template is="dom-if" if="[[horizontal]]">
+            <div class="layout horizontal">
+                <template is="dom-if" if="[[init_done]]" restamp="true">
+                    <template is="dom-repeat" items="[[clinic_sample_dimensions]]" as="d">
+                        <div class="flex">
+                            <vaadin-combo-box id$="[[index]]" label="[[d.name]]" items="[[d.array]]" item-label-path="text" item-value-path="id" value="[[d.selected]]" on-value-changed="__valueChanged" required auto-validate error-message="'This is required'">
+                                <paper-icon-button icon="remove-circle" class="clear-button"></paper-icon-button>
+                                <template>
+                                    [[item.text]]
+                                </template>
+                            </vaadin-combo-box>
+                        </div>
+                    </template>
                 </template>
-              </vaadin-combo-box>
             </div>
-          </template>
         </template>
-      </div>
-    </template>
-    <template is="dom-if" if="[[!horizontal]]">
-      <div>
-        <template is="dom-if" if="[[init_done]]" restamp="true">
-          <template is="dom-repeat" items="[[clinic_sample_dimensions]]" as="d">
-            <vaadin-combo-box id$="[[index]]" label="[[d.name]]" items="[[d.array]]" item-label-path="text" item-value-path="id" value="[[d.selected]]" on-value-changed="__valueChanged" required auto-validate error-message="'This is required'">
-              <paper-icon-button icon="remove-circle" class="clear-button"></paper-icon-button>
-              <template>
-                [[item.text]]
-              </template>
-            </vaadin-combo-box>
-          </template>
+        <template is="dom-if" if="[[!horizontal]]">
+            <div>
+                <template is="dom-if" if="[[init_done]]" restamp="true">
+                    <template is="dom-repeat" items="[[clinic_sample_dimensions]]" as="d">
+                        <vaadin-combo-box id$="[[index]]" label="[[d.name]]" items="[[d.array]]" item-label-path="text" item-value-path="id" value="[[d.selected]]" on-value-changed="__valueChanged" required auto-validate error-message="'This is required'">
+                            <paper-icon-button icon="remove-circle" class="clear-button"></paper-icon-button>
+                            <template>
+                                [[item.text]]
+                            </template>
+                        </vaadin-combo-box>
+                    </template>
+                </template>
+            </div>
         </template>
-      </div>
     </template>
-  </template>
-
-  <script>
+    <script>
     Polymer({
 
-      is: 'optinomic-clinic-sample-selector',
+        is: 'optinomic-clinic-sample-selector',
 
-      __init: function () {
-        this.set('init_done', false);
+        __init: function() {
+            this.set('init_done', false);
 
-        // INIT Properties
-        this.clinic_sample = this.clinic_sample === undefined
-          ? {}
-          : this.clinic_sample;
-        this.data_dive = this.data_dive === undefined
-          ? []
-          : this.data_dive;
-        this.data_dive_path = this.data_dive_path === undefined
-          ? ""
-          : this.data_dive_path;
-        this.return_data = this.return_data === undefined
-          ? {}
-          : this.return_data;
+            // INIT Properties
+            this.clinic_sample = this.clinic_sample === undefined ?
+                {} :
+                this.clinic_sample;
+            this.data_dive = this.data_dive === undefined ?
+                [] :
+                this.data_dive;
+            this.data_dive_path = this.data_dive_path === undefined ?
+                "" :
+                this.data_dive_path;
+            this.return_data = this.return_data === undefined ?
+                {} :
+                this.return_data;
 
-        this.__setDefault();
-        this.__getDataDiveObj();
-      },
+            this.__setDefault();
+            this.__getDataDiveObj();
+        },
 
-      __setDefault: function () {
-        var dimensions = this.get('clinic_sample.dimensions');
-        var data_dive = this.get('data_dive');
+        __setDefault: function() {
+            var dimensions = this.get('clinic_sample.dimensions');
+            var data_dive = this.get('data_dive');
 
-        if (dimensions.length > 0) {
-          dimensions.forEach(function (dimension, dimensionID) {
-            dimension.selected = data_dive[dimensionID];
-            dimension.array.forEach(function (array, arrayID) {
-              array.value = array.id;
-              if (data_dive[dimensionID] === array.id) {
-                array.selected = true;
-              } else {
-                array.selected = false;
-              };
+            if (dimensions.length > 0) {
+                dimensions.forEach(function(dimension, dimensionID) {
+                    dimension.selected = data_dive[dimensionID];
+                    dimension.array.forEach(function(array, arrayID) {
+                        array.value = array.id;
+                        if (data_dive[dimensionID] === array.id) {
+                            array.selected = true;
+                        } else {
+                            array.selected = false;
+                        };
+                    });
+                });
+            };
+
+            this.set('clinic_sample_dimensions', dimensions);
+            //console.log('__setDefault', this.clinic_sample_dimensions);
+
+        },
+
+        __valueChanged: function(event) {
+
+            var event_id = parseInt(event.srcElement.id);
+            var event_value = event.detail.value;
+
+            //console.warn('1', event_id, event_value);
+
+            var dimensions = this.get('clinic_sample_dimensions');
+            var data_dive = this.get('data_dive');
+
+            if ((event_value === "") || (event_value === NaN)) {
+                event_value = dimensions[event_id].array.length - 1;
+            };
+
+            dimensions[event_id].selected = event_value;
+            this.set('clinic_sample_dimensions', dimensions);
+
+            data_dive[event_id] = event_value;
+            this.set('data_dive', data_dive);
+
+            // Update return_data
+            this.__getDataDiveObj();
+
+        },
+
+        __getDataDiveObj: function() {
+            var data = this.get('clinic_sample.data');
+            var data_dive = this.get('data_dive');
+            var data_dive_path = this.get('data_dive_path');
+            var data_dive_path_dots_count = (data_dive_path.split(".").length - 1);
+
+            // Dive into data_dive
+            var return_obj = JSON.parse(JSON.stringify(data));
+            data_dive.forEach(function(dive, diveID) {
+                return_obj = return_obj[dive];
             });
-          });
-        };
 
-        this.set('clinic_sample_dimensions', dimensions);
-        //console.log('__setDefault', this.clinic_sample_dimensions);
+            console.error('????', return_obj);
 
-      },
+            // Dive into data_dive_path if available
+            if (data_dive_path !== "") {
+                if ((data_dive_path_dots_count === 0) && (return_obj !== null)) {
+                    return_obj = return_obj[data_dive_path];
+                } else {
+                    var dive = [];
+                    for (i = 0; i < data_dive_path_dots_count; i++) {
+                        var n = data_dive_path.indexOf(".");
+                        var item = data_dive_path.substring(0, n);
+                        data_dive_path = data_dive_path.substring(n + 1, data_dive_path.length);
+                        dive.push(item);
+                        if (i === data_dive_path_dots_count - 1) {
+                            dive.push(data_dive_path);
+                        };
+                    };
 
-      __valueChanged: function (event) {
-
-        var event_id = parseInt(event.srcElement.id);
-        var event_value = event.detail.value;
-
-        //console.warn('1', event_id, event_value);
-
-        var dimensions = this.get('clinic_sample_dimensions');
-        var data_dive = this.get('data_dive');
-
-        if ((event_value === "") || (event_value === NaN)) {
-          event_value = dimensions[event_id].array.length - 1;
-        };
-
-        dimensions[event_id].selected = event_value;
-        this.set('clinic_sample_dimensions', dimensions);
-
-        data_dive[event_id] = event_value;
-        this.set('data_dive', data_dive);
-
-        // Update return_data
-        this.__getDataDiveObj();
-
-      },
-
-      __getDataDiveObj: function () {
-        var data = this.get('clinic_sample.data');
-        var data_dive = this.get('data_dive');
-        var data_dive_path = this.get('data_dive_path');
-        var data_dive_path_dots_count = (data_dive_path.split(".").length - 1);
-
-        // Dive into data_dive
-        var return_obj = JSON.parse(JSON.stringify(data));
-        data_dive.forEach(function (dive, diveID) {
-          return_obj = return_obj[dive];
-        });
-
-        // Dive into data_dive_path if available
-        if (data_dive_path !== "") {
-          if (data_dive_path_dots_count === 0) {
-            return_obj = return_obj[data_dive_path];
-          } else {
-            var dive = [];
-            for (i = 0; i < data_dive_path_dots_count; i++) {
-              var n = data_dive_path.indexOf(".");
-              var item = data_dive_path.substring(0, n);
-              data_dive_path = data_dive_path.substring(n + 1, data_dive_path.length);
-              dive.push(item);
-              if (i === data_dive_path_dots_count - 1) {
-                dive.push(data_dive_path);
-              };
+                    for (i = 0; i < dive.length; i++) {
+                        return_obj = return_obj[dive[i]];
+                        console.log('return_obj', return_obj);
+                    };
+                };
             };
 
-            for (i = 0; i < dive.length; i++) {
-              return_obj = return_obj[dive[i]];
-              console.log('return_obj', return_obj);
+            var clinic_sample_name = this.__getCSName();
+            //console.log('__getDataDiveObj', data_dive, return_obj, clinic_sample_name); Save
+            this.set('return_data', return_obj);
+
+            // Redraw :: Make sure latest selection is done.
+            this.__redrawChart();
+
+            // Event
+            this.fire('clinic-sample-changed', clinic_sample_name);
+
+            //console.log('return_obj', return_obj);
+        },
+
+        __getCSName: function() {
+
+            var return_str = "";
+            var dimensions = this.get('clinic_sample.dimensions');
+            var data_dive = this.get('data_dive');
+
+            if (data_dive.length > 0) {
+                data_dive.forEach(function(dimension, dimensionID) {
+                    var current_dim = dimensions[dimensionID];
+                    return_str = return_str + current_dim.name + ": " + current_dim.array[dimension].text;
+                    if (dimensionID !== dimensions.length - 1) {
+                        return_str = return_str + " | ";
+                    };
+                    //console.log('?', dimension, dimensionID, current_dim);
+                });
             };
-          };
-        };
 
-        var clinic_sample_name = this.__getCSName();
-        //console.log('__getDataDiveObj', data_dive, return_obj, clinic_sample_name); Save
-        this.set('return_data', return_obj);
-
-        // Redraw :: Make sure latest selection is done.
-        this.__redrawChart();
-
-        // Event
-        this.fire('clinic-sample-changed', clinic_sample_name);
-
-        //console.log('return_obj', return_obj);
-      },
-
-      __getCSName: function () {
-
-        var return_str = "";
-        var dimensions = this.get('clinic_sample.dimensions');
-        var data_dive = this.get('data_dive');
-
-        if (data_dive.length > 0) {
-          data_dive.forEach(function (dimension, dimensionID) {
-            var current_dim = dimensions[dimensionID];
-            return_str = return_str + current_dim.name + ": " + current_dim.array[dimension].text;
-            if (dimensionID !== dimensions.length - 1) {
-              return_str = return_str + " | ";
-            };
-            //console.log('?', dimension, dimensionID, current_dim);
-          });
-        };
-
-        return return_str;
-      },
-
-      ready: function () {},
-
-      attached: function () {
-        // this.__init();
-      },
-
-      __redrawChart: function () {
-        this.set('init_done', false);
-        setTimeout(function () {
-          this.set('init_done', true);
-        }.bind(this), 50);
-
-      },
-
-      __onInit: function () {
-        this.debounce('onInit', function () {
-          //console.error('onInit', this.data_dive, this.clinic_sample);
-          this.__init();
-        }, 250);
-      },
-
-      properties: {
-        data_dive: {
-          type: Array,
-          notify: true,
-          observer: '__onInit'
+            return return_str;
         },
-        data_dive_path: {
-          type: String
+
+        ready: function() {},
+
+        attached: function() {
+            // this.__init();
         },
-        clinic_sample: {
-          type: Object,
-          observer: '__onInit'
+
+        __redrawChart: function() {
+            this.set('init_done', false);
+            setTimeout(function() {
+                this.set('init_done', true);
+            }.bind(this), 50);
+
         },
-        return_data: {
-          type: Object,
-          notify: true
+
+        __onInit: function() {
+            this.debounce('onInit', function() {
+                //console.error('onInit', this.data_dive, this.clinic_sample);
+                this.__init();
+            }, 250);
         },
-        horizontal: {
-          type: Boolean,
-          value: false
+
+        properties: {
+            data_dive: {
+                type: Array,
+                notify: true,
+                observer: '__onInit'
+            },
+            data_dive_path: {
+                type: String
+            },
+            clinic_sample: {
+                type: Object,
+                observer: '__onInit'
+            },
+            return_data: {
+                type: Object,
+                notify: true
+            },
+            horizontal: {
+                type: Boolean,
+                value: false
+            }
         }
-      }
 
     });
-  </script>
+    </script>
 </dom-module>
