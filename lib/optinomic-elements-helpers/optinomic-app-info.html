@@ -80,6 +80,7 @@
                     if ((this.appId !== null) && (this.appId !== undefined)) {
                         if ((state.apps !== null) && (state.apps !== undefined)) {
                             if ((state.apps.all !== null) && (state.apps.all !== undefined)) {
+                              if ((state.apps.all.data !== null) && (state.apps.all.data !== undefined)) {
                                 if ((state.apps.all.data.patient_modules !== null) && (state.apps.all.data.patient_modules !== undefined)) {
                                     var appId = this.appId;
 
@@ -93,6 +94,7 @@
                                         };
                                     });
                                 };
+                              };
                             };
                         };
                     };
